@@ -19,11 +19,17 @@ public partial class MainViewModel : ViewModelBase
     private readonly Window _window;
     
     [ObservableProperty] private string _currentOption = "Meine Fächer";
-    [ObservableProperty] private string _currentCourse = "Mathematik";
-    [ObservableProperty] private string _currentLearningsheet = "Exponentialfunktionen";
+    [ObservableProperty] private string _currentCourse = "";
+    [ObservableProperty] private string _currentLearningsheet = "";
+    
+    [ObservableProperty] private bool _optionArrow1 = false;
+    [ObservableProperty] private bool _optionArrow2 = false;
     
     [ObservableProperty]
     private int _selectedNavIndex = 0;
+    
+    [ObservableProperty]
+    private ViewModelBase currentPageViewModel;
 
     [ObservableProperty] private List<string> _paths = new();
 
@@ -82,7 +88,14 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(Window window)
     {
         _window = window;
+        CurrentPageViewModel = new CourseViewModel();
     }
+    
+    [RelayCommand]
+    private void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
+
+    [RelayCommand]
+    private void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
 
     [RelayCommand]
     private async Task PickFileAsync()
@@ -110,12 +123,20 @@ public partial class MainViewModel : ViewModelBase
             case 0:
                 ClearBreadcrumbs();
                 CurrentOption = "Meine Fächer";
+                ShowCourseView();
                 break;
             case 1:
                 ClearBreadcrumbs();
                 CurrentOption = "Einstellungen";
+                ShowLearningsheetView();
                 break;
         }
+    }
+
+    [RelayCommand]
+    private void GoBack()
+    {
+        
     }
 
     public void ClearBreadcrumbs()

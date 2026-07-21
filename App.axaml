@@ -1,12 +1,19 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Recallr"
+             xmlns:vm="clr-namespace:Recallr.Views"
              x:Class="Recallr.App"
              RequestedThemeVariant="Default">
              <!-- "Default" folgt dem System-Theme. Für immer Dark/Light: "Dark" bzw. "Light" -->
 
              <Application.DataTemplates>
-                 <local:ViewLocator />
+                 <local:ViewLocator/>
+                 <DataTemplate DataType="{x:Type vm:CourseView}">
+                     <vm:CourseView />
+                 </DataTemplate>
+                 <DataTemplate DataType="{x:Type vm:LearningsheetView}">
+                     <vm:LearningsheetView />
+                 </DataTemplate>
              </Application.DataTemplates>
 
     <Application.Styles>
