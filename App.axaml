@@ -18,10 +18,14 @@
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="/Ressources/ButtonStyles.axaml"/>
     </Application.Styles>
 
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Ressources/ButtonBrushes.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
 
                 <ResourceDictionary x:Key="Dark">

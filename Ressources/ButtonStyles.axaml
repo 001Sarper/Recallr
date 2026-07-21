@@ -1,0 +1,86 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Basis-Style für alle Buttons -->
+    <Style Selector="Button">
+        <Setter Property="Padding" Value="14,8"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <!-- PRIMARY -->
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource ButtonPrimaryBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonPrimaryBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonPrimaryForeground}"/>
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonPrimaryBackgroundHover}"/>
+    </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonPrimaryBackgroundPressed}"/>
+    </Style>
+
+    <!-- SECONDARY -->
+    <Style Selector="Button.secondary">
+        <Setter Property="Background" Value="{DynamicResource ButtonSecondaryBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonSecondaryBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonSecondaryForeground}"/>
+    </Style>
+    <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonSecondaryBackgroundHover}"/>
+    </Style>
+    <Style Selector="Button.secondary:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonSecondaryBackgroundPressed}"/>
+    </Style>
+
+    <!-- EDIT -->
+    <Style Selector="Button.edit">
+        <Setter Property="Background" Value="{DynamicResource ButtonEditBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonEditBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonEditForeground}"/>
+    </Style>
+    <Style Selector="Button.edit:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonEditBackgroundHover}"/>
+    </Style>
+    <Style Selector="Button.edit:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonEditBackgroundPressed}"/>
+    </Style>
+
+    <!-- DELETE (Outline-Variante, dezenter) -->
+    <Style Selector="Button.delete">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonDeleteBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonDeleteForeground}"/>
+    </Style>
+    <Style Selector="Button.delete:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteBackgroundHover}"/>
+    </Style>
+    <Style Selector="Button.delete:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteBackgroundPressed}"/>
+    </Style>
+
+    <!-- DELETE SOLID (auffällige Variante, z.B. im Bestätigungsdialog) -->
+    <Style Selector="Button.delete-solid">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteSolidBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonDeleteSolidBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonDeleteSolidForeground}"/>
+    </Style>
+    <Style Selector="Button.delete-solid:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteSolidBackgroundHover}"/>
+    </Style>
+    <Style Selector="Button.delete-solid:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ButtonDeleteSolidBackgroundPressed}"/>
+    </Style>
+
+    <!-- DISABLED (greift für alle Klassen) -->
+    <Style Selector="Button:disabled">
+        <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabledBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonDisabledForeground}"/>
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+</Styles>
