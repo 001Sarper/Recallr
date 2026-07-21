@@ -1,15 +1,62 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Recallr.App"
              xmlns:local="using:Recallr"
-             RequestedThemeVariant="Light">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             x:Class="Recallr.App"
+             RequestedThemeVariant="Default">
+             <!-- "Default" folgt dem System-Theme. Für immer Dark/Light: "Dark" bzw. "Light" -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
+             <Application.DataTemplates>
+                 <local:ViewLocator />
+             </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+
+                <ResourceDictionary x:Key="Dark">
+                    <!-- Grundflächen -->
+                    <SolidColorBrush x:Key="BackgroundColor">#0D1117</SolidColorBrush>
+                    <SolidColorBrush x:Key="SurfaceColor">#161B22</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderColor">#30363D</SolidColorBrush>
+
+                    <!-- Text -->
+                    <SolidColorBrush x:Key="TextPrimaryColor">#E6EDF3</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextSecondaryColor">#8B949E</SolidColorBrush>
+
+                    <!-- Akzent (Buttons, aktive Nav-Elemente, Links) -->
+                    <SolidColorBrush x:Key="AccentColor">#2F81F7</SolidColorBrush>
+
+                    <!-- Wissensstand / Lernfortschritt -->
+                    <SolidColorBrush x:Key="MasteredColor">#3FB950</SolidColorBrush>
+                    <SolidColorBrush x:Key="LearningColor">#D29922</SolidColorBrush>
+                    <SolidColorBrush x:Key="UnseenColor">#484F58</SolidColorBrush>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Light">
+                    <!-- Grundflächen -->
+                    <SolidColorBrush x:Key="BackgroundColor">#e8f1fb</SolidColorBrush>
+                    <SolidColorBrush x:Key="SurfaceColor">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderColor">#D0D7DE</SolidColorBrush>
+
+                    <!-- Text -->
+                    <SolidColorBrush x:Key="TextPrimaryColor">#0D1117</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextSecondaryColor">#57606A</SolidColorBrush>
+
+                    <!-- Akzent (Buttons, aktive Nav-Elemente, Links) -->
+                    <SolidColorBrush x:Key="AccentColor">#0969DA</SolidColorBrush>
+
+                    <!-- Wissensstand / Lernfortschritt -->
+                    <SolidColorBrush x:Key="MasteredColor">#1A7F37</SolidColorBrush>
+                    <SolidColorBrush x:Key="LearningColor">#9A6700</SolidColorBrush>
+                    <SolidColorBrush x:Key="UnseenColor">#8C959F</SolidColorBrush>
+                </ResourceDictionary>
+
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
 </Application>

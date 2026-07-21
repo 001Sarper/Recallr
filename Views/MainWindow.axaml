@@ -3,69 +3,130 @@
         xmlns:vm="using:Recallr.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="900" Width="1440" Height="900" MinWidth="1024" MinHeight="600" WindowState="Maximized"
-        x:Class="Recallr.Views.MainWindow"
+        xmlns:views="using:Recallr.Views"
         x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Recallr">
-
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
-    </Design.DataContext>
+        d:DesignWidth="1200" d:DesignHeight="720"
+        x:Class="Recallr.Views.MainWindow"
+        Title="Recallr"
+        Width="1200" Height="720"
+        MinWidth="900" MinHeight="560"
+        Background="{DynamicResource BackgroundColor}"
+        WindowStartupLocation="CenterScreen">
     
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" MinWidth="200" MaxWidth="500"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" RowDefinitions="*,50">
-            <StackPanel Grid.Row="0" Orientation="Vertical" Background="Aqua">
-                <Button HorizontalAlignment="Center" Margin="10" Width="280" >
-                    <StackPanel Orientation="Horizontal" Spacing="8" 
-                                VerticalAlignment="Center">
-                        <!-- Plus Icon als Path -->
-                        <!-- Minimalistisches Buch - GEOMTRISCHE FORMEN -->
-                        <Image Source="avares://Recallr/Assets/icons-book.png" Width="25" Height="25"/>
+
+    <Grid ColumnDefinitions="230,*">
+
+        <!-- ============ Sidebar (global, bleibt immer sichtbar) ============ -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource SurfaceColor}"
+                BorderBrush="{DynamicResource BorderColor}"
+                BorderThickness="0,0,1,0">
+            <Grid RowDefinitions="Auto,*,Auto">
+
+                <!-- Logo -->
+                <StackPanel Grid.Row="0" Margin="20,24,20,20" Orientation="Horizontal">
+                    <TextBlock Text="📚" FontSize="22" VerticalAlignment="Center" />
+                    <StackPanel Margin="8,0,0,0">
+                        <TextBlock Text="Recallr"
+                                   FontSize="19" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimaryColor}" />
+                        <TextBlock Text="Dein Lernbegleiter"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource TextSecondaryColor}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Globale Navigation -->
+                <StackPanel Grid.Row="1" Margin="12,0" Spacing="4">
+                    <ListBox SelectedIndex="0" Background="Transparent" x:Name="NavList">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="12,10" />
+                                <Setter Property="CornerRadius" Value="8" />
+                                <Setter Property="Margin" Value="0,2" />
+                            </Style>
+                            <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                                <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+                            </Style>
+                        </ListBox.Styles>
+
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="🎓" FontSize="16" />
+                                <TextBlock Text="Meine Fächer" Foreground="{DynamicResource TextPrimaryColor}" />
+                            </StackPanel>
+                        </ListBoxItem>
+
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="🧠" FontSize="16" />
+                                <TextBlock Text="Alle Wiederholungen" Foreground="{DynamicResource TextPrimaryColor}" />
+                            </StackPanel>
+                        </ListBoxItem>
+
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="⚙️" FontSize="16" />
+                                <TextBlock Text="Einstellungen" Foreground="{DynamicResource TextPrimaryColor}" />
+                            </StackPanel>
+                        </ListBoxItem>
+                    </ListBox>
+                </StackPanel>
+
+                <!-- Streak / User -->
+                <Border Grid.Row="2" Margin="12,0,12,16" Padding="12" CornerRadius="10"
+                        Background="{DynamicResource BackgroundColor}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="🔥" FontSize="20" VerticalAlignment="Center" />
+                        <StackPanel Spacing="0">
+                            <TextBlock Text="12 Tage Streak" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryColor}" />
+                            <TextBlock Text="Weiter so!" FontSize="11"
+                                       Foreground="{DynamicResource TextSecondaryColor}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ============ Rechte Seite: Breadcrumb + die 3 Panels ============ -->
+        <Grid Grid.Column="1" RowDefinitions="Auto,*">
+
+            <!-- Breadcrumb-Leiste -->
+            <Border Grid.Row="0"
+                    Padding="24,14"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Button Grid.Column="0" Content="←"
+                            Background="Transparent"
+                            Foreground="{DynamicResource TextPrimaryColor}"
+                            BorderThickness="0" FontSize="16" Padding="6" Margin="0,0,12,0" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+                        <TextBlock Text="Meine Fächer" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="›" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="Mathematik" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="›" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="Klausur: Integralrechnung"
+                                   Foreground="{DynamicResource TextPrimaryColor}" FontSize="13" FontWeight="SemiBold" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Container für alle 3 Panels (übereinander, per IsVisible umschaltbar) -->
+            <Grid Grid.Row="1" RowDefinitions="50,*">
+                <TextBlock Grid.Row="0" Text="Datei hochladen und zusammenfassen" Margin="10"/>
+                <Grid Grid.Row="1" RowDefinitions="50,*">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Content="Datei hochladen" Click="{Binding PDF_Hochladen_ClickCommand}"></Button>
+                        <Button Content="Datei zusammenfassen"></Button>
+                    </StackPanel>
+                    <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Lernzettel}">
                         
-                        <!-- Text daneben -->
-                        <TextBlock Text="Mathe" 
-                                   Foreground="White"
-                                   FontSize="14"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-            <Panel Grid.Row="1" Background="Aqua">
-                <Button HorizontalAlignment="Right" Margin="0,0,10,0">
-                    <StackPanel Orientation="Horizontal" Spacing="8" 
-                                VerticalAlignment="Center">
-                        <!-- Plus Icon als Path -->
-                        <Path Fill="White" 
-                              Width="16" Height="16"
-                              Stretch="Uniform"
-                              Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-        
-                        <!-- Text daneben -->
-                        <TextBlock Text="Neues Fach erstellen" 
-                                   Foreground="White"
-                                   FontSize="14"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-            </Panel>
+                    </TextBox>
+                </Grid>
+            </Grid>
         </Grid>
-        <GridSplitter Grid.Column="1"
-                      Width="5"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      Background="#CCCCCC"
-                      ShowsPreview="True"/>
-        
     </Grid>
-
-    
-
 </Window>
