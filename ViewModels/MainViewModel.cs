@@ -1,9 +1,17 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Recallr.Views;
 
 namespace Recallr.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    public partial string Greeting { get; set; } = "Welcome to Avalonia!";
+    [ObservableProperty] 
+    private string _lernzettel = "";
+
+    [RelayCommand]
+    private void PDF_Hochladen_Click()
+    {
+        
+    }
 }
