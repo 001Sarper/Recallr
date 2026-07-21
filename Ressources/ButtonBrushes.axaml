@@ -1,0 +1,134 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+
+    <!-- ============================================ -->
+    <!-- LIGHT MODE                                    -->
+    <!-- ============================================ -->
+    <ResourceDictionary x:Key="Light">
+
+      <!-- Grundflächen -->
+      <SolidColorBrush x:Key="BackgroundColor">#E8F1FB</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceColor">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="BorderColor">#D0D7DE</SolidColorBrush>
+
+      <!-- Text -->
+      <SolidColorBrush x:Key="TextPrimaryColor">#0D1117</SolidColorBrush>
+      <SolidColorBrush x:Key="TextSecondaryColor">#57606A</SolidColorBrush>
+
+      <!-- Akzent -->
+      <SolidColorBrush x:Key="AccentColor">#0969DA</SolidColorBrush>
+
+      <!-- Lernfortschritt -->
+      <SolidColorBrush x:Key="MasteredColor">#1A7F37</SolidColorBrush>
+      <SolidColorBrush x:Key="LearningColor">#9A6700</SolidColorBrush>
+      <SolidColorBrush x:Key="UnseenColor">#8C959F</SolidColorBrush>
+
+      <!-- Primary Button -->
+      <SolidColorBrush x:Key="ButtonPrimaryBackground">#0969DA</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBackgroundHover">#0860CA</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBackgroundPressed">#0757B3</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBorder">#0969DA</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryForeground">#FFFFFF</SolidColorBrush>
+
+      <!-- Secondary Button -->
+      <SolidColorBrush x:Key="ButtonSecondaryBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBackgroundHover">#F0F3F6</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBackgroundPressed">#E6E9EC</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBorder">#D0D7DE</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryForeground">#0D1117</SolidColorBrush>
+
+      <!-- Edit Button -->
+      <SolidColorBrush x:Key="ButtonEditBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBackgroundHover">#DDF0FF</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBackgroundPressed">#C7E5FF</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBorder">#0969DA</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditForeground">#0969DA</SolidColorBrush>
+
+      <!-- Delete Button (Outline) -->
+      <SolidColorBrush x:Key="ButtonDeleteBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBackgroundHover">#FFEBE9</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBackgroundPressed">#FFCECB</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBorder">#CF222E</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteForeground">#CF222E</SolidColorBrush>
+
+      <!-- Delete Button (Solid) -->
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackground">#CF222E</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackgroundHover">#A40E26</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackgroundPressed">#8A0F1F</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidForeground">#FFFFFF</SolidColorBrush>
+
+      <!-- Disabled -->
+      <SolidColorBrush x:Key="ButtonDisabledBackground">#F6F8FA</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDisabledBorder">#D0D7DE</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDisabledForeground">#8C959F</SolidColorBrush>
+
+    </ResourceDictionary>
+
+    <!-- ============================================ -->
+    <!-- DARK MODE                                     -->
+    <!-- ============================================ -->
+    <ResourceDictionary x:Key="Dark">
+
+      <!-- Grundflächen -->
+      <SolidColorBrush x:Key="BackgroundColor">#0D1117</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceColor">#161B22</SolidColorBrush>
+      <SolidColorBrush x:Key="BorderColor">#30363D</SolidColorBrush>
+
+      <!-- Text -->
+      <SolidColorBrush x:Key="TextPrimaryColor">#E6EDF3</SolidColorBrush>
+      <SolidColorBrush x:Key="TextSecondaryColor">#8B949E</SolidColorBrush>
+
+      <!-- Akzent -->
+      <SolidColorBrush x:Key="AccentColor">#4493F8</SolidColorBrush>
+
+      <!-- Lernfortschritt -->
+      <SolidColorBrush x:Key="MasteredColor">#3FB950</SolidColorBrush>
+      <SolidColorBrush x:Key="LearningColor">#D29922</SolidColorBrush>
+      <SolidColorBrush x:Key="UnseenColor">#6E7681</SolidColorBrush>
+
+      <!-- Primary Button -->
+      <SolidColorBrush x:Key="ButtonPrimaryBackground">#238636</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBackgroundHover">#2EA043</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBackgroundPressed">#268035</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryBorder">#3FB950</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonPrimaryForeground">#FFFFFF</SolidColorBrush>
+
+      <!-- Secondary Button -->
+      <SolidColorBrush x:Key="ButtonSecondaryBackground">#21262D</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBackgroundHover">#30363D</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBackgroundPressed">#3A414B</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryBorder">#30363D</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonSecondaryForeground">#E6EDF3</SolidColorBrush>
+
+      <!-- Edit Button -->
+      <SolidColorBrush x:Key="ButtonEditBackground">#161B22</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBackgroundHover">#1C3A5E</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBackgroundPressed">#234D7A</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditBorder">#4493F8</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonEditForeground">#4493F8</SolidColorBrush>
+
+      <!-- Delete Button (Outline) -->
+      <SolidColorBrush x:Key="ButtonDeleteBackground">#161B22</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBackgroundHover">#3D1418</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBackgroundPressed">#551A20</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteBorder">#F85149</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteForeground">#F85149</SolidColorBrush>
+
+      <!-- Delete Button (Solid) -->
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackground">#DA3633</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackgroundHover">#F85149</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidBackgroundPressed">#B62324</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDeleteSolidForeground">#FFFFFF</SolidColorBrush>
+
+      <!-- Disabled -->
+      <SolidColorBrush x:Key="ButtonDisabledBackground">#21262D</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDisabledBorder">#30363D</SolidColorBrush>
+      <SolidColorBrush x:Key="ButtonDisabledForeground">#6E7681</SolidColorBrush>
+
+    </ResourceDictionary>
+
+  </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

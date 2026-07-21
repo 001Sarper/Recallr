@@ -9,6 +9,14 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaXaml Remove="Ressources\ButtonBrushes.axaml" />
+    <AvaloniaResource Include="Ressources\ButtonBrushes.axaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaXaml Remove="Ressources\ButtonStyles.axaml" />
+    <AvaloniaResource Include="Ressources\ButtonStyles.axaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
 
   <ItemGroup>
