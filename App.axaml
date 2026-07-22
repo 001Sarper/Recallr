@@ -14,6 +14,9 @@
                  <DataTemplate DataType="{x:Type vm:LearningsheetView}">
                      <vm:LearningsheetView />
                  </DataTemplate>
+                 <DataTemplate DataType="{x:Type vm:SettingsView}">
+                     <vm:SettingsView />
+                 </DataTemplate>
              </Application.DataTemplates>
 
     <Application.Styles>
@@ -26,6 +29,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Ressources/ButtonBrushes.axaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
             <ResourceDictionary.ThemeDictionaries>
 
                 <ResourceDictionary x:Key="Dark">
