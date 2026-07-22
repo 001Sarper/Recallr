@@ -95,6 +95,9 @@ public partial class MainViewModel : ViewModelBase
     private void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
 
     [RelayCommand]
+    private void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
+    
+    [RelayCommand]
     private void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
 
     [RelayCommand]
@@ -128,7 +131,7 @@ public partial class MainViewModel : ViewModelBase
             case 1:
                 ClearBreadcrumbs();
                 CurrentOption = "Einstellungen";
-                ShowLearningsheetView();
+                ShowSettingsView();
                 break;
         }
     }

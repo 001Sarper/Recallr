@@ -10,7 +10,7 @@
         x:Class="Recallr.Views.MainWindow"
         Title="Recallr"
         Width="1200" Height="720"
-        MinWidth="900" MinHeight="560"
+        MinWidth="1200" MinHeight="720"
         Background="{DynamicResource BackgroundColor}"
         WindowStartupLocation="CenterScreen">
     
@@ -31,7 +31,7 @@
                         <TextBlock Text="Recallr"
                                    FontSize="19" FontWeight="Bold"
                                    Foreground="{DynamicResource TextPrimaryColor}" />
-                        <TextBlock Text="Dein Lernbegleiter"
+                        <TextBlock Text="Dein smarter Lernbegleiter"
                                    FontSize="11"
                                    Foreground="{DynamicResource TextSecondaryColor}" />
                     </StackPanel>
