@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Recallr.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Recallr.Views.SettingsView">
+             x:Class="Recallr.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
     <ScrollViewer>
         <StackPanel Orientation="Vertical" Margin="10,10,10,0" Background="{DynamicResource BackgroundColor}">
 
@@ -25,7 +27,7 @@
                             <TextBlock Grid.Column="0" Text="OpenAI-Key" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch" PasswordChar="֍" FontSize="8"
-                                     VerticalContentAlignment="Center" />
+                                     VerticalContentAlignment="Center" Text="{Binding OpenaiKey}"/>
                         </Grid>
                     </Border>
                     <Border Grid.Row="3" CornerRadius="12"
@@ -38,7 +40,7 @@
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Profil Name" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch" PlaceholderText="Dipsy" />
+                                     HorizontalAlignment="Stretch" PlaceholderText="Dipsy" Text="{Binding ProfileName}"/>
                         </Grid>
                     </Border>
                     <Border Grid.Row="4" CornerRadius="12"
@@ -51,7 +53,7 @@
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Profil E-Mail" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch" PlaceholderText="" />
+                                     HorizontalAlignment="Stretch" PlaceholderText="" Text="{Binding ProfileMail}"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -71,7 +73,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Theme" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="0" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Theme}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="System" />
                                 <ComboBoxItem Content="Dark" />
@@ -88,7 +90,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Sprache" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="0" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Language}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="Deutsch" />
                                 <ComboBoxItem Content="Englisch" />
@@ -104,7 +106,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Schriftgröße" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="0" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding FontSize}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="14" />
                                 <ComboBoxItem Content="16" />
@@ -131,7 +133,7 @@
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Zusammenfassungsstil" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="0" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding SummaryStyle}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Ausführlich" />
                                 <ComboBoxItem Content="Kurz/Knapp" />
@@ -148,7 +150,7 @@
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Schwierigkeitsgrad" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="1" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Difficulty}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Schwer" />
                                 <ComboBoxItem Content="Normal" />
@@ -165,7 +167,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Fragetyp" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="0" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding QuestionType}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Multiple Choice Fragen" />
                                 <ComboBoxItem Content="Offene Fragen" />
@@ -270,7 +272,7 @@
             </Grid>
             <Separator Height="3" Margin="0,20,0,20" Background="{DynamicResource AccentColor}"/>
             <Grid>
-                <Button Classes="edit" HorizontalAlignment="Center" Margin="0,5,0,0" VerticalContentAlignment="Center">
+                <Button Classes="edit" HorizontalAlignment="Center" Margin="0,5,0,0" VerticalContentAlignment="Center" Command="{Binding SaveSettingsCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Path Data="M5,3 L16,3 L21,8 L21,19 A2,2 0 0,1 19,21 L5,21 A2,2 0 0,1 3,19 L3,5 A2,2 0 0,1 5,3 Z 
             M7,3 L7,8 L15,8 L15,3 

@@ -9,10 +9,13 @@ namespace Recallr;
 
 public partial class App : Application
 {
+    public static App Instance { get; private set; }
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        
+        Instance = this;
+
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -26,5 +29,22 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+    
+    public void SetTheme(int theme)
+    {
+        switch (theme)
+        {
+            case 0:
+                RequestedThemeVariant = ThemeVariant.Default;
+                break;
+            case 1:
+                RequestedThemeVariant = ThemeVariant.Dark;
+                break;
+            case 2:
+                RequestedThemeVariant = ThemeVariant.Light;
+                break;
+        }
+            
     }
 }
