@@ -27,7 +27,7 @@
                             <TextBlock Grid.Column="0" Text="OpenAI-Key" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch" PasswordChar="֍" FontSize="8"
-                                     VerticalContentAlignment="Center" Text="{Binding OpenaiKey}"/>
+                                     VerticalContentAlignment="Center" Text="{Binding DraftOpenaiKey}"/>
                         </Grid>
                     </Border>
                     <Border Grid.Row="3" CornerRadius="12"
@@ -40,7 +40,7 @@
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Profil Name" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch" PlaceholderText="Dipsy" Text="{Binding ProfileName}"/>
+                                     HorizontalAlignment="Stretch" PlaceholderText="Dipsy" Text="{Binding DraftProfileName}"/>
                         </Grid>
                     </Border>
                     <Border Grid.Row="4" CornerRadius="12"
@@ -53,7 +53,7 @@
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Profil E-Mail" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch" PlaceholderText="" Text="{Binding ProfileMail}"/>
+                                     HorizontalAlignment="Stretch" PlaceholderText="" Text="{Binding DraftProfileMail}"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -73,7 +73,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Theme" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Theme}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftTheme}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="System" />
                                 <ComboBoxItem Content="Dark" />
@@ -90,7 +90,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Sprache" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Language}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftLanguage}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="Deutsch" />
                                 <ComboBoxItem Content="Englisch" />
@@ -106,7 +106,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
                             <TextBlock Grid.Column="0" Text="Schriftgröße" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding FontSize}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftFontSize}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="14" />
                                 <ComboBoxItem Content="16" />
@@ -133,7 +133,7 @@
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Zusammenfassungsstil" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding SummaryStyle}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftSummaryStyle}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Ausführlich" />
                                 <ComboBoxItem Content="Kurz/Knapp" />
@@ -150,7 +150,7 @@
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Schwierigkeitsgrad" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding Difficulty}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftDifficulty}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Schwer" />
                                 <ComboBoxItem Content="Normal" />
@@ -167,7 +167,7 @@
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="150,*">
                             <TextBlock Grid.Column="0" Text="Fragetyp" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding QuestionType}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftQuestionType}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Multiple Choice Fragen" />
                                 <ComboBoxItem Content="Offene Fragen" />

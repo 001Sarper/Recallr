@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,11 +10,14 @@ using CommunityToolkit.Mvvm.Input;
 using Recallr.Views;
 using Avalonia.Platform.Storage;
 using OpenAI.Chat;
+using Recallr.Models.Settings;
 
 namespace Recallr.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    public SettingsService Settings => SettingsService.Instance;
+    
     [ObservableProperty] private string _lernzettel = "";
 
     private readonly Window _window;
@@ -24,6 +28,9 @@ public partial class MainViewModel : ViewModelBase
     
     [ObservableProperty] private bool _optionArrow1 = false;
     [ObservableProperty] private bool _optionArrow2 = false;
+    
+    [ObservableProperty] private string _profileName = "";
+    [ObservableProperty] private string _profileMail = "";
     
     [ObservableProperty]
     private int _selectedNavIndex = 0;
