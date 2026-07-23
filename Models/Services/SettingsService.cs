@@ -53,13 +53,6 @@ public partial class SettingsService : ObservableObject
         s.SummaryStyle = SummaryStyle;
         s.Difficulty = Difficulty;
         s.QuestionType = QuestionType;
-        
-        string _appData =
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string _configDirectory =
-            Path.Combine(_appData, "Recallr", "Config");
-        string _settingsFilePath =
-            Path.Combine(_configDirectory, "ClientSettings.json");
 
         File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(_settingsManager));
 

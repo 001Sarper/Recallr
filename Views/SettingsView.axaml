@@ -93,7 +93,7 @@
                             <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftLanguage}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="Deutsch" />
-                                <ComboBoxItem Content="Englisch" />
+                                <ComboBoxItem Content="English" />
                             </ComboBox>
                         </Grid>
                     </Border>
