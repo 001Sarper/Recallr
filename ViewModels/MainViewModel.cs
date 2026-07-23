@@ -96,6 +96,7 @@ public partial class MainViewModel : ViewModelBase
     {
         _window = window;
         CurrentPageViewModel = new CourseViewModel();
+        App.Instance.SetTheme(Settings.Theme); 
     }
     
     [RelayCommand]
