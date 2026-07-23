@@ -1,0 +1,85 @@
+using System;
+using System.IO;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Recallr;
+using Recallr.Models.Settings;
+
+public partial class SettingsService : ObservableObject
+{
+    public static SettingsService Instance { get; } = new SettingsService();
+
+    // Account
+    [ObservableProperty] private string _openaiKey = "";
+    [ObservableProperty] private string _profileName = "";
+    [ObservableProperty] private string _profileMail = "";
+
+    // View
+    [ObservableProperty] private int _theme = 0;
+    [ObservableProperty] private int _language = 0;
+    [ObservableProperty] private int _fontSize = 0;
+
+    // AI-Behaviour
+    [ObservableProperty] private int _summaryStyle = 0;
+    [ObservableProperty] private int _difficulty = 0;
+    [ObservableProperty] private int _questionType = 0;
+
+    private SettingsManager _settingsManager;
+    private static string _settingsFilePath;
+
+
+    private SettingsService()
+    {
+        _settingsFilePath =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientSettings.json");
+        
+
+        var json = File.ReadAllText(_settingsFilePath);
+        _settingsManager = JsonSerializer.Deserialize<SettingsManager>(json) ?? new SettingsManager();
+        Load();
+    }
+
+
+    public void Save()
+    {
+        var s = _settingsManager.ClientSettings[0];
+
+        s.OpenaiKey = OpenaiKey;
+        s.ProfileName = ProfileName;
+        s.ProfileMail = ProfileMail;
+        s.Theme = Theme;
+        s.Language = Language;
+        s.FontSize = FontSize;
+        s.SummaryStyle = SummaryStyle;
+        s.Difficulty = Difficulty;
+        s.QuestionType = QuestionType;
+        
+        string _appData =
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string _configDirectory =
+            Path.Combine(_appData, "Recallr", "Config");
+        string _settingsFilePath =
+            Path.Combine(_configDirectory, "ClientSettings.json");
+
+        File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(_settingsManager));
+
+        App.Instance.SetTheme(Theme);
+    }
+
+    public void Load()
+    {
+        var s = _settingsManager.ClientSettings[0];
+
+        OpenaiKey = s.OpenaiKey;
+        ProfileName = s.ProfileName;
+        ProfileMail = s.ProfileMail;
+
+        Theme = s.Theme;
+        Language = s.Language;
+        FontSize = s.FontSize;
+
+        SummaryStyle = s.SummaryStyle;
+        Difficulty = s.Difficulty;
+        QuestionType = s.QuestionType;
+    }
+}

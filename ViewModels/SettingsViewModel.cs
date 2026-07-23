@@ -9,64 +9,60 @@ namespace Recallr.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
-    private static readonly string _appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-    private static readonly string _parentDirectory = Path.Combine(_appData, "Recallr");
-    private static readonly string _configDirectory = Path.Combine(_parentDirectory, "Config");
+    public SettingsService Settings => SettingsService.Instance;
     
-    private static readonly string _settingsFilePath = Path.Combine(_configDirectory, "ClientSettings.json");
-    
-    public static string json = File.ReadAllText(_settingsFilePath);
-    public static SettingsManager? settingsManager = JsonSerializer.Deserialize<SettingsManager>(json) ?? new SettingsManager();
-    
-    //Account
-    [ObservableProperty] private string _openaiKey = "";
-    [ObservableProperty] private string _profileName = "";
-    [ObservableProperty] private string _profileMail = "";
-    
-    //View
-    [ObservableProperty] private int _theme = 0;
-    [ObservableProperty] private int _language = 0;
-    [ObservableProperty] private int _fontSize = 0;
-    
-    //AI-Behaviour
-    [ObservableProperty] private int _summaryStyle = 0;
-    [ObservableProperty] private int _difficulty = 0;
-    [ObservableProperty] private int _questionType = 0;
+    // Account
+    [ObservableProperty] private string _draftOpenaiKey;
+    [ObservableProperty] private string _draftProfileName;
+    [ObservableProperty] private string _draftProfileMail;
+
+    // View
+    [ObservableProperty] private int _draftTheme;
+    [ObservableProperty] private int _draftLanguage;
+    [ObservableProperty] private int _draftFontSize;
+
+    // AI-Behaviour
+    [ObservableProperty] private int _draftSummaryStyle;
+    [ObservableProperty] private int _draftDifficulty;
+    [ObservableProperty] private int _draftQuestionType;
 
     public SettingsViewModel()
     {
         //Load Settings
-        OpenaiKey = settingsManager.ClientSettings[0].OpenaiKey;
-        ProfileName = settingsManager.ClientSettings[0].ProfileName;
-        ProfileMail = settingsManager.ClientSettings[0].ProfileMail;
+        LoadSettings();
         
-        Theme = settingsManager.ClientSettings[0].Theme;
-        Language = settingsManager.ClientSettings[0].Language;
-        FontSize = settingsManager.ClientSettings[0].FontSize;
-        
-        SummaryStyle = settingsManager.ClientSettings[0].SummaryStyle;
-        Difficulty = settingsManager.ClientSettings[0].Difficulty;
-        QuestionType = settingsManager.ClientSettings[0].QuestionType;
-        
+    }
+
+    public void LoadSettings()
+    {
+        DraftOpenaiKey = Settings.OpenaiKey;
+        DraftProfileName = Settings.ProfileName;
+        DraftProfileMail = Settings.ProfileMail;
+
+        DraftTheme = Settings.Theme;
+        DraftLanguage = Settings.Language;
+        DraftFontSize = Settings.FontSize;
+
+        DraftSummaryStyle = Settings.SummaryStyle;
+        DraftDifficulty = Settings.Difficulty;
+        DraftQuestionType = Settings.QuestionType;
     }
 
     [RelayCommand]
     public void SaveSettings()
     {
-        settingsManager.ClientSettings[0].OpenaiKey = OpenaiKey;
-        settingsManager.ClientSettings[0].ProfileName = ProfileName;
-        settingsManager.ClientSettings[0].ProfileMail = ProfileMail;
+        Settings.OpenaiKey = DraftOpenaiKey;
+        Settings.ProfileName = DraftProfileName;
+        Settings.ProfileMail = DraftProfileMail;
 
-        settingsManager.ClientSettings[0].Theme = Theme;
-        settingsManager.ClientSettings[0].Language = Language;
-        settingsManager.ClientSettings[0].FontSize = FontSize;
+        Settings.Theme = DraftTheme;
+        Settings.Language = DraftLanguage;
+        Settings.FontSize = DraftFontSize;
 
-        settingsManager.ClientSettings[0].SummaryStyle = SummaryStyle;
-        settingsManager.ClientSettings[0].Difficulty = Difficulty;
-        settingsManager.ClientSettings[0].QuestionType = QuestionType;
+        Settings.SummaryStyle = DraftSummaryStyle;
+        Settings.Difficulty = DraftDifficulty;
+        Settings.QuestionType = DraftQuestionType;
         
-        File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(settingsManager));
-
-        App.Instance.SetTheme(Theme);
+        Settings.Save();
     }
 }
