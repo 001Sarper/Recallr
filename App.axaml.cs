@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using Recallr.Models.Settings;
 using Recallr.ViewModels;
 using Recallr.Views;
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Recallr.Models.Settings;
+using Recallr.Models.Configuration;
 
 namespace Recallr;
 
@@ -31,6 +31,7 @@ sealed class Program
         Directory.CreateDirectory(configDirectory);
         
         string settingsFilePath = Path.Combine(configDirectory, "ClientSettings.json");
+        string coursesFilePath = Path.Combine(configDirectory, "ClientCourses.json");
         
         string coursesDirectory = Path.Combine(parentDirectory, "Courses");
         Directory.CreateDirectory(coursesDirectory);
@@ -41,7 +42,7 @@ sealed class Program
 
         if (!File.Exists(settingsFilePath))
         {
-            var defaultSettings = new SettingsManager
+            var defaultSettings = new ConfigManager
             {
                 ClientSettings = new List<ClientSettings>
                 {
@@ -53,6 +54,11 @@ sealed class Program
                 }
             };
             File.WriteAllText(settingsFilePath, JsonSerializer.Serialize(defaultSettings, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        if (!File.Exists(coursesFilePath))
+        {
+            File.WriteAllText(coursesFilePath, "{}");
         }
     }
     

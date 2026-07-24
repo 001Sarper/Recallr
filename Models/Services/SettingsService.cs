@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Recallr;
-using Recallr.Models.Settings;
+using Recallr.Models.Configuration;
 
 public partial class SettingsService : ObservableObject
 {
@@ -24,7 +24,7 @@ public partial class SettingsService : ObservableObject
     [ObservableProperty] private int _difficulty = 0;
     [ObservableProperty] private int _questionType = 0;
 
-    private SettingsManager _settingsManager;
+    private ConfigManager _configManager;
     private static string _settingsFilePath;
 
 
@@ -35,14 +35,14 @@ public partial class SettingsService : ObservableObject
         
 
         var json = File.ReadAllText(_settingsFilePath);
-        _settingsManager = JsonSerializer.Deserialize<SettingsManager>(json) ?? new SettingsManager();
+        _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
         Load();
     }
 
 
     public void Save()
     {
-        var s = _settingsManager.ClientSettings[0];
+        var s = _configManager.ClientSettings[0];
 
         s.OpenaiKey = OpenaiKey;
         s.ProfileName = ProfileName;
@@ -54,14 +54,14 @@ public partial class SettingsService : ObservableObject
         s.Difficulty = Difficulty;
         s.QuestionType = QuestionType;
 
-        File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(_settingsManager));
+        File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(_configManager));
 
         App.Instance.SetTheme(Theme);
     }
 
     public void Load()
     {
-        var s = _settingsManager.ClientSettings[0];
+        var s = _configManager.ClientSettings[0];
 
         OpenaiKey = s.OpenaiKey;
         ProfileName = s.ProfileName;

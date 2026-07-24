@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Recallr.Models.Settings;
 
 namespace Recallr.ViewModels;
 

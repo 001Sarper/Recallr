@@ -1,4 +1,4 @@
-namespace Recallr.Models.Settings;
+namespace Recallr.Models.Configuration;
 
 public class ClientSettings
 {
