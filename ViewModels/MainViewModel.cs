@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Input;
 using Recallr.Views;
 using Avalonia.Platform.Storage;
 using OpenAI.Chat;
-using Recallr.Models.Settings;
 
 namespace Recallr.ViewModels;
 

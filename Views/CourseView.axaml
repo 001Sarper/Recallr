@@ -33,11 +33,14 @@
                         BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
-                    <Grid ColumnDefinitions="Auto,*">
-                        <StackPanel Grid.Column="0" Spacing="5" Orientation="Horizontal">
-                            <TextBlock Text="📚" FontSize="20" VerticalAlignment="Center"/>
-                            <TextBlock Text="Mathe" FontSize="14" VerticalAlignment="Center"/>
-                        </StackPanel>
+                    <Grid ColumnDefinitions="*,*">
+                        <Grid Grid.Column="0" ColumnDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0" Text="📚" FontSize="20" VerticalAlignment="Center"/>
+                            <Grid Grid.Column="1" RowDefinitions="*,*" Margin="8,0,0,0">
+                                <TextBlock Grid.Row="0" Text="Mathe" FontSize="14" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Row="1" Text="Herr Mustermann" FontSize="10" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryColor}"/>
+                            </Grid>
+                        </Grid>
                         <StackPanel Grid.Column="1" Spacing="5" Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button Classes="secondary" Width="36" Height="36" CornerRadius="18" Padding="0">
                                 <Path Data="M6,2 L12,8 L6,14"
