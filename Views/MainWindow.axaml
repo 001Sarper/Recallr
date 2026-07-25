@@ -112,6 +112,22 @@
             <!-- Container für alle 3 Panels (übereinander, per IsVisible umschaltbar) -->
             <Grid Grid.Row="1">
                 <ContentControl Content="{Binding CurrentPageViewModel}"/>
+                
+                <!-- Layer 2: Overlay, nur sichtbar wenn ein Dialog offen ist -->
+                <Grid IsVisible="{Binding Overlay.IsOverlayVisible}">
+                    <!-- Abdunkelung -->
+                    <Border Background="#AA000000" />
+
+                    <!-- Der eigentliche Dialoginhalt -->
+                    <Border
+                            CornerRadius="12"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                        <ContentControl Content="{Binding Overlay.CurrentDialog}" 
+                                        Width="400"
+                                        Height="200"/>
+                    </Border>
+                </Grid>
             </Grid>
             
             <!-- <TextBlock Grid.Row="0" Text="Datei hochladen und zusammenfassen" Margin="10"/>

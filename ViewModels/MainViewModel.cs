@@ -10,12 +10,14 @@ using CommunityToolkit.Mvvm.Input;
 using Recallr.Views;
 using Avalonia.Platform.Storage;
 using OpenAI.Chat;
+using Recallr.Models.Services;
 
 namespace Recallr.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
     public SettingsService Settings => SettingsService.Instance;
+    public OverlayService Overlay => OverlayService.Instance;
     
     [ObservableProperty] private string _lernzettel = "";
 
