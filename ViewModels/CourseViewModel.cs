@@ -60,7 +60,7 @@ public partial class CourseViewModel : ViewModelBase
     [RelayCommand]
     private void OpenCourse(ClientCourses course)
     {
-        
+        OverlayService.ShowLearningsheetView();
     }
 
     [RelayCommand]
