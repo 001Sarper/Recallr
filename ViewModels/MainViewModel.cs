@@ -135,11 +135,13 @@ public partial class MainViewModel : ViewModelBase
             case 0:
                 ClearBreadcrumbs();
                 CurrentOption = "Meine Fächer";
+                if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
                 ShowCourseView();
                 break;
             case 1:
                 ClearBreadcrumbs();
                 CurrentOption = "Einstellungen";
+                if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
                 ShowSettingsView();
                 break;
         }
