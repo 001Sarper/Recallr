@@ -18,6 +18,8 @@ public partial class CourseViewModel : ViewModelBase
     private static string _coursesConfigPath;
     private ConfigManager _configManager;
     
+    [ObservableProperty] private string _searchText;
+    
     
     public CourseViewModel()
     {
@@ -27,6 +29,23 @@ public partial class CourseViewModel : ViewModelBase
         
         var json = File.ReadAllText(_coursesConfigPath);
         _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            CoursesService.LoadCourses();
+        }
+        else
+        {
+            var hitCourses = _configManager.ClientCourses.Where(c => c.Name.ToLower().StartsWith(value.ToLower()));
+            CoursesService.Courses.Clear();
+            foreach (var course in hitCourses)
+            {
+                CoursesService.Courses.Add(course);
+            }
+        }
     }
     
     [RelayCommand]
