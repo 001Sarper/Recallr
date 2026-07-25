@@ -14,4 +14,10 @@ public partial class OverlayService : ObservableObject
     
     [RelayCommand]
     private void ShowNewCourseOverlay() => CurrentDialog = new NewCourseOverlayViewModel();
+
+    public void CloseOverlay()
+    {
+        CurrentDialog = null;
+        IsOverlayVisible = false;
+    }
 }
