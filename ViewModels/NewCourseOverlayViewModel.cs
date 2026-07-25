@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,9 +11,8 @@ namespace Recallr.ViewModels;
 
 public partial class NewCourseOverlayViewModel : ViewModelBase
 {
-    [ObservableProperty] private int _courseEmoji = 0;
-    [ObservableProperty] private string _courseTeacher;
-    [ObservableProperty] private string _courseName;
+    public OverlayService OverlayService => OverlayService.Instance;
+    
     
     private static string _coursesDirectoryPath;
     private static string _coursesConfigPath;
@@ -32,26 +32,45 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
     [RelayCommand]
     private void CloseOverlay()
     {
-        OverlayService.Instance.CloseOverlay();
+        OverlayService.ClearData();
+        OverlayService.CloseOverlay();
     }
     
     [RelayCommand]
     private void CreateCourse()
     {
-        var newCourse = new ClientCourses
+        if (!OverlayService.IsOverlayEditMode)
         {
-            Icon = CourseEmoji, ID = Guid.NewGuid(), Name = CourseName, TeacherName = CourseTeacher
-        };
+            var newCourse = new ClientCourses
+            {
+                Icon = OverlayService.CourseEmoji, ID = Guid.NewGuid(), Name = OverlayService.CourseName, TeacherName = OverlayService.CourseTeacher
+            };
         
-        _configManager.ClientCourses.Add(newCourse);
-        CoursesService.Instance.Courses.Add(newCourse);
+            _configManager.ClientCourses.Add(newCourse);
+            CoursesService.Instance.Courses.Add(newCourse);
         
-        SaveConfig();
+            SaveConfig();
+            OverlayService.ClearData();
         
-        var courseFolder = Path.Combine(_coursesDirectoryPath, newCourse.ID.ToString());
-        Directory.CreateDirectory(courseFolder);
+            var courseFolder = Path.Combine(_coursesDirectoryPath, newCourse.ID.ToString());
+            Directory.CreateDirectory(courseFolder);
         
-        OverlayService.Instance.CloseOverlay();
+            OverlayService.Instance.CloseOverlay();
+        }
+        else
+        {
+            var existingCourse = _configManager.ClientCourses
+                .FirstOrDefault(c => c.ID == OverlayService.course.ID);
+            
+            existingCourse.Icon = OverlayService.Instance.CourseEmoji;
+            existingCourse.Name = OverlayService.Instance.CourseName;
+            existingCourse.TeacherName = OverlayService.Instance.CourseTeacher;
+
+            SaveConfig();
+            OverlayService.ClearData();
+            
+            OverlayService.Instance.CloseOverlay();
+        }
     }
     
     private void SaveConfig()
