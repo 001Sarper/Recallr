@@ -36,8 +36,6 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private int _selectedNavIndex = 0;
     
-    [ObservableProperty]
-    private ViewModelBase currentPageViewModel;
 
     [ObservableProperty] private List<string> _paths = new();
 
@@ -96,18 +94,10 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(Window window)
     {
         _window = window;
-        CurrentPageViewModel = new CourseViewModel();
+        Overlay.CurrentPageViewModel = new CourseViewModel();
         App.Instance.SetTheme(Settings.Theme); 
     }
     
-    [RelayCommand]
-    private void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
-
-    [RelayCommand]
-    private void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
-    
-    [RelayCommand]
-    private void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
 
     [RelayCommand]
     private async Task PickFileAsync()
@@ -136,13 +126,13 @@ public partial class MainViewModel : ViewModelBase
                 ClearBreadcrumbs();
                 CurrentOption = "Meine Fächer";
                 if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
-                ShowCourseView();
+                Overlay.ShowCourseView();
                 break;
             case 1:
                 ClearBreadcrumbs();
                 CurrentOption = "Einstellungen";
                 if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
-                ShowSettingsView();
+                Overlay.ShowSettingsView();
                 break;
         }
     }

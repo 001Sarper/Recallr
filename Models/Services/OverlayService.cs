@@ -19,11 +19,23 @@ public partial class OverlayService : ObservableObject
 
     [ObservableProperty] private bool _isOverlayEditMode = false;
     [ObservableProperty] private string _buttonContent = "";
+    
+    [ObservableProperty]
+    private ViewModelBase currentPageViewModel;
 
     public ClientCourses course;
     
     [RelayCommand]
     private void ShowNewCourseOverlay() => CurrentDialog = new NewCourseOverlayViewModel();
+    
+    
+    public void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
+
+    
+    public void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
+    
+    
+    public void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
 
     public void CloseOverlay()
     {

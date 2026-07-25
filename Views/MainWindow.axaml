@@ -111,7 +111,7 @@
 
             <!-- Container für alle 3 Panels (übereinander, per IsVisible umschaltbar) -->
             <Grid Grid.Row="1">
-                <ContentControl Content="{Binding CurrentPageViewModel}"/>
+                <ContentControl Content="{Binding Overlay.CurrentPageViewModel}"/>
                 
                 <!-- Layer 2: Overlay, nur sichtbar wenn ein Dialog offen ist -->
                 <Grid IsVisible="{Binding Overlay.IsOverlayVisible}" >
