@@ -47,7 +47,7 @@
                                 <Setter Property="Margin" Value="0,2" />
                             </Style>
                             <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
-                                <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+                                <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
                             </Style>
                         </ListBox.Styles>
 

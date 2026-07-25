@@ -47,6 +47,7 @@ public partial class CoursesService : ObservableObject
         var configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
 
         Courses = new ObservableCollection<ClientCourses>(configManager.ClientCourses);
+        
     }
     
     

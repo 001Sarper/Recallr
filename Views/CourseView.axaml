@@ -9,22 +9,20 @@
              x:DataType="vm:CourseViewModel">
     <Grid RowDefinitions="45,Auto,*">
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-            <TextBox CornerRadius="12" Grid.Column="0" Height="36" Margin="10,5,5,0" HorizontalAlignment="Left"
-                     VerticalAlignment="Center" Width="300" PlaceholderText="Nach Fach suchen...">
-
-            </TextBox>
+            <TextBox CornerRadius="12" Grid.Column="0" Height="36" Margin="10,5,5,0" HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"  PlaceholderText="Nach Fach suchen..." Text="{Binding SearchText}"/>
             <Button Margin="0,5,10,0" Height="35" Classes="primary" Grid.Row="0" Grid.Column="1"
                     HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowOverlayCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Path Data="M8,2 L8,14 M2,8 L14,8"
-                          Stroke="{DynamicResource ButtonPrimaryForeground}"
+                          Stroke="{DynamicResource TextPrimaryColor}"
                           StrokeThickness="2"
                           StrokeLineCap="Round"
                           Width="16" Height="16"
                           Stretch="None"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
-                    <TextBlock Text="Fach hinzufügen" FontSize="13" VerticalAlignment="Center" />
+                    <TextBlock Text="Fach hinzufügen" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryColor}"/>
                 </StackPanel>
             </Button>
         </Grid>
