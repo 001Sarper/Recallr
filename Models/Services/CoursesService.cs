@@ -25,7 +25,7 @@ public partial class CoursesService : ObservableObject
     private ObservableCollection<ClientCourses> courses = new();
     
     
-    private ConfigManager _configManager;
+    public static ConfigManager configManager;
     private static string _coursesFilePath;
     
     public CoursesService()
@@ -33,8 +33,9 @@ public partial class CoursesService : ObservableObject
         _coursesFilePath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
         
+        
         var json = File.ReadAllText(_coursesFilePath);
-        _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
+        configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
         
     }
     
@@ -44,10 +45,17 @@ public partial class CoursesService : ObservableObject
             return;
 
         var json = File.ReadAllText(_configPath);
-        var configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
+        configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
 
         Courses = new ObservableCollection<ClientCourses>(configManager.ClientCourses);
         
+    }
+    
+    public static void SaveConfig()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        var json = JsonSerializer.Serialize(configManager, options);
+        File.WriteAllText(_coursesFilePath, json);
     }
     
     
