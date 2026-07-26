@@ -15,7 +15,6 @@ public partial class CourseViewModel : ViewModelBase
     public CoursesService CoursesService => CoursesService.Instance;
     public OverlayService OverlayService => OverlayService.Instance;
     
-    private static string _coursesConfigPath;
     private static string _coursesDirectory;
     
     [ObservableProperty] private string _searchText;
@@ -24,8 +23,6 @@ public partial class CourseViewModel : ViewModelBase
     public CourseViewModel()
     {
         CoursesService.LoadCourses();
-        _coursesConfigPath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
         _coursesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
         
     }
@@ -59,6 +56,7 @@ public partial class CourseViewModel : ViewModelBase
     [RelayCommand]
     private void OpenCourse(ClientCourses course)
     {
+        CoursesService.currentCourseID = course.ID.ToString();
         OverlayService.ShowLearningsheetView();
     }
 

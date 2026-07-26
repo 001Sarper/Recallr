@@ -49,6 +49,17 @@
                     <SolidColorBrush x:Key="MasteredColor">#3FB950</SolidColorBrush>
                     <SolidColorBrush x:Key="LearningColor">#D29922</SolidColorBrush>
                     <SolidColorBrush x:Key="UnseenColor">#484F58</SolidColorBrush>
+                    
+                    <SolidColorBrush x:Key="NavBackgroundColor">#161B22</SolidColorBrush>      <!-- = SurfaceColor, Container-Hintergrund -->
+                    <SolidColorBrush x:Key="NavBorderColor">#30363D</SolidColorBrush>          <!-- = BorderColor, Trennlinie zum Content -->
+
+                    <SolidColorBrush x:Key="NavItemColor">#8B949E</SolidColorBrush>            <!-- inaktiver Tab-Text/Icon -->
+                    <SolidColorBrush x:Key="NavItemHoverColor">#E6EDF3</SolidColorBrush>       <!-- Text beim Hover -->
+                    <SolidColorBrush x:Key="NavItemHoverBackgroundColor">#21262D</SolidColorBrush> <!-- leichtes Hover-Highlight -->
+
+                    <SolidColorBrush x:Key="NavItemActiveColor">#E6EDF3</SolidColorBrush>      <!-- aktiver Tab-Text -->
+                    <SolidColorBrush x:Key="NavItemActiveBackgroundColor">#1F2937</SolidColorBrush> <!-- Hintergrund des aktiven Tabs -->
+                    <SolidColorBrush x:Key="NavIndicatorColor">#2F81F7</SolidColorBrush>       <!-- = AccentColor, Unterstrich/Marker -->
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Light">
@@ -68,6 +79,17 @@
                     <SolidColorBrush x:Key="MasteredColor">#1A7F37</SolidColorBrush>
                     <SolidColorBrush x:Key="LearningColor">#9A6700</SolidColorBrush>
                     <SolidColorBrush x:Key="UnseenColor">#8C959F</SolidColorBrush>
+                    
+                    <SolidColorBrush x:Key="NavBackgroundColor">#FFFFFF</SolidColorBrush>      <!-- = SurfaceColor -->
+                    <SolidColorBrush x:Key="NavBorderColor">#D0D7DE</SolidColorBrush>          <!-- = BorderColor -->
+
+                    <SolidColorBrush x:Key="NavItemColor">#57606A</SolidColorBrush>            <!-- inaktiver Tab-Text/Icon -->
+                    <SolidColorBrush x:Key="NavItemHoverColor">#0D1117</SolidColorBrush>
+                    <SolidColorBrush x:Key="NavItemHoverBackgroundColor">#F0F3F6</SolidColorBrush>
+
+                    <SolidColorBrush x:Key="NavItemActiveColor">#0D1117</SolidColorBrush>
+                    <SolidColorBrush x:Key="NavItemActiveBackgroundColor">#E1EBFA</SolidColorBrush>
+                    <SolidColorBrush x:Key="NavIndicatorColor">#0969DA</SolidColorBrush>       <!-- = AccentColor -->
                 </ResourceDictionary>
 
             </ResourceDictionary.ThemeDictionaries>
