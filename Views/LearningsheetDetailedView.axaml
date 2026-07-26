@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Recallr.Views.LearningsheetDetailedView">
+    <Grid Margin="10,10,10,0" RowDefinitions="Auto,*">
+        <Border CornerRadius="12"
+                Padding="16,10"
+                Background="{DynamicResource NavBackgroundColor}"
+                BorderBrush="{DynamicResource NavBorderColor}"
+                BorderThickness="1"
+                HorizontalAlignment="Center">
+
+            <Border.Styles>
+                <Style Selector="RadioButton.navItem">
+                    <Setter Property="Width" Value="120"/>
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource NavItemColor}" />
+                    <Setter Property="Padding" Value="4,4" />
+                    <Setter Property="CornerRadius" Value="8" />
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="FontWeight" Value="Medium" />
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Padding="{TemplateBinding Padding}">
+                                <StackPanel Orientation="Vertical" Spacing="4" HorizontalAlignment="Center">
+                                    <Path Data="{TemplateBinding Tag}"
+                                          Stroke="{TemplateBinding Foreground}"
+                                          StrokeThickness="2"
+                                          StrokeLineCap="Round"
+                                          StrokeJoin="Round"
+                                          Fill="Transparent"
+                                          Width="20" Height="20"
+                                          Stretch="Uniform" />
+                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                      Foreground="{TemplateBinding Foreground}"
+                                                      HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+
+                <!-- Hover -->
+                <Style Selector="RadioButton.navItem:pointerover /template/ Border">
+                    <Setter Property="Background" Value="{DynamicResource NavItemHoverBackgroundColor}" />
+                </Style>
+                <Style Selector="RadioButton.navItem:pointerover">
+                    <Setter Property="Foreground" Value="{DynamicResource NavItemHoverColor}" />
+                </Style>
+
+                <!-- Aktiv / Selected -->
+                <Style Selector="RadioButton.navItem:checked /template/ Border">
+                    <Setter Property="Background" Value="{DynamicResource NavItemActiveBackgroundColor}" />
+                </Style>
+                <Style Selector="RadioButton.navItem:checked">
+                    <Setter Property="Foreground" Value="{DynamicResource NavItemActiveColor}" />
+                </Style>
+            </Border.Styles>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <RadioButton Classes="navItem" GroupName="MainNav"
+                             Content="Dateien"
+                             Tag="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8
+                             M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z
+                             M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" />
+                <RadioButton Classes="navItem" GroupName="MainNav"
+                             Content="Lernzettel"
+                             Tag="M8 2v4
+                             M12 2v4
+                             M16 2v4
+                             M6,4 h12 a2,2 0 0 1 2,2 v14 a2,2 0 0 1 -2,2 h-12 a2,2 0 0 1 -2,-2 v-14 a2,2 0 0 1 2,-2 z
+                             M8 10h6
+                             M8 14h8
+                             M8 18h5" />
+                <RadioButton Classes="navItem" GroupName="MainNav"
+                             Content="Chat"
+                             Tag="M12 6V2H8
+                             M15 11v2
+                             M2 12h2
+                             M20 12h2
+                             M20 16a2 2 0 0 1-2 2H8.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 4 20.286V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z
+                             M9 11v2" />
+                <RadioButton Classes="navItem" GroupName="MainNav"
+                             Content="Wissensstand"
+                             Tag="M3 3v16a2 2 0 0 0 2 2h16
+                             M18 17V9
+                             M13 17V5
+                             M8 17v-3" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

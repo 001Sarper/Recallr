@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,19 +14,16 @@ public partial class CoursesService : ObservableObject
 {
     public static CoursesService Instance { get; } = new CoursesService();
     
-    [ObservableProperty] private int _id;
-    [ObservableProperty] private string _name;
-    [ObservableProperty] private string _description;
-    [ObservableProperty] private string _teacherName;
-    [ObservableProperty] private Learnsheet _learnsheet;
-    
     private static readonly string _configPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
 
     [ObservableProperty]
     private ObservableCollection<ClientCourses> courses = new();
     
+    [ObservableProperty]
+    private ObservableCollection<Learnsheet> learnsheets = new();
     
+    public static string currentCourseID = "";
     public static ConfigManager configManager;
     private static string _coursesFilePath;
     
@@ -41,6 +40,8 @@ public partial class CoursesService : ObservableObject
     
     public void LoadCourses()
     {
+        Courses.Clear();
+        
         if (!File.Exists(_configPath))
             return;
 
@@ -49,6 +50,21 @@ public partial class CoursesService : ObservableObject
 
         Courses = new ObservableCollection<ClientCourses>(configManager.ClientCourses);
         
+    }
+    
+    public void LoadLearnsheets(string courseID)
+    {
+        Learnsheets.Clear();
+        
+        if (!File.Exists(_configPath))
+            return;
+
+        var json = File.ReadAllText(_configPath);
+        configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
+
+        var course = configManager.ClientCourses.FirstOrDefault(course => course.ID.ToString() == courseID);
+        
+        Learnsheets = new ObservableCollection<Learnsheet>(course?.learnsheets ?? new List<Learnsheet>());
     }
     
     public static void SaveConfig()
