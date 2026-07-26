@@ -16,7 +16,6 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
     
     private static string _coursesDirectoryPath;
     private static string _coursesConfigPath;
-    private ConfigManager _configManager;
 
     public NewCourseOverlayViewModel()
     {
@@ -25,8 +24,6 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
         _coursesConfigPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
         
-        var json = File.ReadAllText(_coursesConfigPath);
-        _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
     }
     
     [RelayCommand]
@@ -46,10 +43,10 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
                 Icon = OverlayService.CourseEmoji, ID = Guid.NewGuid(), Name = OverlayService.CourseName, TeacherName = OverlayService.CourseTeacher
             };
         
-            _configManager.ClientCourses.Add(newCourse);
-            CoursesService.Instance.Courses.Add(newCourse);
-        
-            SaveConfig();
+            CoursesService.configManager.ClientCourses.Add(newCourse);
+            CoursesService.SaveConfig();
+            CoursesService.Instance.LoadCourses();
+            
             OverlayService.ClearData();
         
             var courseFolder = Path.Combine(_coursesDirectoryPath, newCourse.ID.ToString());
@@ -59,24 +56,18 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
         }
         else
         {
-            var existingCourse = _configManager.ClientCourses
+            var existingCourse = CoursesService.configManager.ClientCourses
                 .FirstOrDefault(c => c.ID == OverlayService.course.ID);
             
             existingCourse.Icon = OverlayService.Instance.CourseEmoji;
             existingCourse.Name = OverlayService.Instance.CourseName;
             existingCourse.TeacherName = OverlayService.Instance.CourseTeacher;
 
-            SaveConfig();
+            CoursesService.SaveConfig();
+            CoursesService.Instance.LoadCourses();
             OverlayService.ClearData();
             
             OverlayService.Instance.CloseOverlay();
         }
-    }
-    
-    private void SaveConfig()
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var json = JsonSerializer.Serialize(_configManager, options);
-        File.WriteAllText(_coursesConfigPath, json);
     }
 }

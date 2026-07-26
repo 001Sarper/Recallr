@@ -16,7 +16,7 @@ public partial class CourseViewModel : ViewModelBase
     public OverlayService OverlayService => OverlayService.Instance;
     
     private static string _coursesConfigPath;
-    private ConfigManager _configManager;
+    private static string _coursesDirectory;
     
     [ObservableProperty] private string _searchText;
     
@@ -26,9 +26,8 @@ public partial class CourseViewModel : ViewModelBase
         CoursesService.LoadCourses();
         _coursesConfigPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
+        _coursesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
         
-        var json = File.ReadAllText(_coursesConfigPath);
-        _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
     }
 
     partial void OnSearchTextChanged(string value)
@@ -39,7 +38,7 @@ public partial class CourseViewModel : ViewModelBase
         }
         else
         {
-            var hitCourses = _configManager.ClientCourses.Where(c => c.Name.ToLower().StartsWith(value.ToLower()));
+            var hitCourses = CoursesService.configManager.ClientCourses.Where(c => c.Name.ToLower().StartsWith(value.ToLower()));
             CoursesService.Courses.Clear();
             foreach (var course in hitCourses)
             {
@@ -79,22 +78,29 @@ public partial class CourseViewModel : ViewModelBase
     [RelayCommand]
     private void DeleteCourse(ClientCourses course)
     {
-        var configEntry = _configManager.ClientCourses
+        var configEntry = CoursesService.configManager.ClientCourses
             .FirstOrDefault(c => c.ID == course.ID);
-    
-        if (configEntry != null)
-            _configManager.ClientCourses.Remove(configEntry);
 
-        CoursesService.Courses.Remove(course);
+        if (configEntry != null)
+        {
+            var path = Path.Combine(_coursesDirectory, course.ID.ToString());
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                CoursesService.configManager.ClientCourses.Remove(configEntry);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
         
-        SaveConfig();
+        CoursesService.SaveConfig();
+        CoursesService.LoadCourses();
         
     }
     
-    private void SaveConfig()
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var json = JsonSerializer.Serialize(_configManager, options);
-        File.WriteAllText(_coursesConfigPath, json);
-    }
 }
