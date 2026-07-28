@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Recallr.ViewModels;
 using Recallr.Views;
+using LiveChartsCore; // <-- WICHTIG
+using LiveChartsCore.SkiaSharpView; // <-- WICHTIG
 
 namespace Recallr;
 
@@ -20,6 +22,13 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        LiveCharts.Configure(config => 
+                config
+                    .AddSkiaSharp()
+                    .AddDefaultMappers()
+                    .AddDarkTheme() // oder AddLightTheme()
+        );
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindow = new MainWindow();
