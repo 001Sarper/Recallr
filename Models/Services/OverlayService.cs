@@ -30,12 +30,9 @@ public partial class OverlayService : ObservableObject
     
     
     public void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
-
-    
     public void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
-    
-    
     public void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
+    public void ShowLearningsheetDetailedView() => CurrentPageViewModel = new LearningsheetDetailedViewModel();
 
     public void CloseOverlay()
     {
