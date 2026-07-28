@@ -46,12 +46,24 @@
                     <SolidColorBrush x:Key="AccentColor">#2F81F7</SolidColorBrush>
 
                     <!-- Wissensstand / Lernfortschritt -->
-                    <SolidColorBrush x:Key="MasteredColor">#3FB950</SolidColorBrush>
-                    <SolidColorBrush x:Key="LearningColor">#D29922</SolidColorBrush>
-                    <SolidColorBrush x:Key="UnseenColor">#484F58</SolidColorBrush>
+                    <!-- 1. Fortschritt (Line Chart) -->
+                    <SolidColorBrush x:Key="CardProgressBackground" Color="#F8F9FA"/>
+                    <!-- 2. Activity (Heatmap) -->
+                    <SolidColorBrush x:Key="CardActivityBackground" Color="#FFFFFF"/>
+                    <!-- 3. Topics (Bar Chart) -->
+                    <SolidColorBrush x:Key="CardTopicsBackground" Color="#F8F9FA"/>
+                    <!-- 4. Status (Donut Chart) -->
+                    <SolidColorBrush x:Key="CardStatusBackground" Color="#FFFFFF"/>
                     
                     <SolidColorBrush x:Key="NavBackgroundColor">#161B22</SolidColorBrush>      <!-- = SurfaceColor, Container-Hintergrund -->
                     <SolidColorBrush x:Key="NavBorderColor">#30363D</SolidColorBrush>          <!-- = BorderColor, Trennlinie zum Content -->
+                    
+                    <SolidColorBrush x:Key="ChatAiBackground" Color="#1F242E"/>      <!-- Leicht heller als Nav BG für Kontrast -->
+                    <SolidColorBrush x:Key="ChatAiBorder" Color="#30363D"/>          <!-- Passt zu NavBorderColor -->
+
+                    <!-- User Bubble -->
+                    <SolidColorBrush x:Key="ChatUserBackground" Color="#238636"/>    <!-- Grün-Akzent (GitHub-Style) -->
+                    <SolidColorBrush x:Key="ChatUserBorder" Color="#3FB950"/> 
 
                     <SolidColorBrush x:Key="NavItemColor">#8B949E</SolidColorBrush>            <!-- inaktiver Tab-Text/Icon -->
                     <SolidColorBrush x:Key="NavItemHoverColor">#E6EDF3</SolidColorBrush>       <!-- Text beim Hover -->
@@ -76,12 +88,24 @@
                     <SolidColorBrush x:Key="AccentColor">#0969DA</SolidColorBrush>
 
                     <!-- Wissensstand / Lernfortschritt -->
-                    <SolidColorBrush x:Key="MasteredColor">#1A7F37</SolidColorBrush>
-                    <SolidColorBrush x:Key="LearningColor">#9A6700</SolidColorBrush>
-                    <SolidColorBrush x:Key="UnseenColor">#8C959F</SolidColorBrush>
+                    <!-- 1. Fortschritt (Line Chart) -->
+                    <SolidColorBrush x:Key="CardProgressBackground" Color="#F8F9FA"/>
+                    <!-- 2. Activity (Heatmap) -->
+                    <SolidColorBrush x:Key="CardActivityBackground" Color="#FFFFFF"/>
+                    <!-- 3. Topics (Bar Chart) -->
+                    <SolidColorBrush x:Key="CardTopicsBackground" Color="#F8F9FA"/>
+                    <!-- 4. Status (Donut Chart) -->
+                    <SolidColorBrush x:Key="CardStatusBackground" Color="#FFFFFF"/>
                     
                     <SolidColorBrush x:Key="NavBackgroundColor">#FFFFFF</SolidColorBrush>      <!-- = SurfaceColor -->
                     <SolidColorBrush x:Key="NavBorderColor">#D0D7DE</SolidColorBrush>          <!-- = BorderColor -->
+                    
+                    <SolidColorBrush x:Key="ChatAiBackground" Color="#F6F8FA"/>     <!-- Helles Grau (ähnlich GitHub Light) -->
+                    <SolidColorBrush x:Key="ChatAiBorder" Color="#D0D7DE"/>          <!-- Subtile Border -->
+
+                    <!-- User Bubble -->
+                    <SolidColorBrush x:Key="ChatUserBackground" Color="#238636"/>    <!-- Grün-Akzent (GitHub-Style) -->
+                    <SolidColorBrush x:Key="ChatUserBorder" Color="#3FB950"/> 
 
                     <SolidColorBrush x:Key="NavItemColor">#57606A</SolidColorBrush>            <!-- inaktiver Tab-Text/Icon -->
                     <SolidColorBrush x:Key="NavItemHoverColor">#0D1117</SolidColorBrush>
