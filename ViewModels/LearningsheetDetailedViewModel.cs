@@ -64,6 +64,8 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     
     [ObservableProperty] private double[] _values3  = [20, 50, 40, 20, 40, 30, 50, 20, 50, 40];
     [ObservableProperty] private double[] _values4  = [3, 10, 5, 3, 7, 3, 8];
+
+    
     
     [ObservableProperty] private PieData[] _data  = [
         new("Mary", 10),
@@ -72,18 +74,11 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         new("Bob", 40),
         new("Charlie", 50)
     ];
+    
     [ObservableProperty] private double _value = 30;
-
-    public LearningsheetDetailedViewModel(string learningsheetID)
-    {
-        
-    }
 
 
 }
-
-
-
 
 public class PieData(string name, double value)
 {
