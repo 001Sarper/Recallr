@@ -15,14 +15,11 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
     
     
     private static string _coursesDirectoryPath;
-    private static string _coursesConfigPath;
 
     public NewCourseOverlayViewModel()
     {
         _coursesDirectoryPath = 
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
-        _coursesConfigPath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
         
     }
     

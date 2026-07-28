@@ -31,4 +31,8 @@
     <PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
     <PackageReference Include="OpenAI" Version="2.12.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ namespace Recallr.ViewModels;
 public partial class LearningsheetViewModel : ViewModelBase
 {
     public CoursesService CoursesService => CoursesService.Instance;
+    public OverlayService OverlayService => OverlayService.Instance;
     
     [ObservableProperty] private string _searchText;
 
@@ -34,6 +35,12 @@ public partial class LearningsheetViewModel : ViewModelBase
                 CoursesService.Learnsheets.Add(learnsheet);
             }
         }
+    }
+
+    [RelayCommand]
+    private void CreateLearnsheet()
+    {
+        OverlayService.ShowLearningsheetDetailedView();
     }
 
     [RelayCommand]

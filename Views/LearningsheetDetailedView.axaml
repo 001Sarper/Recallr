@@ -2,8 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Recallr.ViewModels"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Recallr.Views.LearningsheetDetailedView">
+             x:Class="Recallr.Views.LearningsheetDetailedView"
+             x:DataType="vm:LearningsheetDetailedViewModel">
     <Grid Margin="10,10,10,0" RowDefinitions="Auto,*">
         <Border CornerRadius="12"
                 Padding="16,10"
@@ -14,12 +17,13 @@
 
             <Border.Styles>
                 <Style Selector="RadioButton.navItem">
-                    <Setter Property="Width" Value="120"/>
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="{DynamicResource NavItemColor}" />
-                    <Setter Property="Padding" Value="4,4" />
+                    <Setter Property="Padding" Value="4,4"/>
+                    <Setter Property="Margin" Value="4,4"/>
+                    <Setter Property="Width" Value="65"/>
                     <Setter Property="CornerRadius" Value="8" />
-                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="FontSize" Value="11" />
                     <Setter Property="FontWeight" Value="Medium" />
                     <Setter Property="Cursor" Value="Hand" />
                     <Setter Property="Template">
@@ -27,14 +31,14 @@
                             <Border Background="{TemplateBinding Background}"
                                     CornerRadius="{TemplateBinding CornerRadius}"
                                     Padding="{TemplateBinding Padding}">
-                                <StackPanel Orientation="Vertical" Spacing="4" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Vertical" Spacing="3" HorizontalAlignment="Center">
                                     <Path Data="{TemplateBinding Tag}"
                                           Stroke="{TemplateBinding Foreground}"
                                           StrokeThickness="2"
                                           StrokeLineCap="Round"
                                           StrokeJoin="Round"
                                           Fill="Transparent"
-                                          Width="20" Height="20"
+                                          Width="16" Height="16"
                                           Stretch="Uniform" />
                                     <ContentPresenter Content="{TemplateBinding Content}"
                                                       Foreground="{TemplateBinding Foreground}"
@@ -65,11 +69,13 @@
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <RadioButton Classes="navItem" GroupName="MainNav"
                              Content="Dateien"
+                             IsChecked="{Binding IsFilesSelected}"
                              Tag="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8
                              M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z
                              M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" />
                 <RadioButton Classes="navItem" GroupName="MainNav"
                              Content="Lernzettel"
+                             IsChecked="{Binding IsSummarySelected}"
                              Tag="M8 2v4
                              M12 2v4
                              M16 2v4
@@ -79,6 +85,7 @@
                              M8 18h5" />
                 <RadioButton Classes="navItem" GroupName="MainNav"
                              Content="Chat"
+                             IsChecked="{Binding IsChatSelected}"
                              Tag="M12 6V2H8
                              M15 11v2
                              M2 12h2
@@ -86,12 +93,134 @@
                              M20 16a2 2 0 0 1-2 2H8.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 4 20.286V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z
                              M9 11v2" />
                 <RadioButton Classes="navItem" GroupName="MainNav"
-                             Content="Wissensstand"
+                             Content="Wissen"
+                             IsChecked="{Binding IsKnownledgeSelected}"
                              Tag="M3 3v16a2 2 0 0 0 2 2h16
                              M18 17V9
                              M13 17V5
                              M8 17v-3" />
             </StackPanel>
         </Border>
+        
+        <Grid Grid.Row="1" Margin="0,10">
+            <!-- Files View -->
+            <Grid IsVisible="{Binding IsFilesSelected}" ColumnDefinitions="*,*">
+                <Border Grid.Column="0"
+                        CornerRadius="12"
+                        Padding="16,10"
+                        Background="{DynamicResource SurfaceColor}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,5,0">
+                    <Grid RowDefinitions="*,Auto">
+                        <StackPanel Grid.Row="0">
+                            <Border CornerRadius="5"
+                                    Padding="16,10"
+                                    Background="{DynamicResource SurfaceColor}"
+                                    BorderBrush="{DynamicResource BorderColor}"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Stretch">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Text="Bionik.pdf ~ 20 Seiten erfasst" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="1" Classes="delete-solid" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                        <Path Data="M10 11v6
+                                    M14 11v6
+                                    M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6
+                                    M3 6h18
+                                    M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                              Stroke="{DynamicResource ButtonDeleteBackground}"
+                                              StrokeThickness="2"
+                                              StrokeLineCap="Round"
+                                              StrokeJoin="Round"
+                                              Fill="Transparent"
+                                              Width="14" Height="14"
+                                              Stretch="Uniform"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                        <Button Grid.Row="1" Classes="primary">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Path Data="
+                                    M11.35 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5.35
+                                    M14 2v5a1 1 0 0 0 1 1h5
+                                    M14 19h6
+                                    M17 16v6"
+                                      Stroke="{DynamicResource ButtonEditBackground}"
+                                      StrokeThickness="2"
+                                      StrokeLineCap="Round"
+                                      StrokeJoin="Round"
+                                      Fill="Transparent"
+                                      Width="14" Height="14"
+                                      Stretch="Uniform"/>
+                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonEditBackground}"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1"
+                        CornerRadius="12"
+                        Padding="16,10"
+                        Background="{DynamicResource SurfaceColor}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1"
+                        HorizontalAlignment="Stretch"
+                        Margin="5,0,0,0">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Lernzettel Optionen" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                        <Border CornerRadius="12"
+                                Padding="16,10"
+                                Background="{DynamicResource SurfaceColor}"
+                                BorderBrush="{DynamicResource BorderColor}"
+                                BorderThickness="1"
+                                HorizontalAlignment="Stretch"
+                                Margin="5,0,0,0">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="Lernzettel Export als PDF" FontWeight="DemiBold" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="primary">
+                                    <Path Data="
+                                    M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z
+                                    M14 2v5a1 1 0 0 0 1 1h5
+                                    M12 18v-8
+                                    m-3 5 3 3 3-3
+                                    "
+                                          Stroke="{DynamicResource ButtonEditBackground}"
+                                          StrokeThickness="2"
+                                          StrokeLineCap="Round"
+                                          StrokeJoin="Round"
+                                          Fill="Transparent"
+                                          Width="16" Height="16"
+                                          Stretch="Uniform"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            
+            <!-- Summary View -->
+            <Grid IsVisible="{Binding IsSummarySelected}">
+                <Border CornerRadius="10"
+                        Padding="16,10"
+                        Background="{DynamicResource SurfaceColor}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1"
+                        HorizontalAlignment="Stretch"
+                        Margin="5,0,0,0">
+                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}"/>
+                </Border>
+            </Grid>
+            
+            <!-- Chat View -->
+            <Grid IsVisible="{Binding IsChatSelected}">
+                
+            </Grid>
+            
+            <!-- Knownledge View -->
+            <Grid IsVisible="{Binding IsKnownledgeSelected}">
+                
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
