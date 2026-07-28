@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Recallr.ViewModels"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.LearningsheetDetailedView"
              x:DataType="vm:LearningsheetDetailedViewModel">
@@ -19,9 +21,9 @@
                 <Style Selector="RadioButton.navItem">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="{DynamicResource NavItemColor}" />
-                    <Setter Property="Padding" Value="4,4"/>
-                    <Setter Property="Margin" Value="4,4"/>
-                    <Setter Property="Width" Value="65"/>
+                    <Setter Property="Padding" Value="4,4" />
+                    <Setter Property="Margin" Value="4,4" />
+                    <Setter Property="Width" Value="65" />
                     <Setter Property="CornerRadius" Value="8" />
                     <Setter Property="FontSize" Value="11" />
                     <Setter Property="FontWeight" Value="Medium" />
@@ -101,7 +103,7 @@
                              M8 17v-3" />
             </StackPanel>
         </Border>
-        
+
         <Grid Grid.Row="1" Margin="0,10">
             <!-- Files View -->
             <Grid IsVisible="{Binding IsFilesSelected}" ColumnDefinitions="*,*">
@@ -122,39 +124,43 @@
                                     BorderThickness="1"
                                     HorizontalAlignment="Stretch">
                                 <Grid ColumnDefinitions="*,Auto">
-                                    <TextBlock Grid.Column="0" Text="Bionik.pdf ~ 20 Seiten erfasst" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Classes="delete-solid" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                                        <Path Data="M10 11v6
+                                    <TextBlock Grid.Column="0" Text="Bionik.pdf ~ 20 Seiten erfasst"
+                                               VerticalAlignment="Center" />
+                                    <Button Grid.Column="1" Classes="delete-solid" HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center">
+                                        <Path
+                                            Data="M10 11v6
                                     M14 11v6
                                     M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6
                                     M3 6h18
                                     M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                                              Stroke="{DynamicResource ButtonDeleteBackground}"
-                                              StrokeThickness="2"
-                                              StrokeLineCap="Round"
-                                              StrokeJoin="Round"
-                                              Fill="Transparent"
-                                              Width="14" Height="14"
-                                              Stretch="Uniform"/>
+                                            Stroke="{DynamicResource ButtonDeleteBackground}"
+                                            StrokeThickness="2"
+                                            StrokeLineCap="Round"
+                                            StrokeJoin="Round"
+                                            Fill="Transparent"
+                                            Width="14" Height="14"
+                                            Stretch="Uniform" />
                                     </Button>
                                 </Grid>
                             </Border>
                         </StackPanel>
                         <Button Grid.Row="1" Classes="primary">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <Path Data="
+                                <Path
+                                    Data="
                                     M11.35 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5.35
                                     M14 2v5a1 1 0 0 0 1 1h5
                                     M14 19h6
                                     M17 16v6"
-                                      Stroke="{DynamicResource ButtonEditBackground}"
-                                      StrokeThickness="2"
-                                      StrokeLineCap="Round"
-                                      StrokeJoin="Round"
-                                      Fill="Transparent"
-                                      Width="14" Height="14"
-                                      Stretch="Uniform"/>
-                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonEditBackground}"/>
+                                    Stroke="{DynamicResource ButtonEditBackground}"
+                                    StrokeThickness="2"
+                                    StrokeLineCap="Round"
+                                    StrokeJoin="Round"
+                                    Fill="Transparent"
+                                    Width="14" Height="14"
+                                    Stretch="Uniform" />
+                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonEditBackground}" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -168,7 +174,8 @@
                         HorizontalAlignment="Stretch"
                         Margin="5,0,0,0">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Lernzettel Optionen" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                        <TextBlock Text="Lernzettel Optionen" HorizontalAlignment="Center" FontWeight="Bold"
+                                   FontSize="16" Margin="0,0,0,10" />
                         <Border CornerRadius="12"
                                 Padding="16,10"
                                 Background="{DynamicResource SurfaceColor}"
@@ -177,28 +184,30 @@
                                 HorizontalAlignment="Stretch"
                                 Margin="5,0,0,0">
                             <Grid ColumnDefinitions="*,Auto">
-                                <TextBlock Grid.Column="0" Text="Lernzettel Export als PDF" FontWeight="DemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="Lernzettel Export als PDF" FontWeight="DemiBold"
+                                           VerticalAlignment="Center" />
                                 <Button Grid.Column="1" Classes="primary">
-                                    <Path Data="
+                                    <Path
+                                        Data="
                                     M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z
                                     M14 2v5a1 1 0 0 0 1 1h5
                                     M12 18v-8
                                     m-3 5 3 3 3-3
                                     "
-                                          Stroke="{DynamicResource ButtonEditBackground}"
-                                          StrokeThickness="2"
-                                          StrokeLineCap="Round"
-                                          StrokeJoin="Round"
-                                          Fill="Transparent"
-                                          Width="16" Height="16"
-                                          Stretch="Uniform"/>
+                                        Stroke="{DynamicResource ButtonEditBackground}"
+                                        StrokeThickness="2"
+                                        StrokeLineCap="Round"
+                                        StrokeJoin="Round"
+                                        Fill="Transparent"
+                                        Width="16" Height="16"
+                                        Stretch="Uniform" />
                                 </Button>
                             </Grid>
                         </Border>
                     </StackPanel>
                 </Border>
             </Grid>
-            
+
             <!-- Summary View -->
             <Grid IsVisible="{Binding IsSummarySelected}">
                 <Border CornerRadius="10"
@@ -206,20 +215,186 @@
                         Background="{DynamicResource SurfaceColor}"
                         BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
-                        HorizontalAlignment="Stretch"
-                        Margin="5,0,0,0">
-                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}"/>
+                        HorizontalAlignment="Stretch">
+                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}" />
                 </Border>
             </Grid>
-            
+
             <!-- Chat View -->
             <Grid IsVisible="{Binding IsChatSelected}">
-                
+                <Border CornerRadius="10"
+                        Padding="16,10"
+                        Background="{DynamicResource SurfaceColor}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1"
+                        HorizontalAlignment="Stretch">
+                    <Grid RowDefinitions="*,Auto">
+                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,10">
+                            <StackPanel Children="">
+                                <Border CornerRadius="10"
+                                        Padding="16,10"
+                                        Background="{DynamicResource ChatAiBackground}"
+                                        BorderBrush="{DynamicResource ChatAiBorder}"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock Text="Hey wie kann ich dir helfen?" />
+                                </Border>
+                                <Border CornerRadius="10"
+                                        Padding="16,10"
+                                        Background="{DynamicResource ChatUserBackground}"
+                                        BorderBrush="{DynamicResource ChatUserBorder}"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Right">
+                                    <TextBlock Text="Kannst du mir die Parabeln erklären?" />
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="Frag was du willst..." />
+                            <Button Grid.Column="1" Classes="primary" Margin="10,0,0,0">
+                                <Path
+                                    Data="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z
+                                M6 12h16"
+                                    Stroke="{DynamicResource ButtonEditBackground}"
+                                    StrokeThickness="2"
+                                    StrokeLineCap="Round"
+                                    StrokeJoin="Round"
+                                    Fill="Transparent"
+                                    Width="14" Height="14"
+                                    Stretch="Uniform" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
-            
+
             <!-- Knownledge View -->
             <Grid IsVisible="{Binding IsKnownledgeSelected}">
-                
+                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
+                    <Border Grid.Row="0" Grid.Column="0"
+                            Margin="0,0,5,5"
+                            CornerRadius="10"
+                            Padding="16,10"
+                            Background="{DynamicResource CardProgressBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <lvc:CartesianChart>
+                            <lvc:CartesianChart.Title>
+                                <lvc:XamlDrawnLabelVisual
+                                    Text="Lernfortschritt"
+                                    Paint="{lvc:SolidColorPaint Color='#303030'}"
+                                    TextSize="25"
+                                    Padding="{lvc:Padding '15'}" />
+                            </lvc:CartesianChart.Title>
+
+                            <lvc:CartesianChart.Series>
+                                <lvc:XamlLineSeries
+                                    Values="{Binding Values1}"
+                                    Fill="{x:Null}"
+                                    GeometrySize="20" />
+                                <lvc:XamlLineSeries
+                                    x:TypeArguments="x:Int32, draw:StarGeometry"
+                                    Values="{Binding Values2}"
+                                    Fill="{x:Null}"
+                                    GeometrySize="20" />
+                            </lvc:CartesianChart.Series>
+                        </lvc:CartesianChart>
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="1"
+                            Margin="5,0,0,5"
+                            CornerRadius="10"
+                            Padding="16,10"
+                            Background="{DynamicResource CardActivityBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <lvc:CartesianChart>
+                            <lvc:CartesianChart.Title>
+                                <lvc:XamlDrawnLabelVisual
+                                    Text="Themenwissen"
+                                    Paint="{lvc:SolidColorPaint Color='#303030'}"
+                                    TextSize="25"
+                                    Padding="{lvc:Padding '15'}" />
+                            </lvc:CartesianChart.Title>
+
+                            <lvc:CartesianChart.Series>
+                                <lvc:XamlColumnSeries
+                                    IsHoverable="False"
+                                    Values="{Binding Values3}"
+                                    Fill="{lvc:SolidColorPaint Color='#32b4b4b4'}"
+                                    IgnoresBarPosition="True" />
+                                <lvc:XamlColumnSeries
+                                    Values="{Binding Values4}"
+                                    IgnoresBarPosition="True" />
+                            </lvc:CartesianChart.Series>
+
+                            <lvc:CartesianChart.YAxes>
+                                <lvc:XamlAxis
+                                    MinLimit="0"
+                                    MaxLimit="10" />
+                            </lvc:CartesianChart.YAxes>
+
+                        </lvc:CartesianChart>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0"
+                            Margin="0,5,5,0"
+                            CornerRadius="10"
+                            Padding="16,10"
+                            Background="{DynamicResource CardTopicsBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <lvc:PieChart SeriesSource="{Binding Data}">
+                            <lvc:PieChart.SeriesTemplate>
+                                <DataTemplate x:DataType="vm:PieData">
+                                    <lvc:XamlPieSeries
+                                        SeriesName="{Binding Name}"
+                                        Values="{Binding Values}" />
+                                </DataTemplate>
+                            </lvc:PieChart.SeriesTemplate>
+                            <lvc:PieChart.Title>
+                                <lvc:XamlDrawnLabelVisual
+                                    Text="Lernzustand"
+                                    Paint="{lvc:SolidColorPaint Color='#000'}"
+                                    TextSize="25"
+                                    Padding="{lvc:Padding '15'}" />
+                            </lvc:PieChart.Title>
+                        </lvc:PieChart>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="1"
+                            Margin="5,5,0,0"
+                            CornerRadius="10"
+                            Padding="16,10"
+                            Background="{DynamicResource CardStatusBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <lvc:PieChart
+                            InitialRotation="-90"
+                            MinValue="0"
+                            MaxValue="100">
+                            <lvc:PieChart.Series>
+
+                                <lvc:XamlGaugeSeries
+                                    GaugeValue="{Binding Value}"
+                                    DataLabelsSize="50"
+                                    MaxRadialColumnWidth="50" />
+
+                                <!-- The background series is used to style the gauge background. -->
+                                <lvc:XamlGaugeBackgroundSeries />
+
+                            </lvc:PieChart.Series>
+                            <lvc:PieChart.Title>
+                                <lvc:XamlDrawnLabelVisual
+                                    Text="Trefferquote der Antworten"
+                                    Paint="{lvc:SolidColorPaint Color='#000'}"
+                                    TextSize="25"
+                                    Padding="{lvc:Padding '15'}" />
+                            </lvc:PieChart.Title>
+                        </lvc:PieChart>
+                    </Border>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
