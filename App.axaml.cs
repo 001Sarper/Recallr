@@ -40,10 +40,10 @@ public partial class App : Application
             services.AddSingleton<IFilePickerService>(new FilePickerService(
                 () => desktop.MainWindow));
             
-            var mainWindow = new MainWindow();
-            mainWindow.DataContext = new MainViewModel(mainWindow);
-
-            desktop.MainWindow = mainWindow;
+            desktop.MainWindow = new MainWindow
+            {
+                DataContext = new MainViewModel(),
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -19,57 +20,7 @@ namespace Recallr.ViewModels;
 
 public partial class LearningsheetDetailedViewModel : ViewModelBase
 {
-    [ObservableProperty] private bool _isFilesSelected = true;
-    [ObservableProperty] private bool _isSummarySelected = false;
-    [ObservableProperty] private bool _isChatSelected = false;
-    [ObservableProperty] private bool _isKnownledgeSelected = false;
-
-    [ObservableProperty] private string _learnsheetContent = """
-                                                             # Lernzettel: Photosynthese
-
-                                                             ## 1) Grundlagen
-
-                                                             Die **Photosynthese** ist der Prozess, bei dem Pflanzen Lichtenergie in chemische Energie umwandeln.
-
-                                                             ### Wichtige Begriffe
-
-                                                             - **Chlorophyll**: Der grüne Farbstoff in Chloroplasten
-                                                             - **Stroma**: Flüssigkeit innerhalb der Chloroplasten
-                                                             - **Thylakoid**: Membranstruktur, wo die Lichtreaktion stattfindet
-
-                                                             ## 2) Die zwei Phasen
-
-                                                             ### Lichtreaktion (Thylakoidmembran)
-
-                                                             1. Licht wird von Chlorophyll absorbiert
-                                                             2. Wasser wird gespalten (Photolyse): `2 H₂O → 4 H⁺ + 4 e⁻ + O₂`
-                                                             3. ATP und NADPH werden produziert
-
-                                                             ### Dunkelreaktion / Calvin-Zyklus (Stroma)
-
-                                                             1. CO₂-Fixierung durch das Enzym RuBisCO
-                                                             2. Reduktion zu G3P mithilfe von ATP und NADPH
-                                                             3. Regeneration von RuBP
-
-                                                             ## 3) Gesamtgleichung
-
-                                                             > 6 CO₂ + 6 H₂O + Licht → C₆H₁₂O₆ + 6 O₂
-
-                                                             ## 4) Merksätze
-
-                                                             - **Photosynthese** braucht: Licht, Wasser, CO₂
-                                                             - **Produkte**: Glukose und Sauerstoff
-                                                             - Findet in **Chloroplasten** statt
-                                                             - Wichtigstes Enzym: **RuBisCO**
-
-                                                             ---
-
-                                                             *Tipp: Die Lichtreaktion braucht direktes Licht, die Dunkelreaktion kann auch ohne Licht ablaufen (Name ist etwas irreführend).*
-                                                             """;
-
-
-    [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
-    
+    //Graph Variables
     [ObservableProperty] private double[] _values1  = [2, 1, 3, 5, 3, 4, 6];
     [ObservableProperty] private double[] _values2  = [4, 2, 5, 2, 4, 5, 3];
     
@@ -87,12 +38,25 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     ];
     
     [ObservableProperty] private double _value = 30;
+    
+    
+    //Important Variables thar are necessary
+    [ObservableProperty] private bool _isFilesSelected = true;
+    [ObservableProperty] private bool _isSummarySelected = false;
+    [ObservableProperty] private bool _isChatSelected = false;
+    [ObservableProperty] private bool _isKnownledgeSelected = false;
+
+    [ObservableProperty] private string _learnsheetContent;
+    
+    [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
 
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
     private static string _coursesDirectoryPath;
     private string _learningsheetID;
     private string _currentLearningsheetFolder;
+    private List<string> _currentLearningsheetFolderFiles;
+    
 
     public LearningsheetDetailedViewModel(string learningsheetID)
     {
@@ -105,11 +69,19 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         PickFilesCommand = new AsyncRelayCommand(PickFilesAsync);
 
         _currentLearningsheetFolder = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, _learningsheetID);
-        var files = Directory.GetFiles(_currentLearningsheetFolder);
+        _currentLearningsheetFolderFiles = Directory.GetFiles(_currentLearningsheetFolder).ToList();
+        _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.txt"));
 
-        foreach (var file in files)
+        foreach (var file in _currentLearningsheetFolderFiles)
         {
-            Files.Add(new FileEntryViewModel(Path.GetFileName(file), getDocumentPageCount(file)));
+            int pageCount = (file.Contains(".pdf") ? getDocumentPageCount(file) : 1);
+            Files.Add(new FileEntryViewModel(Path.GetFileName(file), pageCount));
+        }
+
+        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
+        if (Path.Exists(learnsheetTextFile))
+        {
+            LearnsheetContent = File.ReadAllText(learnsheetTextFile);
         }
     }
     
@@ -119,6 +91,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         var item = Files.FirstOrDefault(f => f.FileName == fileName);
         if (item != null)
             Files.Remove(item);
+        Console.WriteLine(Path.Combine(_currentLearningsheetFolder, fileName));
+        File.Delete(Path.Combine(_currentLearningsheetFolder, fileName));
+        
 
         // hier z.B. auch die Datei physisch löschen etc.
     }
@@ -147,6 +122,15 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
                 File.Copy(path, newFilePath, true);
             }
         }
+    }
+
+    [RelayCommand]
+    private async Task CreateLearningsheetAsync()
+    {
+        var learnsheetReponse = await AIService.Instance.CreateLearningsheetAsync(_currentLearningsheetFolderFiles);
+        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
+        File.WriteAllText(learnsheetTextFile, learnsheetReponse);
+        LearnsheetContent = learnsheetReponse;
     }
 
     private int getDocumentPageCount(string path)
