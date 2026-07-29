@@ -1,4 +1,6 @@
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,10 +15,14 @@ public partial class LearningsheetViewModel : ViewModelBase
     public OverlayService OverlayService => OverlayService.Instance;
     
     [ObservableProperty] private string _searchText;
+    
+    private static string _coursesDirectoryPath;
 
     public LearningsheetViewModel()
     {
         CoursesService.LoadLearnsheets(CoursesService.currentCourseID);
+        _coursesDirectoryPath = 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
     }
     
     
@@ -40,13 +46,27 @@ public partial class LearningsheetViewModel : ViewModelBase
     [RelayCommand]
     private void CreateLearnsheet()
     {
-        OverlayService.ShowLearningsheetDetailedView();
+        var newGuid = Guid.NewGuid();
+        
+        var newLearnsheet = new Learnsheet
+        {
+            ID = newGuid, Description = "Lade Dateien hoch und klicke auf 'Lernzettel erstellen' – die KI übernimmt den Rest.", Name = "Noch kein Lernzettel", TestDate = "Lege in den Lernzettel Optionen ein Test Datum fest!"
+        };
+        
+        CoursesService.configManager.ClientCourses.FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.Add(newLearnsheet);
+        CoursesService.SaveConfig();
+        CoursesService.Instance.LoadLearnsheets(CoursesService.currentCourseID);
+        
+        string newLearnsheetFolder = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, newGuid.ToString());
+        Directory.CreateDirectory(newLearnsheetFolder);
+        
+        OverlayService.ShowLearningsheetDetailedView(newGuid.ToString());
     }
 
     [RelayCommand]
     private void OpenLernzettel(Learnsheet item)
     {
-        // Navigation zur Detailansicht
+        OverlayService.ShowLearningsheetDetailedView(item.ID.ToString());
     }
 
     [RelayCommand]
@@ -58,6 +78,27 @@ public partial class LearningsheetViewModel : ViewModelBase
     [RelayCommand]
     private void DeleteLernzettel(Learnsheet item)
     {
-        // + Löschung in Storage/DB
+        var configEntry = CoursesService.configManager.ClientCourses
+            .FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.FirstOrDefault(learnsheet => learnsheet.ID == item.ID);
+
+        if (configEntry != null)
+        {
+            var path = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, item.ID.ToString());
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                CoursesService.configManager.ClientCourses.FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.Remove(configEntry);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        } 
+        
+        CoursesService.SaveConfig();
+        CoursesService.LoadLearnsheets(CoursesService.currentCourseID);
     }
 }
