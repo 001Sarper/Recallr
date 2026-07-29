@@ -5,7 +5,10 @@ using Avalonia.Styling;
 using Recallr.ViewModels;
 using Recallr.Views;
 using LiveChartsCore; // <-- WICHTIG
-using LiveChartsCore.SkiaSharpView; // <-- WICHTIG
+using LiveChartsCore.SkiaSharpView;
+using Microsoft.Extensions.DependencyInjection;
+using Recallr.Models.Services;
+using Recallr.Models.Services.Interfaces;
 
 namespace Recallr;
 
@@ -31,6 +34,12 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var services = new ServiceCollection();
+
+            // FilePickerService registrieren
+            services.AddSingleton<IFilePickerService>(new FilePickerService(
+                () => desktop.MainWindow));
+            
             var mainWindow = new MainWindow();
             mainWindow.DataContext = new MainViewModel(mainWindow);
 

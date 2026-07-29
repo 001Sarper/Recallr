@@ -116,36 +116,47 @@
                         HorizontalAlignment="Stretch"
                         Margin="0,0,5,0">
                     <Grid RowDefinitions="*,Auto">
-                        <StackPanel Grid.Row="0">
-                            <Border CornerRadius="5"
-                                    Padding="16,10"
-                                    Background="{DynamicResource SurfaceColor}"
-                                    BorderBrush="{DynamicResource BorderColor}"
-                                    BorderThickness="1"
-                                    HorizontalAlignment="Stretch">
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <TextBlock Grid.Column="0" Text="Bionik.pdf ~ 20 Seiten erfasst"
-                                               VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" Classes="delete-solid" HorizontalContentAlignment="Center"
-                                            VerticalContentAlignment="Center">
-                                        <Path
-                                            Data="M10 11v6
-                                    M14 11v6
-                                    M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6
-                                    M3 6h18
-                                    M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                                            Stroke="{DynamicResource ButtonDeleteBackground}"
-                                            StrokeThickness="2"
-                                            StrokeLineCap="Round"
-                                            StrokeJoin="Round"
-                                            Fill="Transparent"
-                                            Width="14" Height="14"
-                                            Stretch="Uniform" />
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-                        <Button Grid.Row="1" Classes="primary">
+                        <ItemsControl x:Name="FilesItemsControl"
+                                      Grid.Row="0"
+                                      ItemsSource="{Binding Files}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="vm:FileEntryViewModel">
+                                    <StackPanel Margin="0,0,0,8">
+                                        <Border CornerRadius="5"
+                                                Padding="16,10"
+                                                Background="{DynamicResource SurfaceColor}"
+                                                BorderBrush="{DynamicResource BorderColor}"
+                                                BorderThickness="1"
+                                                HorizontalAlignment="Stretch">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding DisplayText}"
+                                                           VerticalAlignment="Center" />
+
+                                                <Button Grid.Column="1"
+                                                        Classes="delete-solid"
+                                                        HorizontalContentAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        Command="{Binding #FilesItemsControl.((vm:LearningsheetDetailedViewModel)DataContext).DeleteFileCommand}"
+                                                        CommandParameter="{Binding DisplayText}">
+                                                    <Path
+                                                        Data="M10 11v6 M14 11v6 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M3 6h18 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                                        Stroke="{DynamicResource ButtonDeleteBackground}"
+                                                        StrokeThickness="2"
+                                                        StrokeLineCap="Round"
+                                                        StrokeJoin="Round"
+                                                        Fill="Transparent"
+                                                        Width="14"
+                                                        Height="14"
+                                                        Stretch="Uniform" />
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Grid.Row="1" Classes="primary" Command="{Binding PickFilesCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Path
                                     Data="
