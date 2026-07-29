@@ -1,9 +1,6 @@
 using System;
-using System.Collections.ObjectModel;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Recallr.ViewModels;
 
@@ -57,36 +54,5 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
                                                              *Tipp: Die Lichtreaktion braucht direktes Licht, die Dunkelreaktion kann auch ohne Licht ablaufen (Name ist etwas irreführend).*
                                                              """;
 
-    [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
-    
-    [ObservableProperty] private double[] _values1  = [2, 1, 3, 5, 3, 4, 6];
-    [ObservableProperty] private double[] _values2  = [4, 2, 5, 2, 4, 5, 3];
-    
-    [ObservableProperty] private double[] _values3  = [20, 50, 40, 20, 40, 30, 50, 20, 50, 40];
-    [ObservableProperty] private double[] _values4  = [3, 10, 5, 3, 7, 3, 8];
-    
-    [ObservableProperty] private PieData[] _data  = [
-        new("Mary", 10),
-        new("John", 20),
-        new("Alice", 30),
-        new("Bob", 40),
-        new("Charlie", 50)
-    ];
-    [ObservableProperty] private double _value = 30;
 
-    public LearningsheetDetailedViewModel(string learningsheetID)
-    {
-        
-    }
-
-
-}
-
-
-
-
-public class PieData(string name, double value)
-{
-    public string Name { get; set; } = name;
-    public double[] Values { get; set; } = [value];
 }
