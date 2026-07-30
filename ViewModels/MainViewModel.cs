@@ -23,15 +23,6 @@ public partial class MainViewModel : ViewModelBase
 
     private readonly Window _window;
     
-    [ObservableProperty] private string _currentOption = "Meine Fächer";
-    [ObservableProperty] private string _currentCourse = "";
-    [ObservableProperty] private string _currentLearningsheet = "";
-    
-    [ObservableProperty] private bool _optionArrow1 = false;
-    [ObservableProperty] private bool _optionArrow2 = false;
-    
-    [ObservableProperty] private string _profileName = "";
-    [ObservableProperty] private string _profileMail = "";
     
     [ObservableProperty]
     private int _selectedNavIndex = 0;
@@ -48,14 +39,14 @@ public partial class MainViewModel : ViewModelBase
         switch (selectedNavIndex)
         {
             case 0:
-                ClearBreadcrumbs();
-                CurrentOption = "Meine Fächer";
+                Overlay.ClearBreadcrumbs();
+                Overlay.CurrentOption = "Meine Fächer";
                 if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
                 Overlay.ShowCourseView();
                 break;
             case 1:
-                ClearBreadcrumbs();
-                CurrentOption = "Einstellungen";
+                Overlay.ClearBreadcrumbs();
+                Overlay.CurrentOption = "Einstellungen";
                 if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
                 Overlay.ShowSettingsView();
                 break;
@@ -65,14 +56,18 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private void GoBack()
     {
-        
+        if (OverlayService.Instance.CurrentLearningsheet != "")
+        {
+            OverlayService.Instance.ShowLearningsheetView();
+            OverlayService.Instance.CurrentLearningsheet = "";
+            Overlay.OptionArrow2 = false;
+        } else if (OverlayService.Instance.CurrentCourse != "")
+        {
+            OverlayService.Instance.ShowCourseView();
+            OverlayService.Instance.CurrentCourse = "";
+            Overlay.OptionArrow1 = false;
+        }
     }
-
-    public void ClearBreadcrumbs()
-    {
-        CurrentOption = "";
-        CurrentCourse = "";
-        CurrentLearningsheet = "";
-    }
+    
     
 }

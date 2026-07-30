@@ -50,7 +50,7 @@ public partial class AIService : ObservableObject
 
     public AIService()
     {
-        _chatClient = new(model: "gpt-5.4-mini", apiKey: Settings.OpenaiKey);
+        _chatClient = new(model: "gpt-5.6-luna", apiKey: Settings.OpenaiKey);
     }
 
 #pragma warning disable OPENAI001
@@ -109,7 +109,6 @@ public partial class AIService : ObservableObject
     {
         try
         {
-            ChatClient chatClient = new(model: "gpt-5.4-nano", apiKey: Settings.OpenaiKey);
             List<ChatMessage> messages =
             [
                 new SystemChatMessage("""
@@ -131,7 +130,7 @@ public partial class AIService : ObservableObject
                 new UserChatMessage("Hier ist der Lernzettel \n" +  learnsheet)
             ];
             
-            ChatCompletion completion = await chatClient.CompleteChatAsync(messages);
+            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
             
             return completion.Content[0].Text;
         }

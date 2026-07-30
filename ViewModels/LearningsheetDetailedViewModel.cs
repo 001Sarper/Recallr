@@ -158,7 +158,6 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         
         if (meta == null)
         {
-            // Fehlerbehandlung/Logging
             return;
         }
 

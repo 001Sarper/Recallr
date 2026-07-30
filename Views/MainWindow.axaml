@@ -99,11 +99,11 @@
                             BorderThickness="0" FontSize="16" Padding="6" Margin="0,0,12,0" />
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
-                        <TextBlock Text="{Binding CurrentOption}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
-                        <TextBlock Text="›" IsVisible="{Binding OptionArrow1}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
-                        <TextBlock Text="{Binding CurrentCourse}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
-                        <TextBlock Text="›" IsVisible="{Binding OptionArrow2}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
-                        <TextBlock Text="{Binding CurrentLearningsheet}"
+                        <TextBlock Text="{Binding Overlay.CurrentOption}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="›" IsVisible="{Binding Overlay.OptionArrow1}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="{Binding Overlay.CurrentCourse}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="›" IsVisible="{Binding Overlay.OptionArrow2}" Foreground="{DynamicResource TextSecondaryColor}" FontSize="13" />
+                        <TextBlock Text="{Binding Overlay.CurrentLearningsheet}"
                                    Foreground="{DynamicResource TextPrimaryColor}" FontSize="13" FontWeight="SemiBold" />
                     </StackPanel>
                 </Grid>
