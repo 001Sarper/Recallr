@@ -9,10 +9,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using AvaloniaEdit.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PdfSharp.Pdf.IO;
+using Recallr.Models.Models;
 using Recallr.Models.Services;
 using Recallr.Models.Services.Interfaces;
 
@@ -49,6 +51,8 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private string _learnsheetContent;
     
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
+    
+    [ObservableProperty] private string _currentInput = string.Empty;
 
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
@@ -56,6 +60,12 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private string _learningsheetID;
     private string _currentLearningsheetFolder;
     private List<string> _currentLearningsheetFolderFiles;
+    
+    public CoursesService CoursesService => CoursesService.Instance;
+
+
+    public ObservableCollection<ChatEntry> Messages { get; } = new();
+    
     
 
     public LearningsheetDetailedViewModel(string learningsheetID)
@@ -83,6 +93,17 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         {
             LearnsheetContent = File.ReadAllText(learnsheetTextFile);
         }
+
+        InitializeAsync();
+
+    }
+    
+    public async Task InitializeAsync()
+    {
+        var savedMessages = await ChatStorageService.Instance.LoadMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
+
+        foreach (var msg in savedMessages)
+            Messages.Add(msg);
     }
     
     [RelayCommand]
@@ -93,14 +114,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             Files.Remove(item);
         Console.WriteLine(Path.Combine(_currentLearningsheetFolder, fileName));
         File.Delete(Path.Combine(_currentLearningsheetFolder, fileName));
-        
-
-        // hier z.B. auch die Datei physisch löschen etc.
     }
 
     public ICommand PickFilesCommand { get; }
-    
-    
     private async Task PickFilesAsync()
     {
         var filters = new[]
@@ -139,6 +155,32 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         {
             return document.PageCount;
         }
+    }
+    
+    public async Task SendMessageAsync(string userInput)
+    {
+        Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput });
+
+        var aiMessage = new ChatEntry() { Sender = ChatSender.Ai };
+        Messages.Add(aiMessage);
+
+        await foreach (var token in AIService.Instance.StreamResponseAsync(Messages.SkipLast(1), LearnsheetContent))
+        {
+            await Dispatcher.UIThread.InvokeAsync(() => aiMessage.AppendToken(token));
+        }
+
+        await ChatStorageService.Instance.SaveMessagesAsync(CoursesService.currentCourseID, _learningsheetID, Messages);
+    }
+    
+    [RelayCommand]
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentInput)) return;
+
+        var input = CurrentInput;
+        CurrentInput = string.Empty; // TextBox sofort leeren
+
+        await SendMessageAsync(input);
     }
 
 
