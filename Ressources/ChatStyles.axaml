@@ -1,0 +1,16 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.ai">
+        <Setter Property="Background" Value="{DynamicResource ChatAiBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ChatAiBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+
+    <Style Selector="Border.user">
+        <Setter Property="Background" Value="{DynamicResource ChatUserBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ChatUserBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+</Styles>

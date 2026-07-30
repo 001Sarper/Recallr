@@ -6,6 +6,7 @@
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.LearningsheetDetailedView"
              x:DataType="vm:LearningsheetDetailedViewModel">
@@ -246,28 +247,28 @@
                         HorizontalAlignment="Stretch">
                     <Grid RowDefinitions="*,Auto">
                         <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,10">
-                            <StackPanel Children="">
-                                <Border CornerRadius="10"
-                                        Padding="16,10"
-                                        Background="{DynamicResource ChatAiBackground}"
-                                        BorderBrush="{DynamicResource ChatAiBorder}"
-                                        BorderThickness="1"
-                                        HorizontalAlignment="Left">
-                                    <TextBlock Text="Hey wie kann ich dir helfen?" />
-                                </Border>
-                                <Border CornerRadius="10"
-                                        Padding="16,10"
-                                        Background="{DynamicResource ChatUserBackground}"
-                                        BorderBrush="{DynamicResource ChatUserBorder}"
-                                        BorderThickness="1"
-                                        HorizontalAlignment="Right">
-                                    <TextBlock Text="Kannst du mir die Parabeln erklären?" />
-                                </Border>
-                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding Messages}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:ChatEntry}">
+                                        <Border CornerRadius="10"
+                                                Padding="16,10"
+                                                Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
+                                                Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
+                                            <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </ScrollViewer>
                         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="Frag was du willst..." />
-                            <Button Grid.Column="1" Classes="primary" Margin="10,0,0,0">
+                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="Frag was du willst..." Text="{Binding CurrentInput}"/>
+                            <Button Grid.Column="1" Classes="primary" Margin="10,0,0,0" Command="{Binding SendMessageCommand}">
                                 <Path
                                     Data="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z
                                 M6 12h16"

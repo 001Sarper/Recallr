@@ -22,6 +22,7 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="/Ressources/ButtonStyles.axaml"/>
+        <StyleInclude Source="/Ressources/ChatStyles.axaml"/>
     </Application.Styles>
 
     <Application.Resources>

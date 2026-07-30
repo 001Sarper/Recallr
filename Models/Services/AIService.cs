@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OpenAI.Chat;
+using Recallr.Models.Models;
+using ChatMessage = OpenAI.Chat.ChatMessage;
 
 namespace Recallr.Models.Services;
 
@@ -50,7 +53,7 @@ public partial class AIService : ObservableObject
         _chatClient = new(model: "gpt-5.4-mini", apiKey: Settings.OpenaiKey);
     }
 
-    #pragma warning disable OPENAI001
+#pragma warning disable OPENAI001
     private ChatMessageContentPart CreateContentPartForFile(string path)
     {
         byte[] bytes = File.ReadAllBytes(path);
@@ -66,7 +69,7 @@ public partial class AIService : ObservableObject
             _ => throw new NotSupportedException($"Dateityp '{extension}' wird nicht unterstützt.")
         };
     }
-    
+
     public async Task<string> CreateLearningsheetAsync(List<string> paths)
     {
         try
@@ -99,6 +102,29 @@ public partial class AIService : ObservableObject
         catch (Exception e)
         {
             return "Error: " + e.Message;
+        }
+    }
+
+    public async IAsyncEnumerable<string> StreamResponseAsync(
+        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+        string lernzettelContent)
+    {
+        var systemPrompt = ChatSystemPrompt.Build(lernzettelContent);
+
+        var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
+
+        messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
+            ? (ChatMessage)new UserChatMessage(m.Text)
+            : new AssistantChatMessage(m.Text)));
+
+        await foreach (StreamingChatCompletionUpdate update in
+                       _chatClient.CompleteChatStreamingAsync(messages))
+        {
+            foreach (var part in update.ContentUpdate)
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    yield return part.Text;
+            }
         }
     }
 }
