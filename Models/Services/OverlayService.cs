@@ -20,6 +20,13 @@ public partial class OverlayService : ObservableObject
     [ObservableProperty] private bool _isOverlayEditMode = false;
     [ObservableProperty] private string _buttonContent = "";
     
+    [ObservableProperty] private string _currentOption = "Meine Fächer";
+    [ObservableProperty] private string _currentCourse = "";
+    [ObservableProperty] private string _currentLearningsheet = "";
+    
+    [ObservableProperty] private bool _optionArrow1 = false;
+    [ObservableProperty] private bool _optionArrow2 = false;
+    
     [ObservableProperty]
     private ViewModelBase currentPageViewModel;
 
@@ -51,6 +58,15 @@ public partial class OverlayService : ObservableObject
         CourseEmoji = 0;
         CourseTeacher = "";
         CourseName = "";
+    }
+    
+    public void ClearBreadcrumbs()
+    {
+        CurrentOption = "";
+        CurrentCourse = "";
+        CurrentLearningsheet = "";
+        OptionArrow1 = false;
+        OptionArrow2 = false;
     }
     
 }

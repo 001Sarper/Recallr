@@ -17,12 +17,15 @@ public partial class LearningsheetViewModel : ViewModelBase
     [ObservableProperty] private string _searchText;
     
     private static string _coursesDirectoryPath;
+    private static string _chatlogDirectoryPath;
 
     public LearningsheetViewModel()
     {
         CoursesService.LoadLearnsheets(CoursesService.currentCourseID);
         _coursesDirectoryPath = 
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
+        _chatlogDirectoryPath = 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "ChatLogs");
     }
     
     
@@ -50,7 +53,7 @@ public partial class LearningsheetViewModel : ViewModelBase
         
         var newLearnsheet = new Learnsheet
         {
-            ID = newGuid, Description = "Lade Dateien hoch und klicke auf 'Lernzettel erstellen' – die KI übernimmt den Rest.", Name = "Noch kein Lernzettel", TestDate = "Lege in den Lernzettel Optionen ein Test Datum fest!"
+            ID = newGuid, Description = "Lade Dateien hoch und klicke auf 'Lernzettel erstellen' – die KI übernimmt den Rest.", Name = "Unbenanntes Lernzettel", TestDate = "Lege in den Lernzettel Optionen ein Test Datum fest!"
         };
         
         CoursesService.configManager.ClientCourses.FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.Add(newLearnsheet);
@@ -60,19 +63,17 @@ public partial class LearningsheetViewModel : ViewModelBase
         string newLearnsheetFolder = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, newGuid.ToString());
         Directory.CreateDirectory(newLearnsheetFolder);
         
+        OverlayService.CurrentLearningsheet = "Unbenanntes Lernzettel";
+        OverlayService.OptionArrow2 = true;
         OverlayService.ShowLearningsheetDetailedView(newGuid.ToString());
     }
 
     [RelayCommand]
     private void OpenLernzettel(Learnsheet item)
     {
+        OverlayService.CurrentLearningsheet = item.Name;
+        OverlayService.OptionArrow2 = true;
         OverlayService.ShowLearningsheetDetailedView(item.ID.ToString());
-    }
-
-    [RelayCommand]
-    private void EditLernzettel(Learnsheet item)
-    {
-        // z.B. Navigation zum Editor mit vorbefülltem Item
     }
 
     [RelayCommand]
@@ -84,16 +85,20 @@ public partial class LearningsheetViewModel : ViewModelBase
         if (configEntry != null)
         {
             var path = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, item.ID.ToString());
+            string chatlogFileName = item.ID + ".json";
+            var chatlogPath = Path.Combine(_chatlogDirectoryPath, CoursesService.currentCourseID, chatlogFileName);
             try
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(path) && File.Exists(chatlogPath))
                 {
                     Directory.Delete(path, true);
+                    File.Delete(chatlogPath);
                 }
                 CoursesService.configManager.ClientCourses.FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.Remove(configEntry);
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return;
             }
         } 

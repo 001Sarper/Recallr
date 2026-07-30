@@ -16,6 +16,8 @@ public partial class CourseViewModel : ViewModelBase
     public OverlayService OverlayService => OverlayService.Instance;
     
     private static string _coursesDirectory;
+    private static string _chatlogDirectoryPath;
+    
     
     [ObservableProperty] private string _searchText;
     
@@ -24,7 +26,8 @@ public partial class CourseViewModel : ViewModelBase
     {
         CoursesService.LoadCourses();
         _coursesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
-        
+        _chatlogDirectoryPath = 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "ChatLogs");
     }
 
     partial void OnSearchTextChanged(string value)
@@ -57,6 +60,8 @@ public partial class CourseViewModel : ViewModelBase
     private void OpenCourse(ClientCourses course)
     {
         CoursesService.currentCourseID = course.ID.ToString();
+        OverlayService.CurrentCourse = course.Name;
+        OverlayService.OptionArrow1 = true;
         OverlayService.ShowLearningsheetView();
     }
 
@@ -82,11 +87,13 @@ public partial class CourseViewModel : ViewModelBase
         if (configEntry != null)
         {
             var path = Path.Combine(_coursesDirectory, course.ID.ToString());
+            var chatlogCourseDirectory = Path.Combine(_chatlogDirectoryPath, course.ID.ToString());
             try
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(path) && Directory.Exists(chatlogCourseDirectory))
                 {
                     Directory.Delete(path, true);
+                    Directory.Delete(chatlogCourseDirectory, true);
                 }
                 CoursesService.configManager.ClientCourses.Remove(configEntry);
             }

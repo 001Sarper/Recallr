@@ -217,6 +217,20 @@
                                     </Button>
                                 </Grid>
                             </Border>
+                            <Border CornerRadius="12"
+                                    Padding="16,10"
+                                    Background="{DynamicResource SurfaceColor}"
+                                    BorderBrush="{DynamicResource BorderColor}"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="5,10,0,0">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Test Datum" FontSize="12" VerticalAlignment="Center" />
+                                    <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
+                                             HorizontalAlignment="Stretch" FontSize="8"
+                                             VerticalContentAlignment="Center"/>
+                                </Grid>
+                            </Border>
                         </StackPanel>
                         <Button Grid.Row="1" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding CreateLearningsheetCommand}">
                             <TextBlock Text="Lernzettel erstellen"/>
