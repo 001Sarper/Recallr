@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -14,6 +16,7 @@ using AvaloniaEdit.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PdfSharp.Pdf.IO;
+using Recallr.Models.Configuration;
 using Recallr.Models.Models;
 using Recallr.Models.Services;
 using Recallr.Models.Services.Interfaces;
@@ -144,9 +147,33 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private async Task CreateLearningsheetAsync()
     {
         var learnsheetReponse = await AIService.Instance.CreateLearningsheetAsync(_currentLearningsheetFolderFiles);
+        CoursesService.SaveConfig();
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
+        
+        var learnsheetMetaData = await AIService.Instance.CreateLearnsheetMetaData(learnsheetReponse);
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var meta = JsonSerializer.Deserialize<LearnsheetMetaData>(learnsheetMetaData, options);
+        
+        if (meta == null)
+        {
+            // Fehlerbehandlung/Logging
+            return;
+        }
+
+        var course = CoursesService.configManager.ClientCourses
+            .FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID);
+
+        var learnsheet = course?.learnsheets
+            .FirstOrDefault(ls => ls.ID.ToString() == _learningsheetID);
+
+        if (learnsheet != null)
+        {
+            learnsheet.Name = meta.Title;
+            learnsheet.Description = meta.Description;
+            CoursesService.SaveConfig();
+        }
     }
 
     private int getDocumentPageCount(string path)
