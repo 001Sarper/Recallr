@@ -105,8 +105,46 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public async IAsyncEnumerable<string> StreamResponseAsync(
-        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+    public async Task<string> CreateLearnsheetMetaData(string learnsheet)
+    {
+        try
+        {
+            ChatClient chatClient = new(model: "gpt-5.4-nano", apiKey: Settings.OpenaiKey);
+            List<ChatMessage> messages =
+            [
+                new SystemChatMessage("""
+                                      Du bist ein Assistent, der aus einem Lernzettel (Zusammenfassung von Lerninhalten) einen kurzen, prägnanten Titel und eine kurze Beschreibung erstellt.
+
+                                      Regeln:
+                                      - Titel: maximal 6 Wörter, beschreibt das Kernthema präzise (z. B. "Photosynthese – Licht- und Dunkelreaktion", "Zweiter Weltkrieg: Ursachen & Verlauf").
+                                      - Beschreibung: 1–2 kurze Sätze (max. 25 Wörter), fasst zusammen, worum es im Lernzettel geht, ohne Details aufzulisten.
+                                      - Verwende ausschließlich Informationen aus dem gegebenen Text. Erfinde nichts dazu.
+                                      - Antworte NUR mit einem validen JSON-Objekt, ohne zusätzlichen Text, ohne Markdown-Codeblöcke, in folgendem Format:
+
+                                      {
+                                        "title": "string",
+                                        "description": "string"
+                                      }
+
+                                      Die Sprache des Titels und der Beschreibung soll der Sprache des Lernzettels entsprechen.
+                                      """),
+                new UserChatMessage("Hier ist der Lernzettel \n" +  learnsheet)
+            ];
+            
+            ChatCompletion completion = await chatClient.CompleteChatAsync(messages);
+            
+            return completion.Content[0].Text;
+        }
+        catch (Exception e)
+        {
+            
+        }
+        
+        
+        return "";
+    }
+
+    public async IAsyncEnumerable<string> StreamResponseAsync(IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
         var systemPrompt = ChatSystemPrompt.Build(lernzettelContent);

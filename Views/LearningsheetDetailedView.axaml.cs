@@ -9,5 +9,10 @@ public partial class LearningsheetDetailedView : UserControl
     public LearningsheetDetailedView()
     {
         InitializeComponent();
+        ChatScrollViewer.ScrollChanged += (s, e) =>
+        {
+            if (e.ExtentDelta.Y > 0)
+                ChatScrollViewer.ScrollToEnd();
+        };
     }
 }

@@ -246,11 +246,11 @@
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
                     <Grid RowDefinitions="*,Auto">
-                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,10">
+                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,10" x:Name="ChatScrollViewer">
                             <ItemsControl ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Spacing="8" />
+                                        <StackPanel Spacing="20" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
 
@@ -258,6 +258,7 @@
                                     <DataTemplate DataType="{x:Type models:ChatEntry}">
                                         <Border CornerRadius="10"
                                                 Padding="16,10"
+                                                MaxWidth="700"
                                                 Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
                                                 Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
                                             <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}"/>
