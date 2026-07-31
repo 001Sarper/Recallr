@@ -13,9 +13,6 @@ namespace Recallr.Models.Services;
 public partial class CoursesService : ObservableObject
 {
     public static CoursesService Instance { get; } = new CoursesService();
-    
-    private static readonly string _configPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
 
     [ObservableProperty]
     private ObservableCollection<ClientCourses> courses = new();
@@ -25,27 +22,20 @@ public partial class CoursesService : ObservableObject
     
     public static string currentCourseID = "";
     public static ConfigManager configManager;
-    private static string _coursesFilePath;
     
     public CoursesService()
     {
-        _coursesFilePath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
-        
-        
-        var json = File.ReadAllText(_coursesFilePath);
-        configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
-        
+        LoadCourses();
     }
     
     public void LoadCourses()
     {
         Courses.Clear();
         
-        if (!File.Exists(_configPath))
+        if (!File.Exists(FileSystemPaths.coursesFilePath))
             return;
 
-        var json = File.ReadAllText(_configPath);
+        var json = File.ReadAllText(FileSystemPaths.coursesFilePath);
         configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
 
         Courses = new ObservableCollection<ClientCourses>(configManager.ClientCourses);
@@ -56,10 +46,10 @@ public partial class CoursesService : ObservableObject
     {
         Learnsheets.Clear();
         
-        if (!File.Exists(_configPath))
+        if (!File.Exists(FileSystemPaths.coursesFilePath))
             return;
 
-        var json = File.ReadAllText(_configPath);
+        var json = File.ReadAllText(FileSystemPaths.coursesFilePath);
         configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
 
         var course = configManager.ClientCourses.FirstOrDefault(course => course.ID.ToString() == courseID);
@@ -71,7 +61,7 @@ public partial class CoursesService : ObservableObject
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
         var json = JsonSerializer.Serialize(configManager, options);
-        File.WriteAllText(_coursesFilePath, json);
+        File.WriteAllText(FileSystemPaths.coursesFilePath, json);
     }
     
     

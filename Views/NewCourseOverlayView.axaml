@@ -8,7 +8,7 @@
              x:DataType="vm:NewCourseOverlayViewModel">
     <Grid RowDefinitions="Auto,Auto,Auto" Background="{DynamicResource BackgroundColor}" VerticalAlignment="Center">
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Margin="10">
-            <ComboBox Grid.Column="0" SelectedIndex="{Binding OverlayService.CourseEmoji}">
+            <ComboBox Grid.Column="0" SelectedIndex="{Binding AppStateService.CourseEmoji}">
                 <ComboBoxItem Content="📚"/>
                 <ComboBoxItem Content="🧮"/>
                 <ComboBoxItem Content="🔬"/>
@@ -16,12 +16,12 @@
                 <ComboBoxItem Content="🎨"/>
                 <ComboBoxItem Content="📘"/>
             </ComboBox>
-            <TextBox Grid.Column="1" PlaceholderText="Fachlehrer" Margin="10,0,0,0" Text="{Binding OverlayService.CourseTeacher}"/>
+            <TextBox Grid.Column="1" PlaceholderText="Fachlehrer" Margin="10,0,0,0" Text="{Binding AppStateService.CourseTeacher}"/>
         </Grid>
-        <TextBox Grid.Row="1" PlaceholderText="Fachname" Margin="10,0,10,10" Text="{Binding OverlayService.CourseName}"/>
+        <TextBox Grid.Row="1" PlaceholderText="Fachname" Margin="10,0,10,10" Text="{Binding AppStateService.CourseName}"/>
         <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,0,0,10">
             <Button Grid.Column="0" Classes="delete" Content="Abbrechen" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CloseOverlayCommand}"/>
-            <Button Grid.Column="1" Classes="edit" Content="{Binding OverlayService.ButtonContent}" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CreateCourseCommand}"/>
+            <Button Grid.Column="1" Classes="edit" Content="{Binding AppStateService.ButtonContent}" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CreateCourseCommand}"/>
         </Grid>
     </Grid>
 </UserControl>

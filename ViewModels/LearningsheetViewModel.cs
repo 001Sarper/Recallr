@@ -12,20 +12,13 @@ namespace Recallr.ViewModels;
 public partial class LearningsheetViewModel : ViewModelBase
 {
     public CoursesService CoursesService => CoursesService.Instance;
-    public OverlayService OverlayService => OverlayService.Instance;
+    public AppStateService AppStateService => AppStateService.Instance;
     
     [ObservableProperty] private string _searchText;
-    
-    private static string _coursesDirectoryPath;
-    private static string _chatlogDirectoryPath;
 
     public LearningsheetViewModel()
     {
         CoursesService.LoadLearnsheets(CoursesService.currentCourseID);
-        _coursesDirectoryPath = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
-        _chatlogDirectoryPath = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "ChatLogs");
     }
     
     
@@ -60,20 +53,20 @@ public partial class LearningsheetViewModel : ViewModelBase
         CoursesService.SaveConfig();
         CoursesService.Instance.LoadLearnsheets(CoursesService.currentCourseID);
         
-        string newLearnsheetFolder = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, newGuid.ToString());
+        string newLearnsheetFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID, newGuid.ToString());
         Directory.CreateDirectory(newLearnsheetFolder);
         
-        OverlayService.CurrentLearningsheet = "Unbenanntes Lernzettel";
-        OverlayService.OptionArrow2 = true;
-        OverlayService.ShowLearningsheetDetailedView(newGuid.ToString());
+        AppStateService.CurrentLearningsheet = "Unbenanntes Lernzettel";
+        AppStateService.OptionArrow2 = true;
+        AppStateService.ShowLearningsheetDetailedView(newGuid.ToString());
     }
 
     [RelayCommand]
     private void OpenLernzettel(Learnsheet item)
     {
-        OverlayService.CurrentLearningsheet = item.Name;
-        OverlayService.OptionArrow2 = true;
-        OverlayService.ShowLearningsheetDetailedView(item.ID.ToString());
+        AppStateService.CurrentLearningsheet = item.Name;
+        AppStateService.OptionArrow2 = true;
+        AppStateService.ShowLearningsheetDetailedView(item.ID.ToString());
     }
 
     [RelayCommand]
@@ -84,9 +77,9 @@ public partial class LearningsheetViewModel : ViewModelBase
 
         if (configEntry != null)
         {
-            var path = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, item.ID.ToString());
+            var path = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID, item.ID.ToString());
             string chatlogFileName = item.ID + ".json";
-            var chatlogPath = Path.Combine(_chatlogDirectoryPath, CoursesService.currentCourseID, chatlogFileName);
+            var chatlogPath = Path.Combine(FileSystemPaths.chatlogDirectoryPath, CoursesService.currentCourseID, chatlogFileName);
             try
             {
                 if (Directory.Exists(path) && File.Exists(chatlogPath))

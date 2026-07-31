@@ -13,42 +13,11 @@ namespace Recallr.Models.Services;
 public partial class AIService : ObservableObject
 {
     public static AIService Instance { get; } = new AIService();
-    public SettingsService Settings => SettingsService.Instance;
+    public static SettingsService Settings => SettingsService.Instance;
 
-    private const string SystemPrompt = """
-                                        Du bist der KI-Lernbuddy in der App "Recallr". Nutzer: Schüler/Studenten, die Fotos/PDFs von Unterlagen (Tafelbilder, Skripte, Folien, Notizen) hochladen, um daraus einen Lernzettel zu bekommen.
+    private static ChatClient _chatClient;
 
-                                        ROLLE
-                                        Kumpel/Kumpelin aus dem Kurs, der/die das Fach drauf hat – nicht Lehrer, nicht Lexikon. Gründlich und ausführlich erklären, nie oberflächlich, aber verständlich statt Lehrbuch-Ton.
-
-                                        TON
-                                        Locker, direkt, du-Ansprache. Gen-Z-Vibe natürlich eingestreut ("ok krass", "macht Sinn", "kurz gesagt"), kein Slang-Bingo. Emojis sparsam: 📌 wichtig, 💡 Aha-Moment, ⚠️ Fehlerquelle. Ehrlich bei schwierigen Stellen ("da bleiben viele hängen, lass uns das genau angucken").
-
-                                        FORMAT (MarkdownScrollViewer/Avalonia)
-                                        - # Haupttitel, ## Hauptthemen, ### Unterpunkte – Hierarchie konsequent nutzen
-                                        - **Fett** bei Erstnennung von Fachbegriffen/Kernaussagen
-                                        - Aufzählung (-) für lose Fakten, nummeriert (1.) für Abläufe/Schritte
-                                        - > Blockquote NUR für Merksätze/Prüfungsrelevantes, nicht für normale Zitate
-                                        - Tabelle nur bei Vergleich von >2 Elementen
-                                        - `Inline-Code` für Formeln/Fachtermini/Werte
-                                        - --- zur Trennung großer Themenblöcke
-                                        - Abschluss: "Kurz gesagt"-Merksätze zum Reinziehen vor der Klausur
-                                        - VERBOTEN: Checkboxen, Fußnoten, Definitionslisten, LaTeX/Mathe-Syntax, Mermaid
-
-                                        INHALT
-                                        - Fachbegriffe erklären, nicht nur nennen (Alltagsvergleich/Eselsbrücke wenn hilfreich)
-                                        - Niemals Inhalte erfinden, die nicht in den Dateien stehen; unleserliche/unklare Stellen ehrlich benennen statt raten
-                                        - Mehrere Dateien thematisch zusammenführen, nicht nacheinander abhandeln
-                                        - Locker im Ton ≠ ungenau im Inhalt – fachlich korrekt bleiben
-
-                                        OUTPUT
-                                        Ausschließlich der fertige Lernzettel. Keine Einleitung, kein "Hier ist dein Lernzettel:", keine Meta-Kommentare.
-                                        """;
-
-    private ChatClient _chatClient;
-
-
-    public AIService()
+    public static void InitialiazeClient()
     {
         _chatClient = new(model: "gpt-5.6-luna", apiKey: Settings.OpenaiKey);
     }
@@ -74,6 +43,7 @@ public partial class AIService : ObservableObject
     {
         try
         {
+            InitialiazeClient();
             var contentParts = new List<ChatMessageContentPart>
             {
                 ChatMessageContentPart.CreateTextPart(
@@ -87,16 +57,11 @@ public partial class AIService : ObservableObject
 
             List<ChatMessage> messages =
             [
-                new SystemChatMessage(SystemPrompt),
+                new SystemChatMessage(SystemPrompts.LearnsheetSystemPrompt),
                 new UserChatMessage(contentParts)
             ];
 
             ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
-
-            int inputTokens = completion.Usage.InputTokenCount;
-            int outputTokens = completion.Usage.OutputTokenCount;
-
-            Console.WriteLine($"Input: {inputTokens}, Output: {outputTokens}");
             return completion.Content[0].Text;
         }
         catch (Exception e)
@@ -109,24 +74,10 @@ public partial class AIService : ObservableObject
     {
         try
         {
+            InitialiazeClient();
             List<ChatMessage> messages =
             [
-                new SystemChatMessage("""
-                                      Du bist ein Assistent, der aus einem Lernzettel (Zusammenfassung von Lerninhalten) einen kurzen, prägnanten Titel und eine kurze Beschreibung erstellt.
-
-                                      Regeln:
-                                      - Titel: maximal 6 Wörter, beschreibt das Kernthema präzise (z. B. "Photosynthese – Licht- und Dunkelreaktion", "Zweiter Weltkrieg: Ursachen & Verlauf").
-                                      - Beschreibung: 1–2 kurze Sätze (max. 25 Wörter), fasst zusammen, worum es im Lernzettel geht, ohne Details aufzulisten.
-                                      - Verwende ausschließlich Informationen aus dem gegebenen Text. Erfinde nichts dazu.
-                                      - Antworte NUR mit einem validen JSON-Objekt, ohne zusätzlichen Text, ohne Markdown-Codeblöcke, in folgendem Format:
-
-                                      {
-                                        "title": "string",
-                                        "description": "string"
-                                      }
-
-                                      Die Sprache des Titels und der Beschreibung soll der Sprache des Lernzettels entsprechen.
-                                      """),
+                new SystemChatMessage(SystemPrompts.MetaDataSystemPrompt),
                 new UserChatMessage("Hier ist der Lernzettel \n" +  learnsheet)
             ];
             
@@ -136,17 +87,15 @@ public partial class AIService : ObservableObject
         }
         catch (Exception e)
         {
-            
+            return "Error: " + e.Message;
         }
-        
-        
-        return "";
     }
 
     public async IAsyncEnumerable<string> StreamResponseAsync(IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
-        var systemPrompt = ChatSystemPrompt.Build(lernzettelContent);
+        InitialiazeClient();
+        var systemPrompt = SystemPrompts.Build(lernzettelContent);
 
         var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
 

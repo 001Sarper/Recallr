@@ -59,12 +59,10 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
-    private static string _coursesDirectoryPath;
     private string _learningsheetID;
-    private string _currentLearningsheetFolder;
+    private static string _currentLearningsheetFolder;
     private List<string> _currentLearningsheetFolderFiles;
     
-    public CoursesService CoursesService => CoursesService.Instance;
 
 
     public ObservableCollection<ChatEntry> Messages { get; } = new();
@@ -73,21 +71,20 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
     public LearningsheetDetailedViewModel(string learningsheetID)
     {
+        
         _filePickerService = new FilePickerService(() =>
             (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
-        _coursesDirectoryPath = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
         
         _learningsheetID = learningsheetID;
         PickFilesCommand = new AsyncRelayCommand(PickFilesAsync);
-
-        _currentLearningsheetFolder = Path.Combine(_coursesDirectoryPath, CoursesService.currentCourseID, _learningsheetID);
+        _currentLearningsheetFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID, _learningsheetID);
+        
         _currentLearningsheetFolderFiles = Directory.GetFiles(_currentLearningsheetFolder).ToList();
         _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.txt"));
 
         foreach (var file in _currentLearningsheetFolderFiles)
         {
-            int pageCount = (file.Contains(".pdf") ? getDocumentPageCount(file) : 1);
+            int pageCount = (file.Contains(".pdf") ? PdfService.GetDocumentPageCount(file) : 1);
             Files.Add(new FileEntryViewModel(Path.GetFileName(file), pageCount));
         }
 
@@ -101,7 +98,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
     }
     
-    public async Task InitializeAsync()
+    private async Task InitializeAsync()
     {
         var savedMessages = await ChatStorageService.Instance.LoadMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
 
@@ -130,14 +127,14 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             }
         };
 
-        var paths = await _filePickerService.PickFilesAsync("Foto auswählen", true, filters);
+        var paths = await _filePickerService.PickFilesAsync("Dateien auswählen", true, filters);
 
         foreach (var path in paths)
         {
             string newFilePath = Path.Combine(_currentLearningsheetFolder, Path.GetFileName(path));
             if (!Path.Exists(newFilePath))
             {
-                Files.Add(new FileEntryViewModel(path, getDocumentPageCount(path)));
+                Files.Add(new FileEntryViewModel(path, PdfService.GetDocumentPageCount(path)));
                 File.Copy(path, newFilePath, true);
             }
         }
@@ -172,14 +169,6 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             learnsheet.Name = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
-        }
-    }
-
-    private int getDocumentPageCount(string path)
-    {
-        using (PdfSharp.Pdf.PdfDocument document = PdfReader.Open(path, PdfDocumentOpenMode.InformationOnly))
-        {
-            return document.PageCount;
         }
     }
     
