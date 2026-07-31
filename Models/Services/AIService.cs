@@ -57,7 +57,7 @@ public partial class AIService : ObservableObject
 
             List<ChatMessage> messages =
             [
-                new SystemChatMessage(SystemPrompts.LearnsheetSystemPrompt),
+                new SystemChatMessage(SystemPrompts.BuildLearnsheet(Settings.SummaryStyle)),
                 new UserChatMessage(contentParts)
             ];
 
@@ -95,7 +95,11 @@ public partial class AIService : ObservableObject
         string lernzettelContent)
     {
         InitialiazeClient();
-        var systemPrompt = SystemPrompts.Build(lernzettelContent);
+        var systemPrompt = SystemPrompts.BuildChat(
+            lernzettelContent: lernzettelContent,
+            difficulty: SettingsService.Instance.Difficulty,
+            questionType: SettingsService.Instance.QuestionType
+        );
 
         var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
 

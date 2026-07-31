@@ -25,26 +25,6 @@ namespace Recallr.ViewModels;
 
 public partial class LearningsheetDetailedViewModel : ViewModelBase
 {
-    //Graph Variables
-    [ObservableProperty] private double[] _values1  = [2, 1, 3, 5, 3, 4, 6];
-    [ObservableProperty] private double[] _values2  = [4, 2, 5, 2, 4, 5, 3];
-    
-    [ObservableProperty] private double[] _values3  = [20, 50, 40, 20, 40, 30, 50, 20, 50, 40];
-    [ObservableProperty] private double[] _values4  = [3, 10, 5, 3, 7, 3, 8];
-
-    
-    
-    [ObservableProperty] private PieData[] _data  = [
-        new("Mary", 10),
-        new("John", 20),
-        new("Alice", 30),
-        new("Bob", 40),
-        new("Charlie", 50)
-    ];
-    
-    [ObservableProperty] private double _value = 30;
-    
-    
     //Important Variables thar are necessary
     [ObservableProperty] private bool _isFilesSelected = true;
     [ObservableProperty] private bool _isSummarySelected = false;
@@ -52,9 +32,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private bool _isKnownledgeSelected = false;
 
     [ObservableProperty] private string _learnsheetContent;
-    
+
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
-    
+
     [ObservableProperty] private string _currentInput = string.Empty;
 
     private readonly IFilePickerService _filePickerService;
@@ -63,22 +43,19 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private static string _currentLearningsheetFolder;
     private List<string> _currentLearningsheetFolderFiles;
     
-
-
     public ObservableCollection<ChatEntry> Messages { get; } = new();
-    
-    
 
     public LearningsheetDetailedViewModel(string learningsheetID)
     {
-        
+
         _filePickerService = new FilePickerService(() =>
             (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
-        
+
         _learningsheetID = learningsheetID;
         PickFilesCommand = new AsyncRelayCommand(PickFilesAsync);
-        _currentLearningsheetFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID, _learningsheetID);
-        
+        _currentLearningsheetFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID,
+            _learningsheetID);
+
         _currentLearningsheetFolderFiles = Directory.GetFiles(_currentLearningsheetFolder).ToList();
         _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.txt"));
 
@@ -97,26 +74,29 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         InitializeAsync();
 
     }
-    
+
     private async Task InitializeAsync()
     {
-        var savedMessages = await ChatStorageService.Instance.LoadMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
+        var savedMessages =
+            await ChatStorageService.Instance.LoadMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
 
         foreach (var msg in savedMessages)
             Messages.Add(msg);
     }
-    
+
     [RelayCommand]
     private void DeleteFile(string fileName)
     {
         var item = Files.FirstOrDefault(f => f.FileName == fileName);
         if (item != null)
             Files.Remove(item);
-        Console.WriteLine(Path.Combine(_currentLearningsheetFolder, fileName));
-        File.Delete(Path.Combine(_currentLearningsheetFolder, fileName));
+        string fullPath = Path.Combine(_currentLearningsheetFolder, fileName);
+        File.Delete(fullPath);
+        _currentLearningsheetFolderFiles.Remove(fullPath);
     }
 
     public ICommand PickFilesCommand { get; }
+
     private async Task PickFilesAsync()
     {
         var filters = new[]
@@ -136,6 +116,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             {
                 Files.Add(new FileEntryViewModel(path, PdfService.GetDocumentPageCount(path)));
                 File.Copy(path, newFilePath, true);
+                _currentLearningsheetFolderFiles.Add(newFilePath);
             }
         }
     }
@@ -148,11 +129,11 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
-        
+
         var learnsheetMetaData = await AIService.Instance.CreateLearnsheetMetaData(learnsheetReponse);
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var meta = JsonSerializer.Deserialize<LearnsheetMetaData>(learnsheetMetaData, options);
-        
+
         if (meta == null)
         {
             return;
@@ -167,11 +148,12 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         if (learnsheet != null)
         {
             learnsheet.Name = meta.Title;
+            AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
         }
     }
-    
+
     public async Task SendMessageAsync(string userInput)
     {
         Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput });
@@ -186,7 +168,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
         await ChatStorageService.Instance.SaveMessagesAsync(CoursesService.currentCourseID, _learningsheetID, Messages);
     }
-    
+
     [RelayCommand]
     private async Task SendMessage()
     {
@@ -198,11 +180,4 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         await SendMessageAsync(input);
     }
 
-
-}
-
-public class PieData(string name, double value)
-{
-    public string Name { get; set; } = name;
-    public double[] Values { get; set; } = [value];
 }
