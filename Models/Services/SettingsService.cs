@@ -4,6 +4,7 @@ using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Recallr;
 using Recallr.Models.Configuration;
+using Recallr.Models.Services;
 
 public partial class SettingsService : ObservableObject
 {
@@ -25,20 +26,13 @@ public partial class SettingsService : ObservableObject
     [ObservableProperty] private int _questionType = 0;
 
     private ConfigManager _configManager;
-    private static string _settingsFilePath;
-
-
+    
     private SettingsService()
     {
-        _settingsFilePath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientSettings.json");
-        
-
-        var json = File.ReadAllText(_settingsFilePath);
+        var json = File.ReadAllText(FileSystemPaths.settingsFilePath);
         _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
         Load();
     }
-
 
     public void Save()
     {
@@ -54,12 +48,12 @@ public partial class SettingsService : ObservableObject
         s.Difficulty = Difficulty;
         s.QuestionType = QuestionType;
 
-        File.WriteAllText(_settingsFilePath, JsonSerializer.Serialize(_configManager));
+        File.WriteAllText(FileSystemPaths.settingsFilePath, JsonSerializer.Serialize(_configManager));
 
         App.Instance.SetTheme(Theme);
     }
 
-    public void Load()
+    private void Load()
     {
         var s = _configManager.ClientSettings[0];
 

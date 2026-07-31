@@ -5,9 +5,9 @@ using Recallr.ViewModels;
 
 namespace Recallr.Models.Services;
 
-public partial class OverlayService : ObservableObject
+public partial class AppStateService : ObservableObject
 {
-    public static OverlayService Instance { get; } = new OverlayService();
+    public static AppStateService Instance { get; } = new AppStateService();
     
     [ObservableProperty] private bool _isOverlayVisible = false;
     

@@ -17,7 +17,7 @@ namespace Recallr.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     public SettingsService Settings => SettingsService.Instance;
-    public OverlayService Overlay => OverlayService.Instance;
+    public AppStateService AppState => AppStateService.Instance;
     
     [ObservableProperty] private string _lernzettel = "";
 
@@ -31,7 +31,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         App.Instance.SetTheme(Settings.Theme); 
-        Overlay.ShowCourseView();
+        AppState.ShowCourseView();
     }
 
     partial void OnSelectedNavIndexChanged(int selectedNavIndex)
@@ -39,33 +39,33 @@ public partial class MainViewModel : ViewModelBase
         switch (selectedNavIndex)
         {
             case 0:
-                Overlay.ClearBreadcrumbs();
-                Overlay.CurrentOption = "Meine Fächer";
-                if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
-                Overlay.ShowCourseView();
+                AppState.ClearBreadcrumbs();
+                AppState.CurrentOption = "Meine Fächer";
+                if(AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
+                AppState.ShowCourseView();
                 break;
             case 1:
-                Overlay.ClearBreadcrumbs();
-                Overlay.CurrentOption = "Einstellungen";
-                if(OverlayService.Instance.IsOverlayVisible) OverlayService.Instance.CloseOverlay();
-                Overlay.ShowSettingsView();
+                AppState.ClearBreadcrumbs();
+                AppState.CurrentOption = "Einstellungen";
+                if(AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
+                AppState.ShowSettingsView();
                 break;
         }
     }
-
+    
     [RelayCommand]
     private void GoBack()
     {
-        if (OverlayService.Instance.CurrentLearningsheet != "")
+        if (AppState.CurrentLearningsheet != "")
         {
-            OverlayService.Instance.ShowLearningsheetView();
-            OverlayService.Instance.CurrentLearningsheet = "";
-            Overlay.OptionArrow2 = false;
-        } else if (OverlayService.Instance.CurrentCourse != "")
+            AppState.ShowLearningsheetView();
+            AppState.CurrentLearningsheet = "";
+            AppState.OptionArrow2 = false;
+        } else if (AppState.CurrentCourse != "")
         {
-            OverlayService.Instance.ShowCourseView();
-            OverlayService.Instance.CurrentCourse = "";
-            Overlay.OptionArrow1 = false;
+            AppState.ShowCourseView();
+            AppState.CurrentCourse = "";
+            AppState.OptionArrow1 = false;
         }
     }
     

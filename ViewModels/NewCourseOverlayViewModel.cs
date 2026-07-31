@@ -11,60 +11,50 @@ namespace Recallr.ViewModels;
 
 public partial class NewCourseOverlayViewModel : ViewModelBase
 {
-    public OverlayService OverlayService => OverlayService.Instance;
-    
-    
-    private static string _coursesDirectoryPath;
-
-    public NewCourseOverlayViewModel()
-    {
-        _coursesDirectoryPath = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
-        
-    }
+    public AppStateService AppStateService => AppStateService.Instance;
     
     [RelayCommand]
     private void CloseOverlay()
     {
-        OverlayService.ClearData();
-        OverlayService.CloseOverlay();
+        AppStateService.ClearData();
+        AppStateService.CloseOverlay();
     }
     
     [RelayCommand]
     private void CreateCourse()
     {
-        if (!OverlayService.IsOverlayEditMode)
+        if (!AppStateService.IsOverlayEditMode)
         {
             var newCourse = new ClientCourses
             {
-                Icon = OverlayService.CourseEmoji, ID = Guid.NewGuid(), Name = OverlayService.CourseName, TeacherName = OverlayService.CourseTeacher
+                Icon = AppStateService.CourseEmoji, ID = Guid.NewGuid(), Name = AppStateService.CourseName, TeacherName = AppStateService.CourseTeacher
             };
         
             CoursesService.configManager.ClientCourses.Add(newCourse);
             CoursesService.SaveConfig();
             CoursesService.Instance.LoadCourses();
             
-            OverlayService.ClearData();
+            AppStateService.ClearData();
         
-            var courseFolder = Path.Combine(_coursesDirectoryPath, newCourse.ID.ToString());
+            var courseFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, newCourse.ID.ToString());
             Directory.CreateDirectory(courseFolder);
         
-            OverlayService.Instance.CloseOverlay();
+            AppStateService.Instance.CloseOverlay();
         }
         else
         {
             var existingCourse = CoursesService.configManager.ClientCourses
-                .FirstOrDefault(c => c.ID == OverlayService.course.ID);
+                .FirstOrDefault(c => c.ID == AppStateService.course.ID);
             
-            existingCourse.Icon = OverlayService.Instance.CourseEmoji;
-            existingCourse.Name = OverlayService.Instance.CourseName;
-            existingCourse.TeacherName = OverlayService.Instance.CourseTeacher;
+            existingCourse.Icon = AppStateService.Instance.CourseEmoji;
+            existingCourse.Name = AppStateService.Instance.CourseName;
+            existingCourse.TeacherName = AppStateService.Instance.CourseTeacher;
 
             CoursesService.SaveConfig();
             CoursesService.Instance.LoadCourses();
-            OverlayService.ClearData();
+            AppStateService.ClearData();
             
-            OverlayService.Instance.CloseOverlay();
+            AppStateService.Instance.CloseOverlay();
         }
     }
 }

@@ -13,11 +13,7 @@ namespace Recallr.ViewModels;
 public partial class CourseViewModel : ViewModelBase
 {
     public CoursesService CoursesService => CoursesService.Instance;
-    public OverlayService OverlayService => OverlayService.Instance;
-    
-    private static string _coursesDirectory;
-    private static string _chatlogDirectoryPath;
-    
+    public AppStateService AppStateService => AppStateService.Instance;
     
     [ObservableProperty] private string _searchText;
     
@@ -25,9 +21,6 @@ public partial class CourseViewModel : ViewModelBase
     public CourseViewModel()
     {
         CoursesService.LoadCourses();
-        _coursesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Courses");
-        _chatlogDirectoryPath = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "ChatLogs");
     }
 
     partial void OnSearchTextChanged(string value)
@@ -50,9 +43,9 @@ public partial class CourseViewModel : ViewModelBase
     [RelayCommand]
     public void ShowOverlay()
     {
-        OverlayService.ButtonContent = "Erstellen";
-        OverlayService.IsOverlayVisible = true;
-        OverlayService.ShowOverlay();
+        AppStateService.ButtonContent = "Erstellen";
+        AppStateService.IsOverlayVisible = true;
+        AppStateService.ShowOverlay();
     }
     
     
@@ -60,22 +53,22 @@ public partial class CourseViewModel : ViewModelBase
     private void OpenCourse(ClientCourses course)
     {
         CoursesService.currentCourseID = course.ID.ToString();
-        OverlayService.CurrentCourse = course.Name;
-        OverlayService.OptionArrow1 = true;
-        OverlayService.ShowLearningsheetView();
+        AppStateService.CurrentCourse = course.Name;
+        AppStateService.OptionArrow1 = true;
+        AppStateService.ShowLearningsheetView();
     }
 
     [RelayCommand]
     private void EditCourse(ClientCourses course)
     {
         
-        OverlayService.CourseEmoji = course.Icon;
-        OverlayService.CourseName = course.Name;
-        OverlayService.CourseTeacher = course.TeacherName;
-        OverlayService.course = course;
-        OverlayService.ButtonContent = "Bearbeiten";
-        OverlayService.IsOverlayEditMode = true;
-        OverlayService.ShowOverlay();
+        AppStateService.CourseEmoji = course.Icon;
+        AppStateService.CourseName = course.Name;
+        AppStateService.CourseTeacher = course.TeacherName;
+        AppStateService.course = course;
+        AppStateService.ButtonContent = "Bearbeiten";
+        AppStateService.IsOverlayEditMode = true;
+        AppStateService.ShowOverlay();
     }
 
     [RelayCommand]
@@ -86,8 +79,8 @@ public partial class CourseViewModel : ViewModelBase
 
         if (configEntry != null)
         {
-            var path = Path.Combine(_coursesDirectory, course.ID.ToString());
-            var chatlogCourseDirectory = Path.Combine(_chatlogDirectoryPath, course.ID.ToString());
+            var path = Path.Combine(FileSystemPaths.coursesDirectoryPath, course.ID.ToString());
+            var chatlogCourseDirectory = Path.Combine(FileSystemPaths.chatlogDirectoryPath, course.ID.ToString());
             try
             {
                 if (Directory.Exists(path) && Directory.Exists(chatlogCourseDirectory))
