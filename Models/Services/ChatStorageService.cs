@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using OpenAI.Chat;
 using Recallr.Models.Models;
 
 namespace Recallr.Models.Services;
