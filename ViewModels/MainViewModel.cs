@@ -19,14 +19,8 @@ public partial class MainViewModel : ViewModelBase
     public SettingsService Settings => SettingsService.Instance;
     public AppStateService AppState => AppStateService.Instance;
     
-    [ObservableProperty] private string _lernzettel = "";
-
-    private readonly Window _window;
-    
-    
     [ObservableProperty]
     private int _selectedNavIndex = 0;
-    
 
     public MainViewModel()
     {

@@ -1,20 +1,6 @@
-using System;
-using System.Collections.Generic;
 
 namespace Recallr.Models.Services
 {
-    public enum Difficulty
-    {
-        Leicht,
-        Normal,
-        Schwer
-    }
-
-    public enum QuestionType
-    {
-        Offen,
-        MultipleChoice
-    }
 
     public static class SystemPrompts
     {
