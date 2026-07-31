@@ -262,7 +262,7 @@
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
                     <Grid RowDefinitions="*,Auto">
-                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,10" x:Name="ChatScrollViewer">
+                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,20" x:Name="ChatScrollViewer">
                             <ItemsControl ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
