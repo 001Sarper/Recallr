@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using QuestPDF.Infrastructure;
 using Recallr.Models.Configuration;
 
 namespace Recallr;
@@ -16,6 +17,7 @@ sealed class Program
     public static void Main(string[] args)
     {
         EnsureConfigFiles();
+        QuestPDF.Settings.License = LicenseType.Community;
         
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);   

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -53,7 +54,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             _learningsheetID);
 
         _currentLearningsheetFolderFiles = Directory.GetFiles(_currentLearningsheetFolder).ToList();
-        _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.txt"));
+        _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.md"));
 
         foreach (var file in _currentLearningsheetFolderFiles)
         {
@@ -61,7 +62,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             Files.Add(new FileEntryViewModel(Path.GetFileName(file), pageCount));
         }
 
-        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
+        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
         if (Path.Exists(learnsheetTextFile))
         {
             LearnsheetContent = File.ReadAllText(learnsheetTextFile);
@@ -122,7 +123,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     {
         var learnsheetReponse = await AIService.Instance.CreateLearningsheetAsync(_currentLearningsheetFolderFiles);
         CoursesService.SaveConfig();
-        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.txt");
+        var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
 
@@ -174,6 +175,19 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         CurrentInput = string.Empty; // TextBox sofort leeren
 
         await SendMessageAsync(input);
+    }
+    
+    [RelayCommand]
+    private void ExportAsPdf()
+    {
+        if (LearnsheetContent != string.Empty)
+        {
+            string exportLocation = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                "Downloads", "learnsheet.pdf");
+            
+            PdfService.ExportMarkdownAsPdf(LearnsheetContent, exportLocation);
+        }
     }
 
 }
