@@ -167,14 +167,14 @@
                                     M14 2v5a1 1 0 0 0 1 1h5
                                     M14 19h6
                                     M17 16v6"
-                                    Stroke="{DynamicResource ButtonEditBackground}"
+                                    Stroke="{DynamicResource ButtonPrimaryForeground}"
                                     StrokeThickness="2"
                                     StrokeLineCap="Round"
                                     StrokeJoin="Round"
                                     Fill="Transparent"
                                     Width="14" Height="14"
                                     Stretch="Uniform" />
-                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonEditBackground}" />
+                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonPrimaryForeground}" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -201,7 +201,7 @@
                                 <Grid ColumnDefinitions="*,Auto">
                                     <TextBlock Grid.Column="0" Text="Lernzettel Export als PDF" FontWeight="DemiBold"
                                                VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" Classes="primary" Command="{Binding ExportAsPdfCommand}">
+                                    <Button Grid.Column="1" Classes="primary" Command="{Binding ExportAsPdfCommand}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <Path
                                             Data="
                                     M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z
@@ -209,7 +209,7 @@
                                     M12 18v-8
                                     m-3 5 3 3 3-3
                                     "
-                                            Stroke="{DynamicResource ButtonEditBackground}"
+                                            Stroke="{DynamicResource ButtonPrimaryForeground}"
                                             StrokeThickness="2"
                                             StrokeLineCap="Round"
                                             StrokeJoin="Round"
@@ -226,16 +226,28 @@
                                     BorderThickness="1"
                                     HorizontalAlignment="Stretch"
                                     Margin="5,10,0,0">
-                                <Grid ColumnDefinitions="80,*">
-                                    <TextBlock Grid.Column="0" Text="Test Datum" FontSize="12" VerticalAlignment="Center" />
+                                <Grid ColumnDefinitions="*,160,Auto">
+                                    <TextBlock Grid.Column="0" Text="Test Datum" VerticalAlignment="Center" FontWeight="DemiBold"/>
                                     <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
-                                             HorizontalAlignment="Stretch" FontSize="8"
-                                             VerticalContentAlignment="Center"/>
+                                             HorizontalAlignment="Stretch"
+                                             VerticalContentAlignment="Center" Text="{Binding TestDate}"
+                                             HorizontalContentAlignment="Center"/>
+                                    <Button Grid.Column="2" Classes="primary" Margin="10,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                            Command="{Binding SaveTestDateCommand}">
+                                        <Path Data="M20 6 9 17l-5-5"
+                                              Stroke="{DynamicResource ButtonPrimaryForeground}"
+                                              StrokeThickness="2"
+                                              StrokeLineCap="Round"
+                                              StrokeJoin="Round"
+                                              Fill="Transparent"
+                                              Width="14" Height="14"
+                                              Stretch="Uniform"/>
+                                    </Button>
                                 </Grid>
                             </Border>
                         </StackPanel>
                         <Button Grid.Row="1" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding CreateLearningsheetCommand}">
-                            <TextBlock Text="Lernzettel erstellen"/>
+                            <TextBlock Text="Lernzettel erstellen" Foreground="{DynamicResource ButtonPrimaryForeground}"/>
                         </Button>
                     </Grid>
                 </Border>
@@ -289,7 +301,7 @@
                                 <Path
                                     Data="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z
                                 M6 12h16"
-                                    Stroke="{DynamicResource ButtonEditBackground}"
+                                    Stroke="{DynamicResource ButtonPrimaryForeground}"
                                     StrokeThickness="2"
                                     StrokeLineCap="Round"
                                     StrokeJoin="Round"

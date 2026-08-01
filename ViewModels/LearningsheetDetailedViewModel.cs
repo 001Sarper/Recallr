@@ -33,12 +33,16 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
 
     [ObservableProperty] private string _currentInput = string.Empty;
+    
+    [ObservableProperty] private string _testDate = string.Empty;
 
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
     private string _learningsheetID;
     private static string _currentLearningsheetFolder;
     private List<string> _currentLearningsheetFolderFiles;
+
+    private Learnsheet _currentLearnsheet;
     
     public ObservableCollection<ChatEntry> Messages { get; } = new();
 
@@ -55,6 +59,15 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
         _currentLearningsheetFolderFiles = Directory.GetFiles(_currentLearningsheetFolder).ToList();
         _currentLearningsheetFolderFiles.Remove(Path.Combine(_currentLearningsheetFolder, "learnsheet.md"));
+
+        _currentLearnsheet = CoursesService.configManager.ClientCourses
+            .FirstOrDefault(course => course.ID.ToString() == CoursesService.currentCourseID)
+            .learnsheets.FirstOrDefault(learnsheet => learnsheet.ID.ToString() == _learningsheetID);
+
+        if (!_currentLearnsheet.TestDate.Contains("Lege in den Lernzettel Optionen ein Test Datum fest!"))
+        {
+            TestDate = _currentLearnsheet.TestDate;
+        }
 
         foreach (var file in _currentLearningsheetFolderFiles)
         {
@@ -188,6 +201,13 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             
             PdfService.ExportMarkdownAsPdf(LearnsheetContent, exportLocation);
         }
+    }
+
+    [RelayCommand]
+    private void SaveTestDate()
+    {
+        _currentLearnsheet.TestDate = TestDate;
+        CoursesService.SaveConfig();
     }
 
 }
