@@ -261,7 +261,7 @@
                         BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
-                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}" />
+                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}" SelectionEnabled="True"/>
                 </Border>
             </Grid>
 
