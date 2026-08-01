@@ -262,7 +262,7 @@
                                 <StackPanel Spacing="0">
                                     <TextBlock Text="Version" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
-                                    <TextBlock Text="v0.1.0" FontSize="11"
+                                    <TextBlock Text="v0.1.1" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
                                 </StackPanel>
                             </StackPanel>

@@ -1,10 +1,10 @@
 # Recallr
 
-![v0.1.0 - Active Development](https://img.shields.io/badge/version-v0.1.0-orange)
+![v0.1.1 - Active Development](https://img.shields.io/badge/version-v0.1.1-orange)
 
 Recallr — turn photos and PDFs into compact study sheets ("Lernzettel") and AI-generated quizzes to practise active recall.
 
-> Status: v0.1.0 — Active development
+> Status: v0.1.1 — Active development
 
 ---
 
@@ -120,7 +120,7 @@ Paths used by the app (OS-dependent):
 
 ## Contributing
 
-This project is in early, active development (v0.1.0). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
+This project is in early, active development (v0.1.1). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
 
 Before contributing:
 - Run dotnet restore and ensure the app builds locally.
