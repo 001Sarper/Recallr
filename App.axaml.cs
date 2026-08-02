@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -6,6 +8,7 @@ using Recallr.ViewModels;
 using Recallr.Views;
 using LiveChartsCore; // <-- WICHTIG
 using LiveChartsCore.SkiaSharpView;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Recallr.Models.Services;
 using Recallr.Models.Services.Interfaces;
@@ -14,12 +17,20 @@ namespace Recallr;
 
 public partial class App : Application
 {
+    public IDataProtector Protector { get; private set; }
     public static App Instance { get; private set; }
     
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
         Instance = this;
+        
+        var provider = DataProtectionProvider.Create(
+            FileSystemPaths.dataprotectionKeysDirectory,
+            options => options.SetApplicationName("Snippy")
+        );
+
+        Protector = provider.CreateProtector("Connections");
 
     }
 

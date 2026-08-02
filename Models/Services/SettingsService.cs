@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.AspNetCore.DataProtection;
 using Recallr;
 using Recallr.Models.Configuration;
 using Recallr.Models.Services;
@@ -37,7 +38,7 @@ public partial class SettingsService : ObservableObject
     {
         var s = _configManager.ClientSettings[0];
 
-        s.OpenaiKey = OpenaiKey;
+        s.OpenaiKey = (string.IsNullOrEmpty(OpenaiKey)) ? "" : App.Instance.Protector.Protect(OpenaiKey);
         s.ProfileName = ProfileName;
         s.ProfileMail = ProfileMail;
         s.Theme = Theme;
@@ -56,7 +57,7 @@ public partial class SettingsService : ObservableObject
     {
         var s = _configManager.ClientSettings[0];
 
-        OpenaiKey = s.OpenaiKey;
+        OpenaiKey = (string.IsNullOrEmpty(s.OpenaiKey)) ? "" : App.Instance.Protector.Unprotect(s.OpenaiKey);
         ProfileName = s.ProfileName;
         ProfileMail = s.ProfileMail;
 
