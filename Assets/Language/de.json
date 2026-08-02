@@ -54,5 +54,6 @@
   "settings_version_title": "Version",
   "settings_save_settings_btn": "Einstellungen speichern",
   "file_picker_filetype": "Dateien",
-  "file_picker_title": "Dateien auswählen"
+  "file_picker_title": "Dateien auswählen",
+  "error_models_not_loading": "Modelle konnten nicht geladen werden"
 }

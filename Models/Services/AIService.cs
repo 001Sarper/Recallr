@@ -108,7 +108,7 @@ public partial class AIService : ObservableObject
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            collection.Add("Modelle konten nicht geladen werden");
+            collection.Add(LocalizationService.Instance["error_models_not_loading"]);
             return collection;
         }
     }

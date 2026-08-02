@@ -28,10 +28,10 @@ public partial class App : Application
         
         var provider = DataProtectionProvider.Create(
             FileSystemPaths.dataprotectionKeysDirectory,
-            options => options.SetApplicationName("Snippy")
+            options => options.SetApplicationName("Recallr")
         );
 
-        Protector = provider.CreateProtector("Connections");
+        Protector = provider.CreateProtector("KeyProtector");
 
     }
 
