@@ -113,13 +113,13 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     {
         var filters = new[]
         {
-            new FilePickerFileType("Dateien")
+            new FilePickerFileType(LocalizationService.Instance["file_picker_filetype"])
             {
                 Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.pdf", "*.webp" }
             }
         };
 
-        var paths = await _filePickerService.PickFilesAsync("Dateien auswählen", true, filters);
+        var paths = await _filePickerService.PickFilesAsync(LocalizationService.Instance["file_picker_title"], true, filters);
 
         foreach (var path in paths)
         {

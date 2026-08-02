@@ -19,7 +19,7 @@ public partial class LocalizationService : ObservableObject
         using var reader = new StreamReader(stream);
         _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd())!;
     
-        OnPropertyChanged("Item"); // <-- ohne eckige Klammern
+        OnPropertyChanged("Item"); 
     }
 
     public string this[string key] =>

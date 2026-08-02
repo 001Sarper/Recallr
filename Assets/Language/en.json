@@ -52,5 +52,7 @@
   "settings_author_title": "Developer",
   "settings_framework_title": "Framework",
   "settings_version_title": "Version",
-  "settings_save_settings_btn": "Save settings"
+  "settings_save_settings_btn": "Save settings",
+  "file_picker_filetype": "Files",
+  "file_picker_title": "Select files"
 }
