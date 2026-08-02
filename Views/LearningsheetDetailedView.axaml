@@ -4,8 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Recallr.ViewModels"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
              xmlns:models="clr-namespace:Recallr.Models.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.LearningsheetDetailedView"
@@ -24,7 +22,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource NavItemColor}" />
                     <Setter Property="Padding" Value="4,4" />
                     <Setter Property="Margin" Value="4,4" />
-                    <Setter Property="Width" Value="65" />
+                    <Setter Property="Width" Value="100" />
                     <Setter Property="CornerRadius" Value="8" />
                     <Setter Property="FontSize" Value="11" />
                     <Setter Property="FontWeight" Value="Medium" />
@@ -71,13 +69,13 @@
 
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <RadioButton Classes="navItem" GroupName="MainNav"
-                             Content="Dateien"
+                             Content="{models:Tr files_nav_bar}"
                              IsChecked="{Binding IsFilesSelected}"
                              Tag="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8
                              M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z
                              M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" />
                 <RadioButton Classes="navItem" GroupName="MainNav"
-                             Content="Lernzettel"
+                             Content="{models:Tr learn_sheet_nav_bar}"
                              IsChecked="{Binding IsSummarySelected}"
                              Tag="M8 2v4
                              M12 2v4
@@ -87,7 +85,7 @@
                              M8 14h8
                              M8 18h5" />
                 <RadioButton Classes="navItem" GroupName="MainNav"
-                             Content="Chat"
+                             Content="{models:Tr chat_nav_bar}"
                              IsChecked="{Binding IsChatSelected}"
                              Tag="M12 6V2H8
                              M15 11v2
@@ -144,7 +142,7 @@
                                                         CommandParameter="{Binding FileName}">
                                                     <Path
                                                         Data="M10 11v6 M14 11v6 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M3 6h18 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                                                        Stroke="{DynamicResource ButtonDeleteBackground}"
+                                                        Stroke="{DynamicResource ButtonPrimaryForeground}"
                                                         StrokeThickness="2"
                                                         StrokeLineCap="Round"
                                                         StrokeJoin="Round"
@@ -174,7 +172,7 @@
                                     Fill="Transparent"
                                     Width="14" Height="14"
                                     Stretch="Uniform" />
-                                <TextBlock Text="Datei anhängen" Foreground="{DynamicResource ButtonPrimaryForeground}" />
+                                <TextBlock Text="{models:Tr files_add_btn}" Foreground="{DynamicResource ButtonPrimaryForeground}" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -189,7 +187,7 @@
                         Margin="5,0,0,0">
                     <Grid RowDefinitions="*,Auto,Auto">
                         <StackPanel Grid.Row="0" Orientation="Vertical">
-                            <TextBlock Text="Lernzettel Optionen" HorizontalAlignment="Center" FontWeight="Bold"
+                            <TextBlock Text="{models:Tr learn_sheet_options_title}" HorizontalAlignment="Center" FontWeight="Bold"
                                        FontSize="16" Margin="0,0,0,10" />
                             <Border CornerRadius="12"
                                     Padding="16,10"
@@ -199,7 +197,7 @@
                                     HorizontalAlignment="Stretch"
                                     Margin="5,0,0,0">
                                 <Grid ColumnDefinitions="*,Auto">
-                                    <TextBlock Grid.Column="0" Text="Lernzettel Export als PDF" FontWeight="DemiBold"
+                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_pdfexport}" FontWeight="DemiBold"
                                                VerticalAlignment="Center" />
                                     <Button Grid.Column="1" Classes="primary" Command="{Binding ExportAsPdfCommand}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <Path
@@ -227,7 +225,7 @@
                                     HorizontalAlignment="Stretch"
                                     Margin="5,10,0,0">
                                 <Grid ColumnDefinitions="*,160,Auto">
-                                    <TextBlock Grid.Column="0" Text="Test Datum" VerticalAlignment="Center" FontWeight="DemiBold"/>
+                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_test_date}" VerticalAlignment="Center" FontWeight="DemiBold"/>
                                     <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                              HorizontalAlignment="Stretch"
                                              VerticalContentAlignment="Center" Text="{Binding TestDate}"
@@ -249,7 +247,7 @@
                         <Button Grid.Row="2" Height="45" Classes="primary" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"  Command="{Binding CreateLearningsheetAsyncCommand}">
                             <Grid>
                                 <ProgressBar IsIndeterminate="True" IsVisible="{Binding LearnsheetCreating}" Height="7" HorizontalAlignment="Stretch" Foreground="{DynamicResource AccentColor}"/>
-                                <TextBlock Text="Lernzettel erstellen" IsVisible="{Binding !LearnsheetCreating}"  Foreground="{DynamicResource ButtonPrimaryForeground}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{models:Tr learn_sheet_create_btn}" IsVisible="{Binding !LearnsheetCreating}"  Foreground="{DynamicResource ButtonPrimaryForeground}" HorizontalAlignment="Center"/>
                             </Grid>
                         </Button>
                     </Grid>
@@ -299,7 +297,7 @@
                             </ItemsControl>
                         </ScrollViewer>
                         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="Frag was du willst..." Text="{Binding CurrentInput}">
+                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="{models:Tr learn_sheet_chat_placeholder}" Text="{Binding CurrentInput}">
                                 <TextBox.KeyBindings>
                                     <KeyBinding Gesture="Enter" Command="{Binding SendMessageCommand}" />
                                 </TextBox.KeyBindings>

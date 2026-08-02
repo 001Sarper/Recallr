@@ -20,7 +20,7 @@ public partial class AppStateService : ObservableObject
     [ObservableProperty] private bool _isOverlayEditMode = false;
     [ObservableProperty] private string _buttonContent = "";
     
-    [ObservableProperty] private string _currentOption = "Meine Fächer";
+    [ObservableProperty] private string _currentOption = LocalizationService.Instance["courses_nav"];
     [ObservableProperty] private string _currentCourse = "";
     [ObservableProperty] private string _currentLearningsheet = "";
     

@@ -66,7 +66,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             .FirstOrDefault(course => course.ID.ToString() == CoursesService.currentCourseID)
             .learnsheets.FirstOrDefault(learnsheet => learnsheet.ID.ToString() == _learningsheetID);
 
-        if (!_currentLearnsheet.TestDate.Contains("Lege in den Lernzettel Optionen ein Test Datum fest!"))
+        if (!_currentLearnsheet.TestDate.Contains(LocalizationService.Instance["learn_sheet_blank_test_date"]))
         {
             TestDate = _currentLearnsheet.TestDate;
         }
@@ -113,13 +113,13 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     {
         var filters = new[]
         {
-            new FilePickerFileType("Dateien")
+            new FilePickerFileType(LocalizationService.Instance["file_picker_filetype"])
             {
                 Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.pdf", "*.webp" }
             }
         };
 
-        var paths = await _filePickerService.PickFilesAsync("Dateien auswählen", true, filters);
+        var paths = await _filePickerService.PickFilesAsync(LocalizationService.Instance["file_picker_title"], true, filters);
 
         foreach (var path in paths)
         {

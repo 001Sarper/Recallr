@@ -30,7 +30,7 @@ public partial class AIService : ObservableObject
     {
         _openAiClient = new OpenAIClient(apiKey: Settings.OpenaiKey);
     }
-    
+
 
 #pragma warning disable OPENAI001
     private ChatMessageContentPart CreateContentPartForFile(string path)
@@ -53,6 +53,13 @@ public partial class AIService : ObservableObject
     {
         try
         {
+            var languageName = Settings.Language switch
+            {
+                0 => "Deutsch",
+                1 => "Englisch",
+                _ => "Englisch"
+            };
+
             InitialiazeClient();
             var contentParts = new List<ChatMessageContentPart>
             {
@@ -67,7 +74,7 @@ public partial class AIService : ObservableObject
 
             List<ChatMessage> messages =
             [
-                new SystemChatMessage(SystemPromptBuilderService.BuildLearnsheet(Settings.SummaryStyle)),
+                new SystemChatMessage(SystemPromptBuilderService.BuildLearnsheet(languageName, Settings.SummaryStyle)),
                 new UserChatMessage(contentParts)
             ];
 
@@ -114,11 +121,11 @@ public partial class AIService : ObservableObject
             List<ChatMessage> messages =
             [
                 new SystemChatMessage(SystemPrompts.MetaDataSystemPrompt),
-                new UserChatMessage("Hier ist der Lernzettel \n" +  learnsheet)
+                new UserChatMessage("Hier ist der Lernzettel \n" + learnsheet)
             ];
-            
+
             ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
-            
+
             return completion.Content[0].Text;
         }
         catch (Exception e)
@@ -127,11 +134,20 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public async IAsyncEnumerable<string> StreamResponseAsync(IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+    public async IAsyncEnumerable<string> StreamResponseAsync(
+        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
+        var languageName = Settings.Language switch
+        {
+            0 => "Deutsch",
+            1 => "Englisch",
+            _ => "Englisch"
+        };
+        
         InitialiazeClient();
         var systemPrompt = SystemPromptBuilderService.BuildChat(
+            languageName,
             lernzettelContent: lernzettelContent,
             difficulty: SettingsService.Instance.Difficulty,
             questionType: SettingsService.Instance.QuestionType

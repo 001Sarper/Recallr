@@ -10,6 +10,7 @@ using LiveChartsCore; // <-- WICHTIG
 using LiveChartsCore.SkiaSharpView;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF;
 using Recallr.Models.Services;
 using Recallr.Models.Services.Interfaces;
 
@@ -42,6 +43,14 @@ public partial class App : Application
                     .AddDefaultMappers()
                     .AddDarkTheme() // oder AddLightTheme()
         );
+        
+        var languageName = SettingsService.Instance.Language switch
+        {
+            0 => "de",
+            1 => "en",
+            _ => "en"
+        };
+        LocalizationService.Instance.SetLanguage(languageName);
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
