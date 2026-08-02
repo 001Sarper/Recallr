@@ -1,5 +1,9 @@
+using System;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Recallr.Models.Models;
+using Recallr.Models.Services;
 
 namespace Recallr.ViewModels;
 
@@ -11,6 +15,7 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private string _draftOpenaiKey;
     [ObservableProperty] private string _draftProfileName;
     [ObservableProperty] private string _draftProfileMail;
+    [ObservableProperty] private string _draftAiModel;
 
     // View
     [ObservableProperty] private int _draftTheme;
@@ -22,14 +27,18 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private int _draftDifficulty;
     [ObservableProperty] private int _draftQuestionType;
 
+    [ObservableProperty] private ObservableCollection<string> _models = new();
+    [ObservableProperty] private bool _modelsLoading;
+    
+
     public SettingsViewModel()
     {
         //Load Settings
         LoadSettings();
-        
+        LoadModelsAsync();
     }
 
-    public void LoadSettings()
+    private void LoadSettings()
     {
         DraftOpenaiKey = Settings.OpenaiKey;
         DraftProfileName = Settings.ProfileName;
@@ -44,12 +53,31 @@ public partial class SettingsViewModel : ViewModelBase
         DraftQuestionType = Settings.QuestionType;
     }
 
+    private async void LoadModelsAsync()
+    {
+        ModelsLoading = true;
+        try
+        {
+            Models = await AIService.Instance.GetOpenAiModels();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Laden der Modelle: {ex.Message}");
+        }
+        finally
+        {
+            DraftAiModel = Settings.AiModel;
+            ModelsLoading = false;
+        }
+    }
+
     [RelayCommand]
     public void SaveSettings()
     {
         Settings.OpenaiKey = DraftOpenaiKey;
         Settings.ProfileName = DraftProfileName;
         Settings.ProfileMail = DraftProfileMail;
+        Settings.AiModel = DraftAiModel;
 
         Settings.Theme = DraftTheme;
         Settings.Language = DraftLanguage;
