@@ -9,6 +9,7 @@ public class FileSystemPaths
     public static string chatlogDirectoryPath { get; }
     public static string settingsFilePath { get; }
     public static string coursesFilePath  {get; }
+    public static DirectoryInfo dataprotectionKeysDirectory { get;  }
     
     static FileSystemPaths()
     {
@@ -20,5 +21,8 @@ public class FileSystemPaths
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientSettings.json");
         coursesFilePath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Recallr", "Config", "ClientCourses.json");
+        dataprotectionKeysDirectory =
+            new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Recallr", "Config", "DataProtectionKeys"));
     }
 }
