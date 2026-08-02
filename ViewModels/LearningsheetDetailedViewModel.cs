@@ -36,6 +36,8 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     
     [ObservableProperty] private string _testDate = string.Empty;
 
+    [ObservableProperty] private bool _learnsheetCreating;
+
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
     private string _learningsheetID;
@@ -132,8 +134,18 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task CreateLearningsheetAsync()
+    private async void CreateLearningsheetAsync()
     {
+        if (!LearnsheetCreating)
+        {
+            await StartLearnsheetCreationAsync();
+        }
+    }
+
+    private async Task StartLearnsheetCreationAsync()
+    {
+        LearnsheetCreating = true;
+        
         var learnsheetReponse = await AIService.Instance.CreateLearningsheetAsync(_currentLearningsheetFolderFiles);
         CoursesService.SaveConfig();
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
@@ -161,6 +173,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
+            LearnsheetCreating = false;
         }
     }
 
