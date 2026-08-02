@@ -24,13 +24,13 @@ public partial class MainViewModel : ViewModelBase
         {
             case 0:
                 AppState.ClearBreadcrumbs();
-                AppState.CurrentOption = "Meine Fächer";
+                AppState.CurrentOption = LocalizationService.Instance["courses_nav"];
                 if(AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
                 AppState.ShowCourseView();
                 break;
             case 1:
                 AppState.ClearBreadcrumbs();
-                AppState.CurrentOption = "Einstellungen";
+                AppState.CurrentOption = LocalizationService.Instance["settings_nav"];
                 if(AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
                 AppState.ShowSettingsView();
                 break;

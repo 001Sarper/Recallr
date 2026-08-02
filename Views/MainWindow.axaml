@@ -2,9 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Recallr.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="using:Recallr.Views"
-        xmlns:md="using:Markdown.Avalonia"
+        xmlns:models="clr-namespace:Recallr.Models.Models"
         x:DataType="vm:MainViewModel"
         d:DesignWidth="1200" d:DesignHeight="720"
         x:Class="Recallr.Views.MainWindow"
@@ -31,7 +29,7 @@
                         <TextBlock Text="Recallr"
                                    FontSize="19" FontWeight="Bold"
                                    Foreground="{DynamicResource TextPrimaryColor}" />
-                        <TextBlock Text="Dein smarter Lernbegleiter"
+                        <TextBlock Text="{models:Tr slogan}"
                                    FontSize="11"
                                    Foreground="{DynamicResource TextSecondaryColor}" />
                     </StackPanel>
@@ -54,14 +52,14 @@
                         <ListBoxItem>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <TextBlock Text="🎓" FontSize="16" />
-                                <TextBlock Text="Meine Fächer" Foreground="{DynamicResource TextPrimaryColor}" />
+                                <TextBlock Text="{models:Tr courses_nav}" Foreground="{DynamicResource TextPrimaryColor}" />
                             </StackPanel>
                         </ListBoxItem>
 
                         <ListBoxItem>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <TextBlock Text="⚙️" FontSize="16" />
-                                <TextBlock Text="Einstellungen" Foreground="{DynamicResource TextPrimaryColor}" />
+                                <TextBlock Text="{models:Tr settings_nav}" Foreground="{DynamicResource TextPrimaryColor}" />
                             </StackPanel>
                         </ListBoxItem>
                     </ListBox>

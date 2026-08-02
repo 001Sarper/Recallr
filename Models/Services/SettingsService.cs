@@ -51,6 +51,15 @@ public partial class SettingsService : ObservableObject
         s.QuestionType = QuestionType;
 
         File.WriteAllText(FileSystemPaths.settingsFilePath, JsonSerializer.Serialize(_configManager));
+        
+        var languageName = Language switch
+        {
+            0 => "de",
+            1 => "en",
+            _ => "en"
+        };
+        LocalizationService.Instance.SetLanguage(languageName);
+        
 
         App.Instance.SetTheme(Theme);
     }

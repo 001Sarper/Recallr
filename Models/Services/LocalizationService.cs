@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Recallr.Models.Services;
@@ -13,9 +14,12 @@ public partial class LocalizationService : ObservableObject
 
     public void SetLanguage(string code)
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "Assets", "Language", $"{code}.json");
-        _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path))!;
-        OnPropertyChanged("Item[]");
+        var uri = new Uri($"avares://Recallr/Assets/Language/{code}.json");
+        using var stream = AssetLoader.Open(uri);
+        using var reader = new StreamReader(stream);
+        _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd())!;
+    
+        OnPropertyChanged("Item"); // <-- ohne eckige Klammern
     }
 
     public string this[string key] =>

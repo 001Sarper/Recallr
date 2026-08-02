@@ -66,7 +66,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             .FirstOrDefault(course => course.ID.ToString() == CoursesService.currentCourseID)
             .learnsheets.FirstOrDefault(learnsheet => learnsheet.ID.ToString() == _learningsheetID);
 
-        if (!_currentLearnsheet.TestDate.Contains("Lege in den Lernzettel Optionen ein Test Datum fest!"))
+        if (!_currentLearnsheet.TestDate.Contains(LocalizationService.Instance["learn_sheet_blank_test_date"]))
         {
             TestDate = _currentLearnsheet.TestDate;
         }

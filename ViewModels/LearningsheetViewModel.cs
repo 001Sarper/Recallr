@@ -45,7 +45,7 @@ public partial class LearningsheetViewModel : ViewModelBase
         
         var newLearnsheet = new Learnsheet
         {
-            ID = newGuid, Description = "Lade Dateien hoch und klicke auf 'Lernzettel erstellen' – die KI übernimmt den Rest.", Name = "Unbenanntes Lernzettel", TestDate = "Lege in den Lernzettel Optionen ein Test Datum fest!"
+            ID = newGuid, Description = LocalizationService.Instance["learn_sheet_blank_description"], Name = LocalizationService.Instance["learn_sheet_blank_name"], TestDate = LocalizationService.Instance["learn_sheet_blank_test_date"]
         };
         
         CoursesService.configManager.ClientCourses.FirstOrDefault(c => c.ID.ToString() == CoursesService.currentCourseID).learnsheets.Add(newLearnsheet);
@@ -55,7 +55,7 @@ public partial class LearningsheetViewModel : ViewModelBase
         string newLearnsheetFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, CoursesService.currentCourseID, newGuid.ToString());
         Directory.CreateDirectory(newLearnsheetFolder);
         
-        AppStateService.CurrentLearningsheet = "Unbenanntes Lernzettel";
+        AppStateService.CurrentLearningsheet = LocalizationService.Instance["learn_sheet_blank_name"];
         AppStateService.OptionArrow2 = true;
         AppStateService.ShowLearningsheetDetailedView(newGuid.ToString());
     }
