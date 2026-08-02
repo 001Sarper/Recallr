@@ -14,6 +14,7 @@ public partial class SettingsService : ObservableObject
     [ObservableProperty] private string _openaiKey = "";
     [ObservableProperty] private string _profileName = "";
     [ObservableProperty] private string _profileMail = "";
+    [ObservableProperty] private string _aiModel = "";
 
     // View
     [ObservableProperty] private int _theme = 0;
@@ -39,6 +40,7 @@ public partial class SettingsService : ObservableObject
         var s = _configManager.ClientSettings[0];
 
         s.OpenaiKey = (string.IsNullOrEmpty(OpenaiKey)) ? "" : App.Instance.Protector.Protect(OpenaiKey);
+        s.AiModel = AiModel;
         s.ProfileName = ProfileName;
         s.ProfileMail = ProfileMail;
         s.Theme = Theme;
@@ -60,6 +62,7 @@ public partial class SettingsService : ObservableObject
         OpenaiKey = (string.IsNullOrEmpty(s.OpenaiKey)) ? "" : App.Instance.Protector.Unprotect(s.OpenaiKey);
         ProfileName = s.ProfileName;
         ProfileMail = s.ProfileMail;
+        AiModel = s.AiModel;
 
         Theme = s.Theme;
         Language = s.Language;

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using OpenAI;
 using OpenAI.Chat;
+using OpenAI.Models;
 using Recallr.Models.Models;
 using ChatMessage = OpenAI.Chat.ChatMessage;
 
@@ -16,11 +19,18 @@ public partial class AIService : ObservableObject
     public static SettingsService Settings => SettingsService.Instance;
 
     private static ChatClient _chatClient;
+    private static OpenAIClient _openAiClient;
 
     public static void InitialiazeClient()
     {
-        _chatClient = new(model: "gpt-5.6-luna", apiKey: Settings.OpenaiKey);
+        _chatClient = new(model: Settings.AiModel, apiKey: Settings.OpenaiKey);
     }
+
+    public static void InitialiazeOpenAiClient()
+    {
+        _openAiClient = new OpenAIClient(apiKey: Settings.OpenaiKey);
+    }
+    
 
 #pragma warning disable OPENAI001
     private ChatMessageContentPart CreateContentPartForFile(string path)
@@ -67,6 +77,32 @@ public partial class AIService : ObservableObject
         catch (Exception e)
         {
             return "Error: " + e.Message;
+        }
+    }
+
+    public async Task<ObservableCollection<string>> GetOpenAiModels()
+    {
+        ObservableCollection<string> collection = new();
+
+        try
+        {
+            InitialiazeOpenAiClient();
+
+            OpenAIModelClient modelClient = _openAiClient.GetOpenAIModelClient();
+            var models = await modelClient.GetModelsAsync();
+
+            foreach (var model in models.Value.OrderBy(m => m.Id))
+            {
+                collection.Add(model.Id);
+            }
+
+            return collection;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            collection.Add("Modelle konten nicht geladen werden");
+            return collection;
         }
     }
 
