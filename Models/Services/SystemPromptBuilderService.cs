@@ -52,13 +52,14 @@ public class SystemPromptBuilderService
         
 
 
-        public static string BuildChat(string lernzettelContent, int difficulty, int questionType)
+        public static string BuildChat(string learnsheetLanguage, string lernzettelContent, int difficulty, int questionType)
             => string.Format(
+                learnsheetLanguage,
                 SystemPrompts.Template,
                 GetDifficultyBlock(difficulty),
                 GetQuestionTypeBlock(questionType),
                 lernzettelContent);
         
-        public static string BuildLearnsheet(int learnsheetType) 
-            => string.Format(SystemPrompts.LearnsheetSystemPrompt, GetLearnsheetSummaryType(learnsheetType));
+        public static string BuildLearnsheet(string learnsheetLanguage, int learnsheetType) 
+            => string.Format(learnsheetLanguage, SystemPrompts.LearnsheetSystemPrompt, GetLearnsheetSummaryType(learnsheetType));
 }
