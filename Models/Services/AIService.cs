@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using OpenAI;
 using OpenAI.Chat;
+using OpenAI.Models;
 using Recallr.Models.Models;
 using ChatMessage = OpenAI.Chat.ChatMessage;
 
@@ -16,11 +19,18 @@ public partial class AIService : ObservableObject
     public static SettingsService Settings => SettingsService.Instance;
 
     private static ChatClient _chatClient;
+    private static OpenAIClient _openAiClient;
 
     public static void InitialiazeClient()
     {
-        _chatClient = new(model: "gpt-5.6-luna", apiKey: Settings.OpenaiKey);
+        _chatClient = new(model: Settings.AiModel, apiKey: Settings.OpenaiKey);
     }
+
+    public static void InitialiazeOpenAiClient()
+    {
+        _openAiClient = new OpenAIClient(apiKey: Settings.OpenaiKey);
+    }
+
 
 #pragma warning disable OPENAI001
     private ChatMessageContentPart CreateContentPartForFile(string path)
@@ -43,6 +53,13 @@ public partial class AIService : ObservableObject
     {
         try
         {
+            var languageName = Settings.Language switch
+            {
+                0 => "Deutsch",
+                1 => "Englisch",
+                _ => "Englisch"
+            };
+
             InitialiazeClient();
             var contentParts = new List<ChatMessageContentPart>
             {
@@ -57,7 +74,7 @@ public partial class AIService : ObservableObject
 
             List<ChatMessage> messages =
             [
-                new SystemChatMessage(SystemPromptBuilderService.BuildLearnsheet(Settings.SummaryStyle)),
+                new SystemChatMessage(SystemPromptBuilderService.BuildLearnsheet(languageName, Settings.SummaryStyle)),
                 new UserChatMessage(contentParts)
             ];
 
@@ -70,6 +87,32 @@ public partial class AIService : ObservableObject
         }
     }
 
+    public async Task<ObservableCollection<string>> GetOpenAiModels()
+    {
+        ObservableCollection<string> collection = new();
+
+        try
+        {
+            InitialiazeOpenAiClient();
+
+            OpenAIModelClient modelClient = _openAiClient.GetOpenAIModelClient();
+            var models = await modelClient.GetModelsAsync();
+
+            foreach (var model in models.Value.OrderBy(m => m.Id))
+            {
+                collection.Add(model.Id);
+            }
+
+            return collection;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            collection.Add(LocalizationService.Instance["error_models_not_loading"]);
+            return collection;
+        }
+    }
+
     public async Task<string> CreateLearnsheetMetaData(string learnsheet)
     {
         try
@@ -78,11 +121,11 @@ public partial class AIService : ObservableObject
             List<ChatMessage> messages =
             [
                 new SystemChatMessage(SystemPrompts.MetaDataSystemPrompt),
-                new UserChatMessage("Hier ist der Lernzettel \n" +  learnsheet)
+                new UserChatMessage("Hier ist der Lernzettel \n" + learnsheet)
             ];
-            
+
             ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
-            
+
             return completion.Content[0].Text;
         }
         catch (Exception e)
@@ -91,11 +134,20 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public async IAsyncEnumerable<string> StreamResponseAsync(IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+    public async IAsyncEnumerable<string> StreamResponseAsync(
+        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
+        var languageName = Settings.Language switch
+        {
+            0 => "Deutsch",
+            1 => "Englisch",
+            _ => "Englisch"
+        };
+        
         InitialiazeClient();
         var systemPrompt = SystemPromptBuilderService.BuildChat(
+            languageName,
             lernzettelContent: lernzettelContent,
             difficulty: SettingsService.Instance.Difficulty,
             questionType: SettingsService.Instance.QuestionType

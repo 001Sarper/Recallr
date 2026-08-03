@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -6,7 +8,9 @@ using Recallr.ViewModels;
 using Recallr.Views;
 using LiveChartsCore; // <-- WICHTIG
 using LiveChartsCore.SkiaSharpView;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF;
 using Recallr.Models.Services;
 using Recallr.Models.Services.Interfaces;
 
@@ -14,12 +18,20 @@ namespace Recallr;
 
 public partial class App : Application
 {
+    public IDataProtector Protector { get; private set; }
     public static App Instance { get; private set; }
     
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
         Instance = this;
+        
+        var provider = DataProtectionProvider.Create(
+            FileSystemPaths.dataprotectionKeysDirectory,
+            options => options.SetApplicationName("Recallr")
+        );
+
+        Protector = provider.CreateProtector("KeyProtector");
 
     }
 
@@ -31,6 +43,14 @@ public partial class App : Application
                     .AddDefaultMappers()
                     .AddDarkTheme() // oder AddLightTheme()
         );
+        
+        var languageName = SettingsService.Instance.Language switch
+        {
+            0 => "de",
+            1 => "en",
+            _ => "en"
+        };
+        LocalizationService.Instance.SetLanguage(languageName);
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

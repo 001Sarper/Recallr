@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Recallr.ViewModels"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="150" Width="400" Height="150"
              x:Class="Recallr.Views.NewCourseOverlayView"
              x:DataType="vm:NewCourseOverlayViewModel">
@@ -16,11 +17,11 @@
                 <ComboBoxItem Content="🎨"/>
                 <ComboBoxItem Content="📘"/>
             </ComboBox>
-            <TextBox Grid.Column="1" PlaceholderText="Fachlehrer" Margin="10,0,0,0" Text="{Binding AppStateService.CourseTeacher}"/>
+            <TextBox Grid.Column="1" PlaceholderText="{models:Tr learn_sheet_overlay_teacher}" Margin="10,0,0,0" Text="{Binding AppStateService.CourseTeacher}"/>
         </Grid>
-        <TextBox Grid.Row="1" PlaceholderText="Fachname" Margin="10,0,10,10" Text="{Binding AppStateService.CourseName}"/>
+        <TextBox Grid.Row="1" PlaceholderText="{models:Tr learn_sheet_overlay_coursename}" Margin="10,0,10,10" Text="{Binding AppStateService.CourseName}"/>
         <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,0,0,10">
-            <Button Grid.Column="0" Classes="delete" Content="Abbrechen" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CloseOverlayCommand}"/>
+            <Button Grid.Column="0" Classes="delete" Content="{models:Tr learn_sheet_overlay_esc}" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CloseOverlayCommand}"/>
             <Button Grid.Column="1" Classes="edit" Content="{Binding AppStateService.ButtonContent}" HorizontalAlignment="Center" Width="125" HorizontalContentAlignment="Center" Command="{Binding CreateCourseCommand}"/>
         </Grid>
     </Grid>

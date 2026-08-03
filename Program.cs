@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using QuestPDF;
 using QuestPDF.Infrastructure;
 using Recallr.Models.Configuration;
+using Recallr.Models.Services;
 
 namespace Recallr;
 
@@ -50,8 +52,8 @@ sealed class Program
                 {
                     new ClientSettings
                     {
-                        OpenaiKey = "", ProfileName = "Example User", ProfileMail = "examplemail@proton.me",
-                        Theme = 0, Language = 0, FontSize = 0, SummaryStyle = 0, Difficulty = 1, QuestionType = 1
+                        OpenaiKey = "", ProfileName = "Example User", ProfileMail = "examplemail@proton.me", AiModel = "gpt-5.6-luna",
+                        Theme = 0, Language = 1, FontSize = 0, SummaryStyle = 0, Difficulty = 1, QuestionType = 1
                     }
                 }
             };

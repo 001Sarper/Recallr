@@ -1,5 +1,6 @@
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Recallr.Models.Services;
 
 namespace Recallr.ViewModels;
 
@@ -12,6 +13,6 @@ public partial class FileEntryViewModel : ObservableObject
     {
         FileName = fileName;
         var shortFileName = Path.GetFileName(fileName);
-        DisplayText = $"{shortFileName} ~ {pageCount} Seiten erfasst";
+        DisplayText = $"{shortFileName} ~ {pageCount} {LocalizationService.Instance["file_picker_pages_text"]}";
     }
 }

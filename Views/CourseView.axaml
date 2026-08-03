@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Recallr.ViewModels"
              xmlns:m="clr-namespace:Recallr.Models.Configuration"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.CourseView"
              x:DataType="vm:CourseViewModel">
     <Grid RowDefinitions="45,Auto,*">
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <TextBox CornerRadius="12" Grid.Column="0" Height="36" Margin="10,5,5,0" HorizontalAlignment="Stretch"
-                     VerticalAlignment="Center"  PlaceholderText="Nach Fach suchen..." Text="{Binding SearchText}"/>
+                     VerticalAlignment="Center"  PlaceholderText="{models:Tr course_search_bar}" Text="{Binding SearchText}"/>
             <Button Margin="0,5,10,0" Height="35" Classes="primary" Grid.Row="0" Grid.Column="1"
                     HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowOverlayCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
@@ -22,7 +23,7 @@
                           Stretch="None"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
-                    <TextBlock Text="Fach hinzufügen" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryColor}"/>
+                    <TextBlock Text="{models:Tr course_add_btn}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryColor}"/>
                 </StackPanel>
             </Button>
         </Grid>

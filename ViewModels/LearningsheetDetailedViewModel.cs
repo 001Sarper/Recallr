@@ -36,6 +36,8 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     
     [ObservableProperty] private string _testDate = string.Empty;
 
+    [ObservableProperty] private bool _learnsheetCreating;
+
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
     private string _learningsheetID;
@@ -64,7 +66,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             .FirstOrDefault(course => course.ID.ToString() == CoursesService.currentCourseID)
             .learnsheets.FirstOrDefault(learnsheet => learnsheet.ID.ToString() == _learningsheetID);
 
-        if (!_currentLearnsheet.TestDate.Contains("Lege in den Lernzettel Optionen ein Test Datum fest!"))
+        if (!_currentLearnsheet.TestDate.Contains(LocalizationService.Instance["learn_sheet_blank_test_date"]))
         {
             TestDate = _currentLearnsheet.TestDate;
         }
@@ -111,13 +113,13 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     {
         var filters = new[]
         {
-            new FilePickerFileType("Dateien")
+            new FilePickerFileType(LocalizationService.Instance["file_picker_filetype"])
             {
                 Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.pdf", "*.webp" }
             }
         };
 
-        var paths = await _filePickerService.PickFilesAsync("Dateien auswählen", true, filters);
+        var paths = await _filePickerService.PickFilesAsync(LocalizationService.Instance["file_picker_title"], true, filters);
 
         foreach (var path in paths)
         {
@@ -132,8 +134,18 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task CreateLearningsheetAsync()
+    private async void CreateLearningsheetAsync()
     {
+        if (!LearnsheetCreating)
+        {
+            await StartLearnsheetCreationAsync();
+        }
+    }
+
+    private async Task StartLearnsheetCreationAsync()
+    {
+        LearnsheetCreating = true;
+        
         var learnsheetReponse = await AIService.Instance.CreateLearningsheetAsync(_currentLearningsheetFolderFiles);
         CoursesService.SaveConfig();
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
@@ -161,6 +173,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
+            LearnsheetCreating = false;
         }
     }
 

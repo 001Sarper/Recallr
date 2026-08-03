@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Recallr.ViewModels"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
@@ -14,7 +15,7 @@
                 <!-- Account Anzeige -->
 
                 <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto,Auto,*,*,*" Margin="0,0,5,0">
-                    <TextBlock Grid.Row="0" Text="Account" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="0" Text="{models:Tr settings_account_title}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" />
                     <Separator Grid.Row="1" />
                     <Border Grid.Row="2" CornerRadius="12"
                             Margin="0,5,0,0"
@@ -24,7 +25,7 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="OpenAI-Key" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_openAiKey_option}" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch" PasswordChar="֍" FontSize="8"
                                      VerticalContentAlignment="Center" Text="{Binding DraftOpenaiKey}"/>
@@ -38,7 +39,7 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="Profil Name" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_profile_name_option}" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch" PlaceholderText="Dipsy" Text="{Binding DraftProfileName}"/>
                         </Grid>
@@ -51,7 +52,7 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="Profil E-Mail" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_profile_mail_option}" FontSize="12" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch" PlaceholderText="" Text="{Binding DraftProfileMail}"/>
                         </Grid>
@@ -61,7 +62,7 @@
                 <!-- Darstellungs Anzeige -->
 
                 <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="Auto,Auto,*,*,*" Margin="5,0,0,0">
-                    <TextBlock Grid.Row="0" Text="Darstellung" FontWeight="Bold" FontSize="18"
+                    <TextBlock Grid.Row="0" Text="{models:Tr settings_view_title}" FontWeight="Bold" FontSize="18"
                                HorizontalAlignment="Center" />
                     <Separator Grid.Row="1" />
                     <Border Grid.Row="2" CornerRadius="12"
@@ -72,12 +73,12 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="Theme" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_theme_option}" FontSize="12" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftTheme}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="System" />
-                                <ComboBoxItem Content="Dark" />
-                                <ComboBoxItem Content="Light" />
+                                <ComboBoxItem Content="{models:Tr settings_theme_system}" />
+                                <ComboBoxItem Content="{models:Tr settings_theme_dark}" />
+                                <ComboBoxItem Content="{models:Tr settings_theme_light}" />
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -89,7 +90,7 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="Sprache" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_language_option}" FontSize="12" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftLanguage}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="Deutsch" />
@@ -105,7 +106,7 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="80,*">
-                            <TextBlock Grid.Column="0" Text="Schriftgröße" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_font_size_option}" FontSize="12" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftFontSize}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="14" />
@@ -119,8 +120,8 @@
 
                 <!-- App-Verhalten Anzeige -->
 
-                <Grid Grid.Row="1" Grid.Column="0" RowDefinitions="Auto,Auto,*,*,*" Margin="0,10,5,0">
-                    <TextBlock Grid.Row="0" Text="KI-Verhalten" FontWeight="Bold" FontSize="18"
+                <Grid Grid.Row="1" Grid.Column="0" RowDefinitions="Auto,Auto,*,*,*,*" Margin="0,10,5,0">
+                    <TextBlock Grid.Row="0" Text="{models:Tr settings_ai_settings_title}" FontWeight="Bold" FontSize="18"
                                HorizontalAlignment="Center" />
                     <Separator Grid.Row="1" />
                     <Border Grid.Row="2" CornerRadius="12"
@@ -130,14 +131,12 @@
                             BorderBrush="{DynamicResource BorderColor}"
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
-                        <Grid ColumnDefinitions="150,*">
-                            <TextBlock Grid.Column="0" Text="Zusammenfassungsstil" FontSize="12"
-                                       VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftSummaryStyle}" CornerRadius="12" VerticalAlignment="Center"
-                                      HorizontalAlignment="Stretch" Margin="10,0,0,0">
-                                <ComboBoxItem Content="Ausführlich" />
-                                <ComboBoxItem Content="Kurz/Knapp" />
+                        <Grid ColumnDefinitions="150,*" RowDefinitions="*,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{models:Tr settings_ai_model_option}" FontSize="12" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" CornerRadius="12" VerticalAlignment="Center"
+                                      HorizontalAlignment="Stretch" Margin="10,0,0,0" ItemsSource="{Binding Models}" SelectedItem="{Binding DraftAiModel}">
                             </ComboBox>
+                            <ProgressBar Grid.Row="1" Grid.Column="1" IsIndeterminate="True" IsVisible="{Binding ModelsLoading}" Margin="10,5,0,0" HorizontalAlignment="Stretch"/>
                         </Grid>
                     </Border>
                     <Border Grid.Row="3" CornerRadius="12"
@@ -148,13 +147,12 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="150,*">
-                            <TextBlock Grid.Column="0" Text="Schwierigkeitsgrad" FontSize="12"
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_summary_style_option}" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftDifficulty}" CornerRadius="12" VerticalAlignment="Center"
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftSummaryStyle}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
-                                <ComboBoxItem Content="Schwer" />
-                                <ComboBoxItem Content="Normal" />
-                                <ComboBoxItem Content="Einfach" />
+                                <ComboBoxItem Content="{models:Tr settings_summary_long}" />
+                                <ComboBoxItem Content="{models:Tr settings_summary_short}" />
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -166,11 +164,29 @@
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
                         <Grid ColumnDefinitions="150,*">
-                            <TextBlock Grid.Column="0" Text="Fragetyp" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_difficulty_option}" FontSize="12"
+                                       VerticalAlignment="Center" />
+                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftDifficulty}" CornerRadius="12" VerticalAlignment="Center"
+                                      HorizontalAlignment="Stretch" Margin="10,0,0,0">
+                                <ComboBoxItem Content="{models:Tr settings_difficulty_difficult}" />
+                                <ComboBoxItem Content="{models:Tr settings_difficulty_normal}" />
+                                <ComboBoxItem Content="{models:Tr settings_difficulty_easy}" />
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Row="5" CornerRadius="12"
+                            Margin="0,5,0,0"
+                            Padding="16,10"
+                            Background="{DynamicResource SurfaceColor}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <Grid ColumnDefinitions="150,*">
+                            <TextBlock Grid.Column="0" Text="{models:Tr settings_question_type_option}" FontSize="12" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftQuestionType}" CornerRadius="12" VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch" Margin="10,0,0,0">
-                                <ComboBoxItem Content="Multiple Choice Fragen" />
-                                <ComboBoxItem Content="Offene Fragen" />
+                                <ComboBoxItem Content="{models:Tr settings_question_type_multi}" />
+                                <ComboBoxItem Content="{models:Tr settings_question_type_open}" />
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -179,7 +195,7 @@
                 <!-- Credits Anzeige -->
                 
                 <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="Auto,Auto,*,*,*" Margin="5,10,0,0">
-                    <TextBlock Grid.Row="0" Text="Recallr " FontWeight="Bold" FontSize="18"
+                    <TextBlock Grid.Row="0" Text="Recallr" FontWeight="Bold" FontSize="18"
                                HorizontalAlignment="Center" />
                     <Separator Grid.Row="1" />
                     <Border Grid.Row="2" CornerRadius="12"
@@ -189,7 +205,7 @@
                             BorderBrush="{DynamicResource BorderColor}"
                             BorderThickness="1"
                             HorizontalAlignment="Stretch">
-                        <TextBlock Text="Recallr verwandelt PDFs, GoodNotes-Dateien und andere Dokumente automatisch in übersichtliche Lernzettel und Zusammenfassungen. Mit Active Recall und Spaced Repetition wirst du gezielt abgefragt – und übersichtliche Grafen zeigen dir, welche Themen du schon beherrschst und wo noch Lücken sind." 
+                        <TextBlock Text="{models:Tr settings_recallr_description}" 
                                    TextWrapping="Wrap" FontSize="12" TextAlignment="Justify" LineHeight="16"/>
                     </Border>
                     
@@ -210,7 +226,7 @@
                                       Width="20"
                                       Height="20"/>
                                 <StackPanel Spacing="0">
-                                    <TextBlock Text="Author" FontSize="13" FontWeight="SemiBold"
+                                    <TextBlock Text="{models:Tr settings_author_title}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
                                     <TextBlock Text="Dipsy" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
@@ -237,7 +253,7 @@
                                       Width="16"
                                       Height="16"/>
                                 <StackPanel Spacing="0">
-                                    <TextBlock Text="Framework" FontSize="13" FontWeight="SemiBold"
+                                    <TextBlock Text="{models:Tr settings_framework_title}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
                                     <TextBlock Text="AvaloniaUI • C#" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
@@ -260,9 +276,9 @@
                                       Width="16"
                                       Height="16"/>
                                 <StackPanel Spacing="0">
-                                    <TextBlock Text="Version" FontSize="13" FontWeight="SemiBold"
+                                    <TextBlock Text="{models:Tr settings_version_title}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
-                                    <TextBlock Text="v0.1.1" FontSize="11"
+                                    <TextBlock Text="v0.2.0" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
                                 </StackPanel>
                             </StackPanel>
@@ -284,7 +300,7 @@
                               Stretch="Uniform"
                               Width="16"
                               Height="16"/>
-                        <TextBlock Text="Einstellungen speichern" Margin="5,0,0,0"/>
+                        <TextBlock Text="{models:Tr settings_save_settings_btn}" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
             </Grid>

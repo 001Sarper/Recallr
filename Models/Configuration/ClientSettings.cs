@@ -6,6 +6,7 @@ public class ClientSettings
     public string OpenaiKey { get; set; }
     public string ProfileName { get; set; }
     public string ProfileMail { get; set; }
+    public string AiModel { get; set; }
     
     //View Settings
     public int Theme { get; set; }
