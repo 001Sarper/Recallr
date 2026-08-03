@@ -55,5 +55,6 @@
   "settings_save_settings_btn": "Save settings",
   "file_picker_filetype": "Files",
   "file_picker_title": "Select files",
+  "file_picker_pages_text": "pages",
   "error_models_not_loading": "Models couldn't be loaded"
 }
