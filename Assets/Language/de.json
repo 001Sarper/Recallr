@@ -59,7 +59,12 @@
   "error_models_not_loading": "Modelle konnten nicht geladen werden",
   "messagebox_ok_btn": "OK",
   "successmessage_title": "Erfolg",
+  "errormessage_title": "Fehler",
   "settings_successmessage_message": "Die Einstellungen wurden erfolgreich abgespeichert",
   "courses_successmessage_message": "Das Fach wurde erfolgreich erstellt",
-  "no_learnsheet_yet": "Es wurde noch kein Lernzettel erstellt!"
+  "no_learnsheet_yet": "Es wurde noch kein Lernzettel erstellt!",
+  "pdf_export_success": "PDF Datei wurde erfolgreich exportiert!",
+  "general_error_message": "Es gab einen unerwarteten Fehler:",
+  "learnsheet_creation_success": "Dein Lernzettel wurde erfolgreich erstellt!"
+  
 }

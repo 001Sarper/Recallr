@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Avalonia.Media;
 using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
@@ -9,6 +11,7 @@ using PdfSharp.Pdf.IO;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using Colors = QuestPDF.Helpers.Colors;
 
 namespace Recallr.Models.Services;
 
@@ -27,48 +30,66 @@ public class PdfService
     private static readonly string ColorCodeBg = Colors.Grey.Lighten3;
     private static readonly string ColorTableHeaderBg = Colors.Blue.Lighten4;
     private static readonly string ColorRule = Colors.Grey.Lighten1;
+    
+    private static AppStateService AppState => AppStateService.Instance;
 
     
     public static int GetDocumentPageCount(string path)
     {
-        using (PdfSharp.Pdf.PdfDocument document = PdfReader.Open(path, PdfDocumentOpenMode.InformationOnly))
+        try
         {
-            return document.PageCount;
+            using (PdfSharp.Pdf.PdfDocument document = PdfReader.Open(path, PdfDocumentOpenMode.InformationOnly))
+            {
+                return document.PageCount;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"], ex.Message, Brushes.Red);
+            return -1;
         }
     }
 
     public static void ExportMarkdownAsPdf(string markdownText, string outputFilePath)
     {
-        var pipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions() // aktiviert Tabellen, Fußnoten, etc.
-            .Build();
- 
-        var document = Markdig.Markdown.Parse(markdownText, pipeline);
- 
-        Document.Create(container =>
+        try
         {
-            container.Page(page =>
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions() // aktiviert Tabellen, Fußnoten, etc.
+                .Build();
+
+            var document = Markdig.Markdown.Parse(markdownText, pipeline);
+
+            Document.Create(container =>
             {
-                page.Size(PageSizes.A4);
-                page.Margin(2, Unit.Centimetre);
-                page.DefaultTextStyle(x => x.FontSize(11).FontColor(ColorText));
- 
-                page.Content().Column(col =>
+                container.Page(page =>
                 {
-                    col.Spacing(4);
-                    foreach (var block in document)
-                        RenderBlock(col, block);
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, Unit.Centimetre);
+                    page.DefaultTextStyle(x => x.FontSize(11).FontColor(ColorText));
+
+                    page.Content().Column(col =>
+                    {
+                        col.Spacing(4);
+                        foreach (var block in document)
+                            RenderBlock(col, block);
+                    });
+
+                    page.Footer().AlignCenter().Text(t =>
+                    {
+                        t.DefaultTextStyle(x => x.FontSize(9).FontColor(Colors.Grey.Medium));
+                        t.CurrentPageNumber();
+                        t.Span(" / ");
+                        t.TotalPages();
+                    });
                 });
- 
-                page.Footer().AlignCenter().Text(t =>
-                {
-                    t.DefaultTextStyle(x => x.FontSize(9).FontColor(Colors.Grey.Medium));
-                    t.CurrentPageNumber();
-                    t.Span(" / ");
-                    t.TotalPages();
-                });
-            });
-        }).GeneratePdf(outputFilePath);
+            }).GeneratePdf(outputFilePath);
+            AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["pdf_export_success"], Brushes.Green);
+        }
+        catch (Exception ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"], ex.Message, Brushes.Red);
+        }
 
     }
     

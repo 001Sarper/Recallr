@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Text.Json;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.AspNetCore.DataProtection;
 using Recallr;
@@ -9,6 +11,9 @@ using Recallr.Models.Services;
 public partial class SettingsService : ObservableObject
 {
     public static SettingsService Instance { get; } = new SettingsService();
+    public AppStateService AppState => AppStateService.Instance;
+    
+    
 
     // Account
     [ObservableProperty] private string _openaiKey = "";
@@ -30,9 +35,16 @@ public partial class SettingsService : ObservableObject
     
     private SettingsService()
     {
-        var json = File.ReadAllText(FileSystemPaths.settingsFilePath);
-        _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
-        Load();
+        try
+        {
+            var json = File.ReadAllText(FileSystemPaths.settingsFilePath);
+            _configManager = JsonSerializer.Deserialize<ConfigManager>(json) ?? new ConfigManager();
+            Load();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     public void Save()
@@ -50,7 +62,15 @@ public partial class SettingsService : ObservableObject
         s.Difficulty = Difficulty;
         s.QuestionType = QuestionType;
 
-        File.WriteAllText(FileSystemPaths.settingsFilePath, JsonSerializer.Serialize(_configManager));
+
+        try
+        {
+            File.WriteAllText(FileSystemPaths.settingsFilePath, JsonSerializer.Serialize(_configManager));
+        }
+        catch (Exception ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"], ex.Message, Brushes.Red);
+        }
         
         var languageName = Language switch
         {
