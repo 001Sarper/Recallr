@@ -39,10 +39,6 @@ sealed class Program
         
         string coursesDirectory = Path.Combine(parentDirectory, "Courses");
         Directory.CreateDirectory(coursesDirectory);
-        
-        
-        
-
 
         if (!File.Exists(settingsFilePath))
         {

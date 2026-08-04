@@ -45,7 +45,7 @@ public partial class CourseViewModel : ViewModelBase
     {
         AppStateService.ButtonContent = LocalizationService.Instance["learn_sheet_overlay_create"];
         AppStateService.IsOverlayVisible = true;
-        AppStateService.ShowOverlay();
+        AppStateService.ShowCourseEditorOverlay();
     }
     
     
@@ -68,7 +68,7 @@ public partial class CourseViewModel : ViewModelBase
         AppStateService.course = course;
         AppStateService.ButtonContent = LocalizationService.Instance["learn_sheet_overlay_edit"];
         AppStateService.IsOverlayEditMode = true;
-        AppStateService.ShowOverlay();
+        AppStateService.ShowCourseEditorOverlay();
     }
 
     [RelayCommand]

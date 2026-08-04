@@ -56,5 +56,10 @@
   "file_picker_filetype": "Dateien",
   "file_picker_title": "Dateien auswählen",
   "file_picker_pages_text": "Seiten",
-  "error_models_not_loading": "Modelle konnten nicht geladen werden"
+  "error_models_not_loading": "Modelle konnten nicht geladen werden",
+  "messagebox_ok_btn": "OK",
+  "successmessage_title": "Erfolg",
+  "settings_successmessage_message": "Die Einstellungen wurden erfolgreich abgespeichert",
+  "courses_successmessage_message": "Das Fach wurde erfolgreich erstellt",
+  "no_learnsheet_yet": "Es wurde noch kein Lernzettel erstellt!"
 }

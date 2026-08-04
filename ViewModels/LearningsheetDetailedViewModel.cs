@@ -28,7 +28,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private bool _isChatSelected = false;
     [ObservableProperty] private bool _isKnownledgeSelected = false;
 
-    [ObservableProperty] private string _learnsheetContent;
+    [ObservableProperty] private string _learnsheetContent = $"# {LocalizationService.Instance["no_learnsheet_yet"]}";
 
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
 

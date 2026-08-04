@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using Recallr.Models.Configuration;
 using Recallr.Models.Services;
@@ -37,7 +38,8 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
             var courseFolder = Path.Combine(FileSystemPaths.coursesDirectoryPath, newCourse.ID.ToString());
             Directory.CreateDirectory(courseFolder);
         
-            AppStateService.Instance.CloseOverlay();
+            AppStateService.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["courses_successmessage_message"], Brushes.Green);
+            
         }
         else
         {
@@ -51,8 +53,6 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
             CoursesService.SaveConfig();
             CoursesService.Instance.LoadCourses();
             AppStateService.ClearData();
-            
-            AppStateService.Instance.CloseOverlay();
         }
     }
 }
