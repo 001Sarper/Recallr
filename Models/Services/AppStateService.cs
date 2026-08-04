@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Recallr.Models.Configuration;
@@ -12,6 +13,10 @@ public partial class AppStateService : ObservableObject
     [ObservableProperty] private bool _isOverlayVisible = false;
     
     [ObservableProperty] private ViewModelBase? _currentDialog;
+
+    [ObservableProperty] private IBrush _borderColor = Brushes.Gray;
+    
+    //CourseEditor Variables
     
     [ObservableProperty] private int _courseEmoji = 0;
     [ObservableProperty] private string _courseTeacher;
@@ -20,12 +25,19 @@ public partial class AppStateService : ObservableObject
     [ObservableProperty] private bool _isOverlayEditMode = false;
     [ObservableProperty] private string _buttonContent = "";
     
+    //Breadcrumbs Variables
+    
     [ObservableProperty] private string _currentOption = LocalizationService.Instance["courses_nav"];
     [ObservableProperty] private string _currentCourse = "";
     [ObservableProperty] private string _currentLearningsheet = "";
     
     [ObservableProperty] private bool _optionArrow1 = false;
     [ObservableProperty] private bool _optionArrow2 = false;
+    
+    //MessageBox Variables
+    
+    [ObservableProperty] private string _messageViewTitle = "";
+    [ObservableProperty] private string _messageViewMessage = "";
     
     [ObservableProperty]
     private ViewModelBase currentPageViewModel;
@@ -47,9 +59,19 @@ public partial class AppStateService : ObservableObject
         IsOverlayVisible = false;
     }
 
-    public void ShowOverlay()
+    public void ShowCourseEditorOverlay()
     {
         CurrentDialog = new NewCourseOverlayViewModel();
+        BorderColor = Brushes.CadetBlue;
+        IsOverlayVisible = true;
+    }
+
+    public void ShowMessageOverlay(string title, string message, IBrush borderColor)
+    {
+        MessageViewTitle = title;
+        MessageViewMessage = message;
+        CurrentDialog = new MessageOverlayViewModel();
+        BorderColor = borderColor;
         IsOverlayVisible = true;
     }
 
@@ -58,6 +80,9 @@ public partial class AppStateService : ObservableObject
         CourseEmoji = 0;
         CourseTeacher = "";
         CourseName = "";
+        MessageViewTitle = "";
+        MessageViewMessage = "";
+        BorderColor = Brushes.Gray;
     }
     
     public void ClearBreadcrumbs()

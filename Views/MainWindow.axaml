@@ -119,12 +119,10 @@
                     <Border Background="{DynamicResource BackgroundColor}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            BorderBrush="{DynamicResource AccentColor}"
+                            BorderBrush="{Binding AppState.BorderColor}"
                             BorderThickness="2"
                             CornerRadius="12">
-                        <ContentControl Content="{Binding AppState.CurrentDialog}"
-                                        Width="400"
-                                        Height="150"/>
+                        <ContentControl Content="{Binding AppState.CurrentDialog}"/>
                     </Border>
                 </Grid>
             </Grid>

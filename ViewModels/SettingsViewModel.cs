@@ -1,8 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Recallr.Models.Models;
 using Recallr.Models.Services;
 
 namespace Recallr.ViewModels;
@@ -10,6 +10,7 @@ namespace Recallr.ViewModels;
 public partial class SettingsViewModel : ViewModelBase
 {
     public SettingsService Settings => SettingsService.Instance;
+    public AppStateService AppStateService => AppStateService.Instance;
     
     // Account
     [ObservableProperty] private string _draftOpenaiKey;
@@ -88,5 +89,7 @@ public partial class SettingsViewModel : ViewModelBase
         Settings.QuestionType = DraftQuestionType;
         
         Settings.Save();
+        AppStateService.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["settings_successmessage_message"], Brushes.Green);
+        
     }
 }

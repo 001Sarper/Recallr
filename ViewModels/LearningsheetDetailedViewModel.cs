@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -28,7 +29,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private bool _isChatSelected = false;
     [ObservableProperty] private bool _isKnownledgeSelected = false;
 
-    [ObservableProperty] private string _learnsheetContent;
+    [ObservableProperty] private string _learnsheetContent = $"# {LocalizationService.Instance["no_learnsheet_yet"]}";
 
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
 
@@ -47,6 +48,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private Learnsheet _currentLearnsheet;
     
     public ObservableCollection<ChatEntry> Messages { get; } = new();
+    
+    private AppStateService AppState => AppStateService.Instance;
+
 
     public LearningsheetDetailedViewModel(string learningsheetID)
     {

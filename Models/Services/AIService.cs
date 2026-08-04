@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OpenAI;
 using OpenAI.Chat;
@@ -16,37 +17,63 @@ namespace Recallr.Models.Services;
 public partial class AIService : ObservableObject
 {
     public static AIService Instance { get; } = new AIService();
-    public static SettingsService Settings => SettingsService.Instance;
+    private static SettingsService Settings => SettingsService.Instance;
+    private static AppStateService AppState => AppStateService.Instance;
+
 
     private static ChatClient _chatClient;
     private static OpenAIClient _openAiClient;
 
     public static void InitialiazeClient()
     {
-        _chatClient = new(model: Settings.AiModel, apiKey: Settings.OpenaiKey);
+        try
+        {
+            _chatClient = new(model: Settings.AiModel, apiKey: Settings.OpenaiKey);
+        }
+        catch (Exception e)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+        }
     }
 
     public static void InitialiazeOpenAiClient()
     {
-        _openAiClient = new OpenAIClient(apiKey: Settings.OpenaiKey);
+        try
+        {
+            _openAiClient = new OpenAIClient(apiKey: Settings.OpenaiKey);
+        }
+        catch (Exception e)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+        }
     }
 
 
 #pragma warning disable OPENAI001
     private ChatMessageContentPart CreateContentPartForFile(string path)
     {
-        byte[] bytes = File.ReadAllBytes(path);
-        BinaryData data = BinaryData.FromBytes(bytes);
-        string extension = Path.GetExtension(path).ToLowerInvariant();
-
-        return extension switch
+        try
         {
-            ".pdf" => ChatMessageContentPart.CreateFilePart(data, "application/pdf", Path.GetFileName(path)),
-            ".png" => ChatMessageContentPart.CreateImagePart(data, "image/png"),
-            ".jpg" or ".jpeg" => ChatMessageContentPart.CreateImagePart(data, "image/jpeg"),
-            ".webp" => ChatMessageContentPart.CreateImagePart(data, "image/webp"),
-            _ => throw new NotSupportedException($"Dateityp '{extension}' wird nicht unterstützt.")
-        };
+            byte[] bytes = File.ReadAllBytes(path);
+            BinaryData data = BinaryData.FromBytes(bytes);
+            string extension = Path.GetExtension(path).ToLowerInvariant();
+
+            return extension switch
+            {
+                ".pdf" => ChatMessageContentPart.CreateFilePart(data, "application/pdf", Path.GetFileName(path)),
+                ".png" => ChatMessageContentPart.CreateImagePart(data, "image/png"),
+                ".jpg" or ".jpeg" => ChatMessageContentPart.CreateImagePart(data, "image/jpeg"),
+                ".webp" => ChatMessageContentPart.CreateImagePart(data, "image/webp"),
+                _ => throw new NotSupportedException($"Dateityp '{extension}' wird nicht unterstützt.")
+            };
+        }
+        catch (Exception ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"], ex.Message, Brushes.Red);
+            return ChatMessageContentPart.CreateTextPart(ex.Message);
+        }
     }
 
     public async Task<string> CreateLearningsheetAsync(List<string> paths)
@@ -79,11 +106,15 @@ public partial class AIService : ObservableObject
             ];
 
             ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
+            AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
+                LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
             return completion.Content[0].Text;
         }
         catch (Exception e)
         {
-            return "Error: " + e.Message;
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+            return string.Empty;
         }
     }
 
@@ -107,8 +138,8 @@ public partial class AIService : ObservableObject
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            collection.Add(LocalizationService.Instance["error_models_not_loading"]);
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
             return collection;
         }
     }
@@ -138,35 +169,78 @@ public partial class AIService : ObservableObject
         IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
-        var languageName = Settings.Language switch
+        IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = null;
+        Exception initException = null;
+
+        try
         {
-            0 => "Deutsch",
-            1 => "Englisch",
-            _ => "Englisch"
-        };
-        
-        InitialiazeClient();
-        var systemPrompt = SystemPromptBuilderService.BuildChat(
-            languageName,
-            lernzettelContent: lernzettelContent,
-            difficulty: SettingsService.Instance.Difficulty,
-            questionType: SettingsService.Instance.QuestionType
-        );
-
-        var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
-
-        messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
-            ? (ChatMessage)new UserChatMessage(m.Text)
-            : new AssistantChatMessage(m.Text)));
-
-        await foreach (StreamingChatCompletionUpdate update in
-                       _chatClient.CompleteChatStreamingAsync(messages))
-        {
-            foreach (var part in update.ContentUpdate)
+            var languageName = Settings.Language switch
             {
-                if (!string.IsNullOrEmpty(part.Text))
-                    yield return part.Text;
+                0 => "Deutsch",
+                1 => "Englisch",
+                _ => "Englisch"
+            };
+
+            InitialiazeClient(); // may throw if client/config invalid
+
+            var systemPrompt = SystemPromptBuilderService.BuildChat(
+                languageName,
+                lernzettelContent: lernzettelContent,
+                difficulty: SettingsService.Instance.Difficulty,
+                questionType: SettingsService.Instance.QuestionType
+            );
+
+            var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
+            messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
+                ? (ChatMessage)new UserChatMessage(m.Text)
+                : new AssistantChatMessage(m.Text)));
+
+            enumerator = _chatClient.CompleteChatStreamingAsync(messages).GetAsyncEnumerator();
+            // ^ throws here if _chatClient is null / misconfigured
+        }
+        catch (Exception ex)
+        {
+            initException = ex; // no yield allowed in here, so just store it
+        }
+
+        if (initException != null)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{initException.Message}", Brushes.Red);
+            yield break;
+        }
+
+        try
+        {
+            while (true)
+            {
+                StreamingChatCompletionUpdate update;
+
+                try
+                {
+                    if (!await enumerator.MoveNextAsync())
+                        break;
+
+                    update = enumerator.Current;
+                }
+                catch (Exception ex)
+                {
+                    AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                        LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+                    yield break;
+                }
+
+                foreach (var part in update.ContentUpdate)
+                {
+                    if (!string.IsNullOrEmpty(part.Text))
+                        yield return part.Text;
+                }
             }
+        }
+        finally
+        {
+            if (enumerator != null)
+                await enumerator.DisposeAsync();
         }
     }
 }

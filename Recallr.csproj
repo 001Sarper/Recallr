@@ -42,4 +42,31 @@
   <ItemGroup>
     <Folder Include="docs\screenshots\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Overlays\MessageOverlayView.axaml.cs">
+      <DependentUpon>MessageOverlayView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Overlays\NewCourseOverlayView.axaml.cs">
+      <DependentUpon>NewCourseOverlayView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\CourseView.axaml.cs">
+      <DependentUpon>CourseView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\LearningsheetDetailedView.axaml.cs">
+      <DependentUpon>LearningsheetDetailedView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\LearningsheetView.axaml.cs">
+      <DependentUpon>LearningsheetView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\SettingsView.axaml.cs">
+      <DependentUpon>SettingsView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>
