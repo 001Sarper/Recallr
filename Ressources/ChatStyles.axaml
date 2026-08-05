@@ -13,4 +13,10 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Right" />
     </Style>
+    <Style Selector="StackPanel.ai">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="StackPanel.user">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
 </Styles>

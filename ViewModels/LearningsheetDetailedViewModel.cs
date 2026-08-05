@@ -181,18 +181,23 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         }
     }
 
-    public async Task SendMessageAsync(string userInput)
+    private async Task SendMessageAsync(string userInput)
     {
         Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput });
-
-        var aiMessage = new ChatEntry() { Sender = ChatSender.Ai };
+        var aiMessage = new ChatEntry { Sender = ChatSender.Ai };
         Messages.Add(aiMessage);
 
-        await foreach (var token in AIService.Instance.StreamResponseAsync(Messages.SkipLast(1), LearnsheetContent))
+        var response = await AIService.Instance.GetResponseAsync(Messages.SkipLast(1), LearnsheetContent);
+
+        if (response == null)
         {
-            await Dispatcher.UIThread.InvokeAsync(() => aiMessage.AppendToken(token));
+            // Fehler wurde schon im AIService per Overlay angezeigt - leere AI-Nachricht wieder entfernen,
+            // damit sie nicht als Blindgänger in der History/Storage landet.
+            Messages.Remove(aiMessage);
+            return;
         }
 
+        await Dispatcher.UIThread.InvokeAsync(() => aiMessage.SetResponse(response));
         await ChatStorageService.Instance.SaveMessagesAsync(CoursesService.currentCourseID, _learningsheetID, Messages);
     }
 
@@ -205,6 +210,14 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         CurrentInput = string.Empty; // TextBox sofort leeren
 
         await SendMessageAsync(input);
+    }
+
+    [RelayCommand]
+    private async Task PickAnswer(string answer)
+    {
+        Messages.Last().MultipleChoice = false;
+        Messages.Last().Answers = new List<string>();
+        await SendMessageAsync(answer);
     }
     
     [RelayCommand]

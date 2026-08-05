@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Models;
+using Recallr.Models.Configuration;
 using Recallr.Models.Models;
 using ChatMessage = OpenAI.Chat.ChatMessage;
 
@@ -24,7 +27,7 @@ public partial class AIService : ObservableObject
     private static ChatClient _chatClient;
     private static OpenAIClient _openAiClient;
 
-    public static void InitialiazeClient()
+    private static void InitialiazeClient()
     {
         try
         {
@@ -37,7 +40,7 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public static void InitialiazeOpenAiClient()
+    private static void InitialiazeOpenAiClient()
     {
         try
         {
@@ -165,13 +168,11 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public async IAsyncEnumerable<string> StreamResponseAsync(
+    public async Task<AIResponse?> GetResponseAsync(
         IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
     {
         IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = null;
-        Exception initException = null;
-
         try
         {
             var languageName = Settings.Language switch
@@ -180,60 +181,50 @@ public partial class AIService : ObservableObject
                 1 => "Englisch",
                 _ => "Englisch"
             };
-
             InitialiazeClient(); // may throw if client/config invalid
-
             var systemPrompt = SystemPromptBuilderService.BuildChat(
                 languageName,
                 lernzettelContent: lernzettelContent,
-                difficulty: SettingsService.Instance.Difficulty,
-                questionType: SettingsService.Instance.QuestionType
+                difficulty: SettingsService.Instance.Difficulty
             );
-
             var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
             messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
                 ? (ChatMessage)new UserChatMessage(m.Text)
                 : new AssistantChatMessage(m.Text)));
-
             enumerator = _chatClient.CompleteChatStreamingAsync(messages).GetAsyncEnumerator();
             // ^ throws here if _chatClient is null / misconfigured
         }
         catch (Exception ex)
         {
-            initException = ex; // no yield allowed in here, so just store it
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+            return null;
         }
 
-        if (initException != null)
-        {
-            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
-                LocalizationService.Instance["general_error_message"] + $"\n{initException.Message}", Brushes.Red);
-            yield break;
-        }
+        var buffer = new StringBuilder();
 
         try
         {
             while (true)
             {
                 StreamingChatCompletionUpdate update;
-
                 try
                 {
                     if (!await enumerator.MoveNextAsync())
                         break;
-
                     update = enumerator.Current;
                 }
                 catch (Exception ex)
                 {
                     AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
                         LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
-                    yield break;
+                    return null;
                 }
 
                 foreach (var part in update.ContentUpdate)
                 {
                     if (!string.IsNullOrEmpty(part.Text))
-                        yield return part.Text;
+                        buffer.Append(part.Text); // sammeln statt yield return
                 }
             }
         }
@@ -241,6 +232,20 @@ public partial class AIService : ObservableObject
         {
             if (enumerator != null)
                 await enumerator.DisposeAsync();
+        }
+
+        var fullResponse = buffer.ToString();
+
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            return JsonSerializer.Deserialize<AIResponse>(fullResponse, options);
+        }
+        catch (JsonException ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+            return null;
         }
     }
 }

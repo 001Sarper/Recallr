@@ -37,7 +37,9 @@ public class ChatStorageService
             var dtoList = messages.Select(m => new ChatMessageDto
             {
                 Sender = m.Sender,
-                Text = m.Text
+                Text = m.Text,
+                MultipleChoice = m.MultipleChoice,
+                Answers = m.Answers,
             });
 
             var json = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = true });
@@ -65,7 +67,9 @@ public class ChatStorageService
             return dtoList.Select(dto => new ChatEntry
             {
                 Sender = dto.Sender,
-                Text = dto.Text
+                Text = dto.Text,
+                MultipleChoice = dto.MultipleChoice,
+                Answers = dto.Answers,
             }).ToList();
         }
         catch (Exception e)
@@ -83,4 +87,6 @@ public class ChatMessageDto
 {
     public ChatSender Sender { get; set; }
     public string Text { get; set; } = string.Empty;
+    public bool MultipleChoice { get; set; } = false;
+    public List<string> Answers { get; set; } = new List<string>();
 }

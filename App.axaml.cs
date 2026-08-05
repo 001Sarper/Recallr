@@ -54,12 +54,6 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var services = new ServiceCollection();
-
-            // FilePickerService registrieren
-            services.AddSingleton<IFilePickerService>(new FilePickerService(
-                () => desktop.MainWindow));
-            
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel(),
