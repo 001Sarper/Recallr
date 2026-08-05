@@ -183,7 +183,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
     private async Task SendMessageAsync(string userInput)
     {
-        Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput });
+        Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput, ResponseGenerated = true});
         var aiMessage = new ChatEntry { Sender = ChatSender.Ai };
         Messages.Add(aiMessage);
 

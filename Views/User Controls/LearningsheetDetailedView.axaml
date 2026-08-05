@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:Recallr.ViewModels"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              xmlns:models="clr-namespace:Recallr.Models.Models"
+             xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.LearningsheetDetailedView"
              x:DataType="vm:LearningsheetDetailedViewModel">
@@ -304,7 +305,14 @@
                                                         Padding="16,10"
                                                         Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
                                                         Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
-                                                    <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}" />
+                                                    <Grid>
+                                                        <Grid IsVisible="{Binding !ResponseGenerated}" ColumnDefinitions="Auto,*">
+                                                            <avaloniaProgressRing:ProgressRing Grid.Column="0"
+                                                                    IsActive="True" Width="16" Height="16" VerticalAlignment="Center"/> 
+                                                            <TextBlock Grid.Column="1" Text="{models:Tr ai_response_loading_message}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                        <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}" IsVisible="{Binding ResponseGenerated}"/>
+                                                    </Grid>
                                                 </Border>
                                             </StackPanel>
                                             

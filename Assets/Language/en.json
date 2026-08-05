@@ -62,5 +62,6 @@
   "no_learnsheet_yet": "No study sheet has been created yet!",
   "pdf_export_success": "The PDF file was successfully exported!",
   "general_error_message": "An unexpected error occurred:",
-  "learnsheet_creation_success": "Your study sheet has been successfully created!"
+  "learnsheet_creation_success": "Your study sheet has been successfully created!",
+  "ai_response_loading_message": "Thinking..."
 }

@@ -15,6 +15,9 @@ public partial class ChatEntry : ObservableObject
     private string _text = string.Empty;
 
     [ObservableProperty]
+    private bool _responseGenerated = false;
+
+    [ObservableProperty]
     private string _type = string.Empty;
 
     [ObservableProperty]
@@ -36,6 +39,7 @@ public partial class ChatEntry : ObservableObject
     {
         if (response.type == "question")
         {
+            ResponseGenerated = true;
             Text = response.question;
             if (response.multipleChoice)
             {
@@ -44,6 +48,7 @@ public partial class ChatEntry : ObservableObject
             }
         } else if (response.type == "feedback")
         {
+            ResponseGenerated = true;
             Text = (response.correct) ? "✔️" : "❌";
             Text += $"\n{response.explanation}";
         }

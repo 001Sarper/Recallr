@@ -38,6 +38,7 @@ public class ChatStorageService
             {
                 Sender = m.Sender,
                 Text = m.Text,
+                ResponseGenerated =  m.ResponseGenerated,
                 MultipleChoice = m.MultipleChoice,
                 Answers = m.Answers,
             });
@@ -68,6 +69,7 @@ public class ChatStorageService
             {
                 Sender = dto.Sender,
                 Text = dto.Text,
+                ResponseGenerated = dto.ResponseGenerated,
                 MultipleChoice = dto.MultipleChoice,
                 Answers = dto.Answers,
             }).ToList();
@@ -87,6 +89,7 @@ public class ChatMessageDto
 {
     public ChatSender Sender { get; set; }
     public string Text { get; set; } = string.Empty;
+    public bool ResponseGenerated { get; set; }
     public bool MultipleChoice { get; set; } = false;
     public List<string> Answers { get; set; } = new List<string>();
 }
