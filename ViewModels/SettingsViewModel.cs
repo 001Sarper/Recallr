@@ -26,7 +26,6 @@ public partial class SettingsViewModel : ViewModelBase
     // AI-Behaviour
     [ObservableProperty] private int _draftSummaryStyle;
     [ObservableProperty] private int _draftDifficulty;
-    [ObservableProperty] private int _draftQuestionType;
 
     [ObservableProperty] private ObservableCollection<string> _models = new();
     [ObservableProperty] private bool _modelsLoading;
@@ -51,7 +50,6 @@ public partial class SettingsViewModel : ViewModelBase
 
         DraftSummaryStyle = Settings.SummaryStyle;
         DraftDifficulty = Settings.Difficulty;
-        DraftQuestionType = Settings.QuestionType;
     }
 
     private async void LoadModelsAsync()
@@ -86,7 +84,6 @@ public partial class SettingsViewModel : ViewModelBase
 
         Settings.SummaryStyle = DraftSummaryStyle;
         Settings.Difficulty = DraftDifficulty;
-        Settings.QuestionType = DraftQuestionType;
         
         Settings.Save();
         AppStateService.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["settings_successmessage_message"], Brushes.Green);

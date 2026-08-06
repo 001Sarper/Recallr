@@ -29,7 +29,6 @@ public partial class SettingsService : ObservableObject
     // AI-Behaviour
     [ObservableProperty] private int _summaryStyle = 0;
     [ObservableProperty] private int _difficulty = 0;
-    [ObservableProperty] private int _questionType = 0;
 
     private ConfigManager _configManager;
     
@@ -60,7 +59,6 @@ public partial class SettingsService : ObservableObject
         s.FontSize = FontSize;
         s.SummaryStyle = SummaryStyle;
         s.Difficulty = Difficulty;
-        s.QuestionType = QuestionType;
 
 
         try
@@ -99,6 +97,5 @@ public partial class SettingsService : ObservableObject
 
         SummaryStyle = s.SummaryStyle;
         Difficulty = s.Difficulty;
-        QuestionType = s.QuestionType;
     }
 }

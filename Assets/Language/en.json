@@ -45,9 +45,6 @@
   "settings_difficulty_difficult": "Hard",
   "settings_difficulty_normal": "Normal",
   "settings_difficulty_easy": "Easy",
-  "settings_question_type_option": "Question type",
-  "settings_question_type_open": "Open questions",
-  "settings_question_type_multi": "Multiple choice questions",
   "settings_recallr_description": "Recallr automatically turns PDFs, GoodNotes files, and other documents into clear study sheets and summaries. With Active Recall and Spaced Repetition, you're tested in a targeted way – and clear graphs show you which topics you've already mastered and where there are still gaps.",
   "settings_author_title": "Developer",
   "settings_framework_title": "Framework",
@@ -65,5 +62,6 @@
   "no_learnsheet_yet": "No study sheet has been created yet!",
   "pdf_export_success": "The PDF file was successfully exported!",
   "general_error_message": "An unexpected error occurred:",
-  "learnsheet_creation_success": "Your study sheet has been successfully created!"
+  "learnsheet_creation_success": "Your study sheet has been successfully created!",
+  "ai_response_loading_message": "Thinking..."
 }

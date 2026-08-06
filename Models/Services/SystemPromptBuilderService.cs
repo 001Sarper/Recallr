@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Recallr.Models.Models;
 
 namespace Recallr.Models.Services;
 
@@ -21,20 +24,6 @@ public class SystemPromptBuilderService
             _ => throw new ArgumentOutOfRangeException(nameof(difficulty), difficulty, "Unbekannter Schwierigkeitsgrad")
         };
 
-        // questionType: 0 = Offen, 1 = MultipleChoice
-        private static string GetQuestionTypeBlock(int questionType) => questionType switch
-        {
-            0 =>
-                """
-                Stelle die Frage im Chat als Fließtext, gefolgt von genau 4 Antwortoptionen (A–D), davon 1 richtig und 3 plausible Distraktoren aus demselben Themenbereich des Lernzettels. Nutze für die Optionen eine einfache Aufzählung (-), keine Tabelle. Der Nutzer antwortet mit dem Buchstaben oder Text seiner Wahl; du bestätigst danach richtig/falsch wie im normalen Feedback-Ablauf.
-                """,
-            1 =>
-                """
-                Stelle ausschließlich offene Fragen (keine Antwortoptionen vorgeben). Der Nutzer formuliert die Antwort frei in eigenen Worten. Bewerte anhand des Lernzettels, ob die Antwort inhaltlich passt – nicht wortwörtlich, sondern sinngemäß.
-                """,
-            _ => throw new ArgumentOutOfRangeException(nameof(questionType), questionType, "Unbekannter Fragetyp")
-        };
-
         private static string GetLearnsheetSummaryType(int learnsheetType) => learnsheetType switch
         {
             0 =>
@@ -48,17 +37,40 @@ public class SystemPromptBuilderService
             _ => throw new ArgumentOutOfRangeException(nameof(learnsheetType), learnsheetType,
                 "Unbekannter Zusammenfassungsstil")
         };
-        
-        
 
 
-        public static string BuildChat(string learnsheetLanguage, string lernzettelContent, int difficulty, int questionType)
-            => string.Format(
-                SystemPrompts.Template,
-                learnsheetLanguage,
-                GetDifficultyBlock(difficulty),
-                GetQuestionTypeBlock(questionType),
-                lernzettelContent);
+
+
+        public static string BuildChat(IEnumerable<ChatEntry> conversationHistory, string learnsheetLanguage, string lernzettelContent, int difficulty)
+        {
+            var forcedMultipleChoice = Random.Shared.Next(2) == 0;
+            var forcedType = forcedMultipleChoice
+                ? "eine MULTIPLE-CHOICE-Frage (multipleChoice: true)"
+                : "eine OFFENE Frage (multipleChoice: false)";
+            
+            var askedTopics = conversationHistory
+                .Where(m => m.Sender == ChatSender.Ai && !string.IsNullOrEmpty(m.Topic))
+                .Select(m => m.Topic)
+                .Distinct()
+                .ToList();
+            
+            var topicsBlock = askedTopics.Count > 0
+                ? "BEREITS ABGEFRAGTE THEMEN (nicht erneut verwenden, außer alle anderen Themen sind aufgebraucht):\n"
+                  + string.Join("\n", askedTopics.Select(t => $"- {t}"))
+                : "Noch keine Themen abgefragt – das ist die erste Frage.";
+            
+            Console.WriteLine(forcedType);
+            Console.WriteLine(topicsBlock);
+            
+            return SystemPrompts.Template
+                .Replace("%%LANG%%", learnsheetLanguage)
+                .Replace("%%ASKEDTOPICS%%", topicsBlock)
+                .Replace("%%QUESTIONTYPE%%", forcedType)
+                .Replace("%%DIFFICULTY%%", GetDifficultyBlock(difficulty))
+                .Replace("%%CONTEXT%%", lernzettelContent);
+
+        }
+            
         
         public static string BuildLearnsheet(string learnsheetLanguage, int learnsheetType) 
             => string.Format(SystemPrompts.LearnsheetSystemPrompt, learnsheetLanguage, GetLearnsheetSummaryType(learnsheetType));

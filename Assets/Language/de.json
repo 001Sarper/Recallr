@@ -45,9 +45,6 @@
   "settings_difficulty_difficult": "Schwer",
   "settings_difficulty_normal": "Normal",
   "settings_difficulty_easy": "Einfach",
-  "settings_question_type_option": "Fragetyp",
-  "settings_question_type_open": "Offene Fragen",
-  "settings_question_type_multi": "Multiple Choice Fragen",
   "settings_recallr_description": "Recallr verwandelt PDFs, GoodNotes-Dateien und andere Dokumente automatisch in übersichtliche Lernzettel und Zusammenfassungen. Mit Active Recall und Spaced Repetition wirst du gezielt abgefragt – und übersichtliche Grafen zeigen dir, welche Themen du schon beherrschst und wo noch Lücken sind.",
   "settings_author_title": "Entwickler",
   "settings_framework_title": "Framework",
@@ -65,6 +62,7 @@
   "no_learnsheet_yet": "Es wurde noch kein Lernzettel erstellt!",
   "pdf_export_success": "PDF Datei wurde erfolgreich exportiert!",
   "general_error_message": "Es gab einen unerwarteten Fehler:",
-  "learnsheet_creation_success": "Dein Lernzettel wurde erfolgreich erstellt!"
+  "learnsheet_creation_success": "Dein Lernzettel wurde erfolgreich erstellt!",
+  "ai_response_loading_message": "Denke nach..."
   
 }

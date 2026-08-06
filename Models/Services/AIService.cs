@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Models;
+using Recallr.Models.Configuration;
 using Recallr.Models.Models;
 using ChatMessage = OpenAI.Chat.ChatMessage;
 
@@ -24,7 +27,7 @@ public partial class AIService : ObservableObject
     private static ChatClient _chatClient;
     private static OpenAIClient _openAiClient;
 
-    public static void InitialiazeClient()
+    private static void InitialiazeClient()
     {
         try
         {
@@ -37,7 +40,7 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public static void InitialiazeOpenAiClient()
+    private static void InitialiazeOpenAiClient()
     {
         try
         {
@@ -75,6 +78,11 @@ public partial class AIService : ObservableObject
             return ChatMessageContentPart.CreateTextPart(ex.Message);
         }
     }
+    private static readonly ChatCompletionOptions LearnsheetOptions = new ()
+    {
+        ReasoningEffortLevel = ChatReasoningEffortLevel.High
+    };
+    
 
     public async Task<string> CreateLearningsheetAsync(List<string> paths)
     {
@@ -105,7 +113,7 @@ public partial class AIService : ObservableObject
                 new UserChatMessage(contentParts)
             ];
 
-            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
+            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, LearnsheetOptions);
             AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
                 LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
             return completion.Content[0].Text;
@@ -165,13 +173,50 @@ public partial class AIService : ObservableObject
         }
     }
 
-    public async IAsyncEnumerable<string> StreamResponseAsync(
-        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+    // Einmal definieren (z.B. als static readonly Feld der Klasse), nicht bei jedem Call neu bauen
+    private static readonly ChatCompletionOptions ChatOptions = new()
+    {
+        ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+            jsonSchemaFormatName: "recallr_chat_response",
+            jsonSchema: BinaryData.FromString("""
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "type": { "type": "string", "enum": ["question", "feedback", "message"] },
+                                                  "topic": {"type": ["string", "null"] },
+                                                  "question": { "type": ["string", "null"] },
+                                                  "multipleChoice": { "type": ["boolean", "null"] },
+                                                  "answers": { "type": ["array", "null"], "items": { "type": "string" } },
+                                                  "correct": { "type": ["boolean", "null"] },
+                                                  "explanation": { "type": ["string", "null"] },
+                                                  "message": { "type": ["string", "null"] },
+                                                  "nextQuestion": {
+                                                    "type": ["object", "null"],
+                                                    "properties": {
+                                                      "question": { "type": "string" },
+                                                      "multipleChoice": { "type": "boolean" },
+                                                      "answers": { "type": ["array", "null"], "items": { "type": "string" } },
+                                                      "topic": { "type": "string" }
+                                                    },
+                                                    "required": ["question", "multipleChoice", "answers", "topic"],
+                                                    "additionalProperties": false
+                                                  }
+                                                },
+                                                "required": ["type", "topic", "question", "multipleChoice", "answers", "correct", "explanation", "message", "nextQuestion"],
+                                                "additionalProperties": false
+                                              }
+                                              """),
+            jsonSchemaFormatDescription: "Antwort des KI-Lernbuddys: entweder eine Frage, Feedback oder eine normale Nachricht",
+            jsonSchemaIsStrict: true),
+        ReasoningEffortLevel = ChatReasoningEffortLevel.High,
+        MaxOutputTokenCount = 2000 // JSON-Antworten sind klein, harte Obergrenze gegen abgeschnittenes JSON
+    };
+
+    public async Task<AIResponse?> GetResponseAsync(
+        IEnumerable<ChatEntry> conversationHistory,
         string lernzettelContent)
     {
         IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = null;
-        Exception initException = null;
-
         try
         {
             var languageName = Settings.Language switch
@@ -180,60 +225,58 @@ public partial class AIService : ObservableObject
                 1 => "Englisch",
                 _ => "Englisch"
             };
-
-            InitialiazeClient(); // may throw if client/config invalid
-
+            InitialiazeClient();
             var systemPrompt = SystemPromptBuilderService.BuildChat(
+                conversationHistory,
                 languageName,
                 lernzettelContent: lernzettelContent,
-                difficulty: SettingsService.Instance.Difficulty,
-                questionType: SettingsService.Instance.QuestionType
+                difficulty: SettingsService.Instance.Difficulty
             );
-
             var messages = new List<ChatMessage> { new SystemChatMessage(systemPrompt) };
             messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
                 ? (ChatMessage)new UserChatMessage(m.Text)
                 : new AssistantChatMessage(m.Text)));
 
-            enumerator = _chatClient.CompleteChatStreamingAsync(messages).GetAsyncEnumerator();
-            // ^ throws here if _chatClient is null / misconfigured
+            enumerator = _chatClient.CompleteChatStreamingAsync(messages, ChatOptions).GetAsyncEnumerator();
         }
         catch (Exception ex)
         {
-            initException = ex; // no yield allowed in here, so just store it
-        }
-
-        if (initException != null)
-        {
             AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
-                LocalizationService.Instance["general_error_message"] + $"\n{initException.Message}", Brushes.Red);
-            yield break;
+                LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+            return null;
         }
 
+        var buffer = new StringBuilder();
+        var refusal = new StringBuilder();
         try
         {
             while (true)
             {
                 StreamingChatCompletionUpdate update;
-
                 try
                 {
                     if (!await enumerator.MoveNextAsync())
                         break;
-
                     update = enumerator.Current;
                 }
                 catch (Exception ex)
                 {
                     AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
                         LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
-                    yield break;
+                    return null;
                 }
 
                 foreach (var part in update.ContentUpdate)
                 {
                     if (!string.IsNullOrEmpty(part.Text))
-                        yield return part.Text;
+                        buffer.Append(part.Text);
+                }
+
+                // Modell kann bei strict-Schema statt Inhalt eine Ablehnung streamen (Safety-Refusal)
+                foreach (var part in update.ContentUpdate)
+                {
+                    if (!string.IsNullOrEmpty(part.Refusal))
+                        refusal.Append(part.Refusal);
                 }
             }
         }
@@ -241,6 +284,26 @@ public partial class AIService : ObservableObject
         {
             if (enumerator != null)
                 await enumerator.DisposeAsync();
+        }
+
+        if (refusal.Length > 0)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                refusal.ToString(), Brushes.Red);
+            return null;
+        }
+
+        var fullResponse = buffer.ToString();
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            return JsonSerializer.Deserialize<AIResponse>(fullResponse, options);
+        }
+        catch (JsonException ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+            return null;
         }
     }
 }
