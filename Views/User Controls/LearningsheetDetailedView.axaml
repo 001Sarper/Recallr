@@ -297,7 +297,7 @@
 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="models:ChatEntry">
-                                        <Grid RowDefinitions="*,Auto">
+                                        <Grid>
                                             <StackPanel Grid.Row="0" Spacing="10" MaxWidth="700"
                                                         Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
                                                         Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
@@ -305,36 +305,47 @@
                                                         Padding="16,10"
                                                         Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
                                                         Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
-                                                    <Grid>
+                                                    <Grid RowDefinitions="*,Auto">
                                                         <Grid IsVisible="{Binding !ResponseGenerated}" ColumnDefinitions="Auto,*">
                                                             <avaloniaProgressRing:ProgressRing Grid.Column="0"
                                                                     IsActive="True" Width="16" Height="16" VerticalAlignment="Center"/> 
                                                             <TextBlock Grid.Column="1" Text="{models:Tr ai_response_loading_message}" Margin="10,0,0,0" VerticalAlignment="Center"/>
                                                         </Grid>
-                                                        <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}" IsVisible="{Binding ResponseGenerated}"/>
+                                                        <mdxaml:MarkdownScrollViewer Grid.Row="0"
+                                                                Markdown="{Binding Text}" IsVisible="{Binding ResponseGenerated}"/>
+                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Answers}"
+                                                                      IsVisible="{Binding MultipleChoice}"
+                                                                      Margin="0,5,0,10"
+                                                                      HorizontalAlignment="Left">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel Orientation="Vertical" ItemSpacing="5" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Classes="secondary" HorizontalAlignment="Left" HorizontalContentAlignment="Left" 
+                                                                            Command="{Binding $parent[UserControl].((vm:LearningsheetDetailedViewModel)DataContext).PickAnswerCommand}"
+                                                                            
+                                                                            CommandParameter="{Binding }">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <Border CornerRadius="10"
+                                                                                    Background="{DynamicResource SurfaceColor}"
+                                                                                    BorderBrush="{DynamicResource BorderColor}"
+                                                                                    BorderThickness="1"
+                                                                                    Height="24"
+                                                                                    Width="32">
+                                                                                    <TextBlock Text="•" Margin="5" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                            </Border>
+                                                                            <TextBlock Text="{Binding}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                                        </StackPanel>
+                                                                    </Button>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
                                                     </Grid>
                                                 </Border>
                                             </StackPanel>
-                                            
-                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Answers}"
-                                                          IsVisible="{Binding MultipleChoice}"
-                                                          Margin="0,5,0,0"
-                                                          HorizontalAlignment="Left">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel Orientation="Vertical" ItemSpacing="5" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate x:DataType="x:String">
-                                                        <Button Classes="secondary" HorizontalAlignment="Left" HorizontalContentAlignment="Left" 
-                                                                Command="{Binding $parent[UserControl].((vm:LearningsheetDetailedViewModel)DataContext).PickAnswerCommand}"
-                                                                CommandParameter="{Binding}">
-                                                            <TextBlock Text="{Binding}"/>
-                                                        </Button>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
                                         </Grid>
 
 
