@@ -155,6 +155,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
+        LearnsheetCreating = false;
 
         var learnsheetMetaData = await AIService.Instance.CreateLearnsheetMetaData(learnsheetReponse);
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -177,7 +178,6 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
-            LearnsheetCreating = false;
         }
     }
 

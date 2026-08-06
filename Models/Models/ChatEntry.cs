@@ -37,20 +37,31 @@ public partial class ChatEntry : ObservableObject
 
     public void SetResponse(AIResponse response)
     {
-        if (response.type == "question")
+        switch (response.Type)
         {
-            ResponseGenerated = true;
-            Text = response.question;
-            if (response.multipleChoice)
-            {
-                MultipleChoice = response.multipleChoice;
-                Answers = response.answers ?? new();
-            }
-        } else if (response.type == "feedback")
-        {
-            ResponseGenerated = true;
-            Text = (response.correct) ? "✔️" : "❌";
-            Text += $"\n{response.explanation}";
+            case "question":
+                ResponseGenerated = true;
+                Text = response.Question ?? string.Empty;
+                if (response.MultipleChoice == true)
+                {
+                    MultipleChoice = true;
+                    Answers = response.Answers ?? new();
+                }
+                break;
+            case "feedback":
+                ResponseGenerated = true;
+                Text = response.Explanation ?? string.Empty;
+                Text += $"\n\n{response.NextQuestion?.Question}";
+                if (response.NextQuestion?.MultipleChoice ?? false)
+                {
+                    MultipleChoice = true;
+                    Answers = response.NextQuestion.Answers ?? new();
+                } 
+                break;
+            case "message":
+                ResponseGenerated = true;
+                Text = response.Message ?? string.Empty;
+                break;
         }
     }
 }

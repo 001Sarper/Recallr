@@ -40,8 +40,16 @@ public class SystemPromptBuilderService
 
         public static string BuildChat(string learnsheetLanguage, string lernzettelContent, int difficulty)
         {
+            var forcedMultipleChoice = Random.Shared.Next(2) == 0;
+            var forcedType = forcedMultipleChoice
+                ? "eine MULTIPLE-CHOICE-Frage (multipleChoice: true)"
+                : "eine OFFENE Frage (multipleChoice: false)";
+            
+            Console.WriteLine(forcedType);
+            
             return SystemPrompts.Template
                 .Replace("%%LANG%%", learnsheetLanguage)
+                .Replace("%%QUESTIONTYPE%%", forcedType)
                 .Replace("%%DIFFICULTY%%", GetDifficultyBlock(difficulty))
                 .Replace("%%CONTEXT%%", lernzettelContent);
 

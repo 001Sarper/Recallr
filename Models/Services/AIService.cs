@@ -168,6 +168,42 @@ public partial class AIService : ObservableObject
         }
     }
 
+    // Einmal definieren (z.B. als static readonly Feld der Klasse), nicht bei jedem Call neu bauen
+    private static readonly ChatCompletionOptions ChatOptions = new()
+    {
+        ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+            jsonSchemaFormatName: "recallr_chat_response",
+            jsonSchema: BinaryData.FromString("""
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "type": { "type": "string", "enum": ["question", "feedback", "message"] },
+                                                  "question": { "type": ["string", "null"] },
+                                                  "multipleChoice": { "type": ["boolean", "null"] },
+                                                  "answers": { "type": ["array", "null"], "items": { "type": "string" } },
+                                                  "correct": { "type": ["boolean", "null"] },
+                                                  "explanation": { "type": ["string", "null"] },
+                                                  "message": { "type": ["string", "null"] },
+                                                  "nextQuestion": {
+                                                    "type": ["object", "null"],
+                                                    "properties": {
+                                                      "question": { "type": "string" },
+                                                      "multipleChoice": { "type": "boolean" },
+                                                      "answers": { "type": ["array", "null"], "items": { "type": "string" } }
+                                                    },
+                                                    "required": ["question", "multipleChoice", "answers"],
+                                                    "additionalProperties": false
+                                                  }
+                                                },
+                                                "required": ["type", "question", "multipleChoice", "answers", "correct", "explanation", "message", "nextQuestion"],
+                                                "additionalProperties": false
+                                              }
+                                              """),
+            jsonSchemaFormatDescription: "Antwort des KI-Lernbuddys: entweder eine Frage, Feedback oder eine normale Nachricht",
+            jsonSchemaIsStrict: true),
+        MaxOutputTokenCount = 800 // JSON-Antworten sind klein, harte Obergrenze gegen abgeschnittenes JSON
+    };
+
     public async Task<AIResponse?> GetResponseAsync(
         IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
         string lernzettelContent)
@@ -181,7 +217,7 @@ public partial class AIService : ObservableObject
                 1 => "Englisch",
                 _ => "Englisch"
             };
-            InitialiazeClient(); // may throw if client/config invalid
+            InitialiazeClient();
             var systemPrompt = SystemPromptBuilderService.BuildChat(
                 languageName,
                 lernzettelContent: lernzettelContent,
@@ -191,8 +227,8 @@ public partial class AIService : ObservableObject
             messages.AddRange(conversationHistory.Select(m => m.Sender == ChatSender.User
                 ? (ChatMessage)new UserChatMessage(m.Text)
                 : new AssistantChatMessage(m.Text)));
-            enumerator = _chatClient.CompleteChatStreamingAsync(messages).GetAsyncEnumerator();
-            // ^ throws here if _chatClient is null / misconfigured
+
+            enumerator = _chatClient.CompleteChatStreamingAsync(messages, ChatOptions).GetAsyncEnumerator();
         }
         catch (Exception ex)
         {
@@ -202,7 +238,7 @@ public partial class AIService : ObservableObject
         }
 
         var buffer = new StringBuilder();
-
+        var refusal = new StringBuilder();
         try
         {
             while (true)
@@ -224,7 +260,14 @@ public partial class AIService : ObservableObject
                 foreach (var part in update.ContentUpdate)
                 {
                     if (!string.IsNullOrEmpty(part.Text))
-                        buffer.Append(part.Text); // sammeln statt yield return
+                        buffer.Append(part.Text);
+                }
+
+                // Modell kann bei strict-Schema statt Inhalt eine Ablehnung streamen (Safety-Refusal)
+                foreach (var part in update.ContentUpdate)
+                {
+                    if (!string.IsNullOrEmpty(part.Refusal))
+                        refusal.Append(part.Refusal);
                 }
             }
         }
@@ -234,8 +277,14 @@ public partial class AIService : ObservableObject
                 await enumerator.DisposeAsync();
         }
 
-        var fullResponse = buffer.ToString();
+        if (refusal.Length > 0)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                refusal.ToString(), Brushes.Red);
+            return null;
+        }
 
+        var fullResponse = buffer.ToString();
         try
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
