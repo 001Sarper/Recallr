@@ -78,6 +78,8 @@ namespace Recallr.Models.Services
                                         "question": null, "multipleChoice": null, "answers": null, "correct": null, "explanation": null, "nextQuestion": null
                                         }
                                         
+                                        - "topic" ist eine kurze Erklärung (14-16 Wörter) für das inhaltliche Thema der jeweils NEUEN Frage – spezifisch genug, um sie von anderen Teilaspekten desselben Oberthemas zu unterscheiden (z.B. "Sachgrundlose Befristung – Neueinstellung nach Ausbildung", nicht nur "Sachgrundlose Befristung"). Bei type "question": im top-level "topic"-Feld. Bei type "feedback": im "nextQuestion.topic"-Feld (top-level "topic" bleibt dann null). Bei type "message": beide null.
+                                        
                                         Inhaltliche Regeln:
                                         - "question" ist EIN einziger String. Optional davor ein kurzer, natürlicher Satz (Reaktion, Übergang, Kommentar) – getrennt durch doppelten Zeilenumbruch "\n\n". Kein Muss bei jeder Frage, nur wenn's natürlich wirkt. Maximal 1 kurzer Satz, keine Erklärung.
                                         - "question", "explanation" und "message" NIE im Prüfungs-/Gesetzestext-Ton – immer in deiner eigenen, lockeren Sprache (siehe ROLLE).
@@ -117,6 +119,9 @@ namespace Recallr.Models.Services
                                         - NICHT verwenden: # Überschriften, Tabellen, Bilder, HTML-Tags, nummerierte Listen mit Unterebenen, Codeblöcke (```), horizontale Linien (---) – rendern in diesem Viewer nicht zuverlässig.
                                         - Kein Markdown-Overkill wie im Lernzettel selbst. Das hier ist Chat, kein Dokument.
                                         - Antwortlänge: normal 2-5 Sätze; nur bei echten Verständnisfragen mit Erklärbedarf länger (max. ~8 Sätze). Aktive-Recall-Feedback so kurz wie möglich halten.
+                                        
+                                        BEREITS ABGEFRAGTE THEMEN (nicht erneut verwenden, außer alle anderen Themen sind aufgebraucht):
+                                        %%ASKEDTOPICS%%
                                         
                                         LERNZETTEL-KONTEXT:
                                         %%CONTEXT%%

@@ -37,6 +37,7 @@ public class ChatStorageService
             var dtoList = messages.Select(m => new ChatMessageDto
             {
                 Sender = m.Sender,
+                Topic = m.Topic,
                 Text = m.Text,
                 ResponseGenerated =  m.ResponseGenerated,
                 MultipleChoice = m.MultipleChoice,
@@ -45,6 +46,19 @@ public class ChatStorageService
 
             var json = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(GetFilePath(fachId, lernzettelId), json);
+        }
+        catch (Exception e)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+        }
+    }
+
+    public async Task ResetMessagesAsync(string fachId, string lernzettelId)
+    {
+        try
+        {
+            await File.WriteAllTextAsync(GetFilePath(fachId, lernzettelId), "[]");
         }
         catch (Exception e)
         {
@@ -68,6 +82,7 @@ public class ChatStorageService
             return dtoList.Select(dto => new ChatEntry
             {
                 Sender = dto.Sender,
+                Topic = dto.Topic,
                 Text = dto.Text,
                 ResponseGenerated = dto.ResponseGenerated,
                 MultipleChoice = dto.MultipleChoice,
@@ -89,6 +104,7 @@ public class ChatMessageDto
 {
     public ChatSender Sender { get; set; }
     public string Text { get; set; } = string.Empty;
+    public string Topic {get; set;} = string.Empty;
     public bool ResponseGenerated { get; set; }
     public bool MultipleChoice { get; set; } = false;
     public List<string> Answers { get; set; } = new List<string>();

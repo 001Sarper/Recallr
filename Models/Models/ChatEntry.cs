@@ -16,6 +16,9 @@ public partial class ChatEntry : ObservableObject
 
     [ObservableProperty]
     private bool _responseGenerated = false;
+    
+    [ObservableProperty]
+    private string _topic = string.Empty;
 
     [ObservableProperty]
     private string _type = string.Empty;
@@ -42,6 +45,7 @@ public partial class ChatEntry : ObservableObject
             case "question":
                 ResponseGenerated = true;
                 Text = response.Question ?? string.Empty;
+                Topic = response.Topic ?? string.Empty;
                 if (response.MultipleChoice == true)
                 {
                     MultipleChoice = true;
@@ -55,8 +59,13 @@ public partial class ChatEntry : ObservableObject
                 if (response.NextQuestion?.MultipleChoice ?? false)
                 {
                     MultipleChoice = true;
+                    Topic = response.NextQuestion.Topic ?? string.Empty;
                     Answers = response.NextQuestion.Answers ?? new();
-                } 
+                }
+                else
+                {
+                    Topic = response.Topic ?? string.Empty;
+                }
                 break;
             case "message":
                 ResponseGenerated = true;

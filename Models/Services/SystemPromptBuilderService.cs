@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Recallr.Models.Models;
 
 namespace Recallr.Models.Services;
 
@@ -38,17 +41,30 @@ public class SystemPromptBuilderService
 
 
 
-        public static string BuildChat(string learnsheetLanguage, string lernzettelContent, int difficulty)
+        public static string BuildChat(IEnumerable<ChatEntry> conversationHistory, string learnsheetLanguage, string lernzettelContent, int difficulty)
         {
             var forcedMultipleChoice = Random.Shared.Next(2) == 0;
             var forcedType = forcedMultipleChoice
                 ? "eine MULTIPLE-CHOICE-Frage (multipleChoice: true)"
                 : "eine OFFENE Frage (multipleChoice: false)";
             
+            var askedTopics = conversationHistory
+                .Where(m => m.Sender == ChatSender.Ai && !string.IsNullOrEmpty(m.Topic))
+                .Select(m => m.Topic)
+                .Distinct()
+                .ToList();
+            
+            var topicsBlock = askedTopics.Count > 0
+                ? "BEREITS ABGEFRAGTE THEMEN (nicht erneut verwenden, außer alle anderen Themen sind aufgebraucht):\n"
+                  + string.Join("\n", askedTopics.Select(t => $"- {t}"))
+                : "Noch keine Themen abgefragt – das ist die erste Frage.";
+            
             Console.WriteLine(forcedType);
+            Console.WriteLine(topicsBlock);
             
             return SystemPrompts.Template
                 .Replace("%%LANG%%", learnsheetLanguage)
+                .Replace("%%ASKEDTOPICS%%", topicsBlock)
                 .Replace("%%QUESTIONTYPE%%", forcedType)
                 .Replace("%%DIFFICULTY%%", GetDifficultyBlock(difficulty))
                 .Replace("%%CONTEXT%%", lernzettelContent);

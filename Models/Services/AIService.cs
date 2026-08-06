@@ -78,6 +78,11 @@ public partial class AIService : ObservableObject
             return ChatMessageContentPart.CreateTextPart(ex.Message);
         }
     }
+    private static readonly ChatCompletionOptions LearnsheetOptions = new ()
+    {
+        ReasoningEffortLevel = ChatReasoningEffortLevel.High
+    };
+    
 
     public async Task<string> CreateLearningsheetAsync(List<string> paths)
     {
@@ -108,7 +113,7 @@ public partial class AIService : ObservableObject
                 new UserChatMessage(contentParts)
             ];
 
-            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
+            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, LearnsheetOptions);
             AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
                 LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
             return completion.Content[0].Text;
@@ -178,6 +183,7 @@ public partial class AIService : ObservableObject
                                                 "type": "object",
                                                 "properties": {
                                                   "type": { "type": "string", "enum": ["question", "feedback", "message"] },
+                                                  "topic": {"type": ["string", "null"] },
                                                   "question": { "type": ["string", "null"] },
                                                   "multipleChoice": { "type": ["boolean", "null"] },
                                                   "answers": { "type": ["array", "null"], "items": { "type": "string" } },
@@ -189,23 +195,25 @@ public partial class AIService : ObservableObject
                                                     "properties": {
                                                       "question": { "type": "string" },
                                                       "multipleChoice": { "type": "boolean" },
-                                                      "answers": { "type": ["array", "null"], "items": { "type": "string" } }
+                                                      "answers": { "type": ["array", "null"], "items": { "type": "string" } },
+                                                      "topic": { "type": "string" }
                                                     },
-                                                    "required": ["question", "multipleChoice", "answers"],
+                                                    "required": ["question", "multipleChoice", "answers", "topic"],
                                                     "additionalProperties": false
                                                   }
                                                 },
-                                                "required": ["type", "question", "multipleChoice", "answers", "correct", "explanation", "message", "nextQuestion"],
+                                                "required": ["type", "topic", "question", "multipleChoice", "answers", "correct", "explanation", "message", "nextQuestion"],
                                                 "additionalProperties": false
                                               }
                                               """),
             jsonSchemaFormatDescription: "Antwort des KI-Lernbuddys: entweder eine Frage, Feedback oder eine normale Nachricht",
             jsonSchemaIsStrict: true),
-        MaxOutputTokenCount = 800 // JSON-Antworten sind klein, harte Obergrenze gegen abgeschnittenes JSON
+        ReasoningEffortLevel = ChatReasoningEffortLevel.High,
+        MaxOutputTokenCount = 2000 // JSON-Antworten sind klein, harte Obergrenze gegen abgeschnittenes JSON
     };
 
     public async Task<AIResponse?> GetResponseAsync(
-        IEnumerable<Recallr.Models.Models.ChatEntry> conversationHistory,
+        IEnumerable<ChatEntry> conversationHistory,
         string lernzettelContent)
     {
         IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = null;
@@ -219,6 +227,7 @@ public partial class AIService : ObservableObject
             };
             InitialiazeClient();
             var systemPrompt = SystemPromptBuilderService.BuildChat(
+                conversationHistory,
                 languageName,
                 lernzettelContent: lernzettelContent,
                 difficulty: SettingsService.Instance.Difficulty
