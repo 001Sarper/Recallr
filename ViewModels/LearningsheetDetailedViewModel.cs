@@ -164,6 +164,8 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
         LearnsheetCreating = false;
+        AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
+            LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
 
         var learnsheetMetaData = await AIService.Instance.CreateLearnsheetMetaData(learnsheetReponse);
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -186,7 +188,6 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
-            LearnsheetCreating = false;
         }
     }
 

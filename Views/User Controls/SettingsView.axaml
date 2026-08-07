@@ -262,7 +262,7 @@
                                 <StackPanel Spacing="0">
                                     <TextBlock Text="{models:Tr settings_version_title}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
-                                    <TextBlock Text="v0.2.0" FontSize="11"
+                                    <TextBlock Text="v0.3.0" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
                                 </StackPanel>
                             </StackPanel>

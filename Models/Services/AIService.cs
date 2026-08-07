@@ -115,8 +115,6 @@ public partial class AIService : ObservableObject
             ];
 
             ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, LearnsheetOptions);
-            AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
-                LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
             return completion.Content[0].Text;
         }
         catch (Exception e)
