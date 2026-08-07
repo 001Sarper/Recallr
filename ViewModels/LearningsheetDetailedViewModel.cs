@@ -186,6 +186,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
+            LearnsheetCreating = false;
         }
     }
 
