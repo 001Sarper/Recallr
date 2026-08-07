@@ -1,6 +1,6 @@
 # Recallr
 
-![Version](https://img.shields.io/badge/version-v0.2.0-orange)
+![Version](https://img.shields.io/badge/version-v0.3.0-orange)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)
 ![Status](https://img.shields.io/badge/status-active%20development-brightgreen)
@@ -46,16 +46,15 @@ Typical workflow:
 | ![Learn Sheet Chat](docs/screenshots/learnsheet-chat.png)     |  ![Settings View](docs/screenshots/settings-view.png)   |
 
 ## Key Implemented Features
-
-- 📚 **Course & Learn Sheet Management** – organize your subjects and generated study sheets
-- 📄 **File Import** – import images (PNG, JPG, WEBP) and PDFs as source material
 - 🤖 **AI-Powered Summaries** – automatically generate learn sheets from your uploaded files
 - 💬 **Interactive AI Chat & Quizzes** – ask questions and get quizzed on your material with streaming responses
-- 🕘 **Chat History** – previous conversations are saved per learn sheet
-- 🎨 **Light/Dark Theme** – Fluent UI-based theming
+- 🎯 **Multiple-Choice Quiz Picker** – clickable answer options instead of typing
+- 📄 **File Import** – import images (PNG, JPG, WEBP) and PDFs as source material
+- 📚 **Course & Learn Sheet Management** – organize your subjects and generated study sheets
 - 🌐 **Multi-Language Support** – German & English
-- ⚙️ **Customizable AI Behavior** – choose OpenAI model, summary style, difficulty, and question type
 - 🔒 **Encrypted API Key Storage** – your OpenAI key is encrypted at rest via `Microsoft.AspNetCore.DataProtection`
+- ⚙️ **Customizable AI Behavior** – choose OpenAI model, summary style and quiz difficulty
+- 🎨 **Light/Dark Theme** – Fluent UI-based theming
 
 Notes from code:
 - Settings and courses are stored as plain JSON files in the user's ApplicationData folder (the OpenAI key itself is encrypted before being written; everything else is stored as-is).
@@ -67,8 +66,8 @@ Notes from code:
 Planned items (not yet implemented in code):
 - Knowledge status view for learn sheets (tracking how well the user knows each topic)
 - Adjustable font size for the learn sheet view (UI control to change font rendering)
-- Interactive multiple-choice picker for quiz questions in the AI chat
-- Error handling with custom error overlay
+- General AI Chat for school related assistance (Featuring: File Upload & Websearch Features)
+- Calendar for class tests & pop quizes
 
 ---
 
@@ -134,7 +133,7 @@ Paths used by the app (OS-dependent):
 
 ## Contributing
 
-This project is in early, active development (v0.2.0). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
+This project is in early, active development (v0.3.0). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
 
 Before contributing:
 - Run `dotnet restore` and ensure the app builds locally.

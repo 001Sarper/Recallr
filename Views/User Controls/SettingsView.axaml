@@ -174,22 +174,6 @@
                             </ComboBox>
                         </Grid>
                     </Border>
-                    <Border Grid.Row="5" CornerRadius="12"
-                            Margin="0,5,0,0"
-                            Padding="16,10"
-                            Background="{DynamicResource SurfaceColor}"
-                            BorderBrush="{DynamicResource BorderColor}"
-                            BorderThickness="1"
-                            HorizontalAlignment="Stretch">
-                        <Grid ColumnDefinitions="150,*">
-                            <TextBlock Grid.Column="0" Text="{models:Tr settings_question_type_option}" FontSize="12" VerticalAlignment="Center" />
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding DraftQuestionType}" CornerRadius="12" VerticalAlignment="Center"
-                                      HorizontalAlignment="Stretch" Margin="10,0,0,0">
-                                <ComboBoxItem Content="{models:Tr settings_question_type_multi}" />
-                                <ComboBoxItem Content="{models:Tr settings_question_type_open}" />
-                            </ComboBox>
-                        </Grid>
-                    </Border>
                 </Grid>
                 
                 <!-- Credits Anzeige -->
@@ -278,7 +262,7 @@
                                 <StackPanel Spacing="0">
                                     <TextBlock Text="{models:Tr settings_version_title}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryColor}" />
-                                    <TextBlock Text="v0.2.0" FontSize="11"
+                                    <TextBlock Text="v0.3.0" FontSize="11"
                                                Foreground="{DynamicResource TextSecondaryColor}" />
                                 </StackPanel>
                             </StackPanel>

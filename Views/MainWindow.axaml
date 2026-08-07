@@ -13,7 +13,12 @@
         WindowStartupLocation="CenterScreen">
     
 
-    <Grid ColumnDefinitions="230,*">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="230" Width="230"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="750"/>
+        </Grid.ColumnDefinitions>
 
         <!-- ============ Sidebar (global, bleibt immer sichtbar) ============ -->
         <Border Grid.Column="0"
@@ -80,9 +85,10 @@
                 </Border>
             </Grid>
         </Border>
+        <GridSplitter Grid.Column="1" />
 
         <!-- ============ Rechte Seite: Breadcrumb + die 3 Panels ============ -->
-        <Grid Grid.Column="1" RowDefinitions="Auto,*">
+        <Grid Grid.Column="2" RowDefinitions="Auto,*">
 
             <!-- Breadcrumb-Leiste -->
             <Border Grid.Row="0"
@@ -119,12 +125,10 @@
                     <Border Background="{DynamicResource BackgroundColor}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            BorderBrush="{DynamicResource AccentColor}"
+                            BorderBrush="{Binding AppState.BorderColor}"
                             BorderThickness="2"
                             CornerRadius="12">
-                        <ContentControl Content="{Binding AppState.CurrentDialog}"
-                                        Width="400"
-                                        Height="150"/>
+                        <ContentControl Content="{Binding AppState.CurrentDialog}"/>
                     </Border>
                 </Grid>
             </Grid>

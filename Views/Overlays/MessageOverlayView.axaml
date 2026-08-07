@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Recallr.ViewModels"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="400" MaxHeight="200"
+             x:Class="Recallr.Views.MessageOverlayView"
+             x:DataType="vm:MessageOverlayViewModel">
+    <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource BackgroundColor}" VerticalAlignment="Center" Margin="10">
+        <TextBlock Grid.Row="0" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding AppStateService.MessageViewTitle}" Margin="0,0,0,15"/>
+        <TextBlock Grid.Row="1" FontSize="12" HorizontalAlignment="Center" Text="{Binding AppStateService.MessageViewMessage}" Margin="0,0,0,10" TextWrapping="Wrap" TextAlignment="Center"/>
+        <Grid Grid.Row="2" ColumnDefinitions="Auto" HorizontalAlignment="Center">
+            <Button Grid.Column="0" Content="{models:Tr messagebox_ok_btn}" Classes="primary" Command="{Binding CloseMessageOverlayCommand}" Width="150" HorizontalContentAlignment="Center"/>
+        </Grid>
+    </Grid>
+</UserControl>

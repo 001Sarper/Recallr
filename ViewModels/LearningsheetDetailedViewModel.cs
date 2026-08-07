@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -28,7 +29,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     [ObservableProperty] private bool _isChatSelected = false;
     [ObservableProperty] private bool _isKnownledgeSelected = false;
 
-    [ObservableProperty] private string _learnsheetContent;
+    [ObservableProperty] private string _learnsheetContent = $"# {LocalizationService.Instance["no_learnsheet_yet"]}";
 
     [ObservableProperty] private ObservableCollection<Border> _chatlog = new();
 
@@ -47,6 +48,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private Learnsheet _currentLearnsheet;
     
     public ObservableCollection<ChatEntry> Messages { get; } = new();
+    
+    private AppStateService AppState => AppStateService.Instance;
+
 
     public LearningsheetDetailedViewModel(string learningsheetID)
     {
@@ -94,6 +98,14 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
 
         foreach (var msg in savedMessages)
             Messages.Add(msg);
+    }
+
+    [RelayCommand]
+    private async void ResetChat()
+    {
+        await ChatStorageService.Instance.ResetMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
+        Messages.Clear();
+        AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["chat_clear_success"], Brushes.Green);
     }
 
     [RelayCommand]
@@ -151,6 +163,9 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         var learnsheetTextFile = Path.Combine(_currentLearningsheetFolder, "learnsheet.md");
         File.WriteAllText(learnsheetTextFile, learnsheetReponse);
         LearnsheetContent = learnsheetReponse;
+        LearnsheetCreating = false;
+        AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"],
+            LocalizationService.Instance["learnsheet_creation_success"], Brushes.Green);
 
         var learnsheetMetaData = await AIService.Instance.CreateLearnsheetMetaData(learnsheetReponse);
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -173,22 +188,26 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
             AppStateService.Instance.CurrentLearningsheet = meta.Title;
             learnsheet.Description = meta.Description;
             CoursesService.SaveConfig();
-            LearnsheetCreating = false;
         }
     }
 
-    public async Task SendMessageAsync(string userInput)
+    private async Task SendMessageAsync(string userInput)
     {
-        Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput });
-
-        var aiMessage = new ChatEntry() { Sender = ChatSender.Ai };
+        Messages.Add(new ChatEntry { Sender = ChatSender.User, Text = userInput, ResponseGenerated = true});
+        var aiMessage = new ChatEntry { Sender = ChatSender.Ai };
         Messages.Add(aiMessage);
 
-        await foreach (var token in AIService.Instance.StreamResponseAsync(Messages.SkipLast(1), LearnsheetContent))
+        var response = await AIService.Instance.GetResponseAsync(Messages.SkipLast(1), LearnsheetContent);
+
+        if (response == null)
         {
-            await Dispatcher.UIThread.InvokeAsync(() => aiMessage.AppendToken(token));
+            // Fehler wurde schon im AIService per Overlay angezeigt - leere AI-Nachricht wieder entfernen,
+            // damit sie nicht als Blindgänger in der History/Storage landet.
+            Messages.Remove(aiMessage);
+            return;
         }
 
+        await Dispatcher.UIThread.InvokeAsync(() => aiMessage.SetResponse(response));
         await ChatStorageService.Instance.SaveMessagesAsync(CoursesService.currentCourseID, _learningsheetID, Messages);
     }
 
@@ -201,6 +220,14 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
         CurrentInput = string.Empty; // TextBox sofort leeren
 
         await SendMessageAsync(input);
+    }
+
+    [RelayCommand]
+    private async Task PickAnswer(string answer)
+    {
+        Messages.Last().MultipleChoice = false;
+        Messages.Last().Answers = new List<string>();
+        await SendMessageAsync(answer);
     }
     
     [RelayCommand]

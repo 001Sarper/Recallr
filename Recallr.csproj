@@ -28,6 +28,7 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.11.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.1.0-dev-798" />
     <PackageReference Include="Markdig" Version="1.3.2" />
     <PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
@@ -41,5 +42,32 @@
 
   <ItemGroup>
     <Folder Include="docs\screenshots\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Overlays\MessageOverlayView.axaml.cs">
+      <DependentUpon>MessageOverlayView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Overlays\NewCourseOverlayView.axaml.cs">
+      <DependentUpon>NewCourseOverlayView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\CourseView.axaml.cs">
+      <DependentUpon>CourseView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\LearningsheetDetailedView.axaml.cs">
+      <DependentUpon>LearningsheetDetailedView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\LearningsheetView.axaml.cs">
+      <DependentUpon>LearningsheetView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\User Controls\SettingsView.axaml.cs">
+      <DependentUpon>SettingsView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

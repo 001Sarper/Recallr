@@ -1,8 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Recallr.Models.Models;
 using Recallr.Models.Services;
 
 namespace Recallr.ViewModels;
@@ -10,6 +10,7 @@ namespace Recallr.ViewModels;
 public partial class SettingsViewModel : ViewModelBase
 {
     public SettingsService Settings => SettingsService.Instance;
+    public AppStateService AppStateService => AppStateService.Instance;
     
     // Account
     [ObservableProperty] private string _draftOpenaiKey;
@@ -25,7 +26,6 @@ public partial class SettingsViewModel : ViewModelBase
     // AI-Behaviour
     [ObservableProperty] private int _draftSummaryStyle;
     [ObservableProperty] private int _draftDifficulty;
-    [ObservableProperty] private int _draftQuestionType;
 
     [ObservableProperty] private ObservableCollection<string> _models = new();
     [ObservableProperty] private bool _modelsLoading;
@@ -50,7 +50,6 @@ public partial class SettingsViewModel : ViewModelBase
 
         DraftSummaryStyle = Settings.SummaryStyle;
         DraftDifficulty = Settings.Difficulty;
-        DraftQuestionType = Settings.QuestionType;
     }
 
     private async void LoadModelsAsync()
@@ -85,8 +84,9 @@ public partial class SettingsViewModel : ViewModelBase
 
         Settings.SummaryStyle = DraftSummaryStyle;
         Settings.Difficulty = DraftDifficulty;
-        Settings.QuestionType = DraftQuestionType;
         
         Settings.Save();
+        AppStateService.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["settings_successmessage_message"], Brushes.Green);
+        
     }
 }

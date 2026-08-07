@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:Recallr.ViewModels"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              xmlns:models="clr-namespace:Recallr.Models.Models"
+             xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Recallr.Views.LearningsheetDetailedView"
              x:DataType="vm:LearningsheetDetailedViewModel">
@@ -172,7 +173,8 @@
                                     Fill="Transparent"
                                     Width="14" Height="14"
                                     Stretch="Uniform" />
-                                <TextBlock Text="{models:Tr files_add_btn}" Foreground="{DynamicResource ButtonPrimaryForeground}" />
+                                <TextBlock Text="{models:Tr files_add_btn}"
+                                           Foreground="{DynamicResource ButtonPrimaryForeground}" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -187,7 +189,8 @@
                         Margin="5,0,0,0">
                     <Grid RowDefinitions="*,Auto,Auto">
                         <StackPanel Grid.Row="0" Orientation="Vertical">
-                            <TextBlock Text="{models:Tr learn_sheet_options_title}" HorizontalAlignment="Center" FontWeight="Bold"
+                            <TextBlock Text="{models:Tr learn_sheet_options_title}" HorizontalAlignment="Center"
+                                       FontWeight="Bold"
                                        FontSize="16" Margin="0,0,0,10" />
                             <Border CornerRadius="12"
                                     Padding="16,10"
@@ -195,11 +198,13 @@
                                     BorderBrush="{DynamicResource BorderColor}"
                                     BorderThickness="1"
                                     HorizontalAlignment="Stretch"
-                                    Margin="5,0,0,0">
+                                    Margin="5,0,0,10">
                                 <Grid ColumnDefinitions="*,Auto">
-                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_pdfexport}" FontWeight="DemiBold"
+                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_pdfexport}"
+                                               FontWeight="DemiBold"
                                                VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" Classes="primary" Command="{Binding ExportAsPdfCommand}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    <Button Grid.Column="1" Classes="edit" Command="{Binding ExportAsPdfCommand}"
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <Path
                                             Data="
                                     M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z
@@ -207,7 +212,7 @@
                                     M12 18v-8
                                     m-3 5 3 3 3-3
                                     "
-                                            Stroke="{DynamicResource ButtonPrimaryForeground}"
+                                            Stroke="{DynamicResource ButtonEditForeground}"
                                             StrokeThickness="2"
                                             StrokeLineCap="Round"
                                             StrokeJoin="Round"
@@ -223,14 +228,49 @@
                                     BorderBrush="{DynamicResource BorderColor}"
                                     BorderThickness="1"
                                     HorizontalAlignment="Stretch"
-                                    Margin="5,10,0,0">
+                                    Margin="5,0,0,10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_chathistory_del}"
+                                               FontWeight="DemiBold"
+                                               VerticalAlignment="Center" />
+                                    <Button Grid.Column="1" Classes="delete" Command="{Binding ResetChatCommand}"
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                        <Path
+                                            Data="
+                                                M4 13V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5
+                                                M14 2v5a1 1 0 0 0 1 1h5
+                                                M10 22v-5
+                                                M14 19v-2
+                                                M18 20v-3
+                                                M2 13h20
+                                                M6 20v-3
+                                                 "
+                                            Stroke="{DynamicResource ButtonDeleteForeground}"
+                                            StrokeThickness="2"
+                                            StrokeLineCap="Round"
+                                            StrokeJoin="Round"
+                                            Fill="Transparent"
+                                            Width="16" Height="16"
+                                            Stretch="Uniform" />
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            <Border CornerRadius="12"
+                                    Padding="16,10"
+                                    Background="{DynamicResource SurfaceColor}"
+                                    BorderBrush="{DynamicResource BorderColor}"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="5,0,0,10">
                                 <Grid ColumnDefinitions="*,160,Auto">
-                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_test_date}" VerticalAlignment="Center" FontWeight="DemiBold"/>
+                                    <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_test_date}"
+                                               VerticalAlignment="Center" FontWeight="DemiBold" />
                                     <TextBox Grid.Column="1" CornerRadius="2" VerticalAlignment="Center"
                                              HorizontalAlignment="Stretch"
                                              VerticalContentAlignment="Center" Text="{Binding TestDate}"
-                                             HorizontalContentAlignment="Center"/>
-                                    <Button Grid.Column="2" Classes="primary" Margin="10,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                             HorizontalContentAlignment="Center" />
+                                    <Button Grid.Column="2" Classes="primary" Margin="10,0,0,0"
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                             Command="{Binding SaveTestDateCommand}">
                                         <Path Data="M20 6 9 17l-5-5"
                                               Stroke="{DynamicResource ButtonPrimaryForeground}"
@@ -239,15 +279,20 @@
                                               StrokeJoin="Round"
                                               Fill="Transparent"
                                               Width="14" Height="14"
-                                              Stretch="Uniform"/>
+                                              Stretch="Uniform" />
                                     </Button>
                                 </Grid>
                             </Border>
                         </StackPanel>
-                        <Button Grid.Row="2" Height="45" Classes="primary" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"  Command="{Binding CreateLearningsheetAsyncCommand}">
+                        <Button Grid.Row="2" Height="45" Classes="primary" HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Center" Command="{Binding CreateLearningsheetAsyncCommand}">
                             <Grid>
-                                <ProgressBar IsIndeterminate="True" IsVisible="{Binding LearnsheetCreating}" Height="7" HorizontalAlignment="Stretch" Foreground="{DynamicResource AccentColor}"/>
-                                <TextBlock Text="{models:Tr learn_sheet_create_btn}" IsVisible="{Binding !LearnsheetCreating}"  Foreground="{DynamicResource ButtonPrimaryForeground}" HorizontalAlignment="Center"/>
+                                <ProgressBar IsIndeterminate="True" IsVisible="{Binding LearnsheetCreating}" Height="7"
+                                             HorizontalAlignment="Stretch" Foreground="{DynamicResource AccentColor}" />
+                                <TextBlock Text="{models:Tr learn_sheet_create_btn}"
+                                           IsVisible="{Binding !LearnsheetCreating}"
+                                           Foreground="{DynamicResource ButtonPrimaryForeground}"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </Button>
                     </Grid>
@@ -262,7 +307,7 @@
                         BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
-                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}" SelectionEnabled="True"/>
+                    <mdxaml:MarkdownScrollViewer Markdown="{Binding LearnsheetContent}" SelectionEnabled="True" />
                 </Border>
             </Grid>
 
@@ -275,7 +320,7 @@
                         BorderThickness="1"
                         HorizontalAlignment="Stretch">
                     <Grid RowDefinitions="*,Auto">
-                        <ScrollViewer Grid.Row="0" Padding="10,0" Margin="0,0,0,20" x:Name="ChatScrollViewer">
+                        <ScrollViewer Grid.Row="0" Margin="0,0,0,20" x:Name="ChatScrollViewer">
                             <ItemsControl ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -284,28 +329,80 @@
                                 </ItemsControl.ItemsPanel>
 
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:ChatEntry}">
-                                        <Border CornerRadius="10"
-                                                Padding="16,10"
-                                                MaxWidth="700"
-                                                Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
-                                                Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
-                                            <mdxaml:MarkdownScrollViewer Markdown="{Binding Text}"/>
-                                        </Border>
+                                    <DataTemplate x:DataType="models:ChatEntry">
+                                        <Grid>
+                                            <StackPanel Grid.Row="0" Spacing="10" MaxWidth="700"
+                                                        Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
+                                                        Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
+                                                <Border CornerRadius="10"
+                                                        Padding="16,10"
+                                                        Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
+                                                        Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
+                                                    <Grid RowDefinitions="*,Auto">
+                                                        <Grid IsVisible="{Binding !ResponseGenerated}" ColumnDefinitions="Auto,*">
+                                                            <avaloniaProgressRing:ProgressRing Grid.Column="0"
+                                                                    IsActive="True" Width="16" Height="16" VerticalAlignment="Center"/> 
+                                                            <TextBlock Grid.Column="1" Text="{models:Tr ai_response_loading_message}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                        <mdxaml:MarkdownScrollViewer Grid.Row="0"
+                                                                Markdown="{Binding Text}" IsVisible="{Binding ResponseGenerated}"/>
+                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Answers}"
+                                                                      IsVisible="{Binding MultipleChoice}"
+                                                                      Margin="0,5,0,10"
+                                                                      HorizontalAlignment="Left">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel Orientation="Vertical" ItemSpacing="5" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Classes="secondary" HorizontalAlignment="Left" HorizontalContentAlignment="Left" 
+                                                                            Command="{Binding $parent[UserControl].((vm:LearningsheetDetailedViewModel)DataContext).PickAnswerCommand}"
+                                                                            
+                                                                            CommandParameter="{Binding }">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <Path
+                                                                                Data="m9 18 6-6-6-6"
+                                                                                Stroke="{DynamicResource ButtonPrimaryForeground}"
+                                                                                StrokeThickness="2"
+                                                                                StrokeLineCap="Round"
+                                                                                StrokeJoin="Round"
+                                                                                Fill="Transparent"
+                                                                                Width="10" Height="10"
+                                                                                Stretch="Uniform" 
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center"/>
+                                                                            <TextBlock Text="{Binding}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                                                        </StackPanel>
+                                                                    </Button>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Grid>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+
+
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
+
                         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-                            <TextBox Grid.Column="0" CornerRadius="6" PlaceholderText="{models:Tr learn_sheet_chat_placeholder}" Text="{Binding CurrentInput}">
+                            <TextBox Grid.Column="0" CornerRadius="6"
+                                     PlaceholderText="{models:Tr learn_sheet_chat_placeholder}"
+                                     Text="{Binding CurrentInput}">
                                 <TextBox.KeyBindings>
                                     <KeyBinding Gesture="Enter" Command="{Binding SendMessageCommand}" />
                                 </TextBox.KeyBindings>
                             </TextBox>
-                            <Button Grid.Column="1" Classes="primary" Margin="10,0,0,0" Command="{Binding SendMessageCommand}">
+                            <Button Grid.Column="1" Classes="primary" Margin="10,0,0,0"
+                                    Command="{Binding SendMessageCommand}">
                                 <Path
                                     Data="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z
-                                M6 12h16"
+                    M6 12h16"
                                     Stroke="{DynamicResource ButtonPrimaryForeground}"
                                     StrokeThickness="2"
                                     StrokeLineCap="Round"
@@ -318,6 +415,7 @@
                     </Grid>
                 </Border>
             </Grid>
+
 
             <!-- Knownledge View 
             <Grid IsVisible="{Binding IsKnownledgeSelected}">
@@ -447,7 +545,7 @@
                     </Border>
                 </Grid>
             </Grid> -->
-            
+
         </Grid>
     </Grid>
 </UserControl>
