@@ -14,6 +14,7 @@
   "files_add_btn": "Attach file",
   "learn_sheet_options_title": "Study Sheet Options",
   "learn_sheet_pdfexport": "Export study sheet as PDF",
+  "learn_sheet_chathistory_del": "Delete AI Chat History",
   "learn_sheet_test_date": "Test date",
   "learn_sheet_create_btn": "Create study sheet",
   "learn_sheet_chat_placeholder": "Ask anything...",

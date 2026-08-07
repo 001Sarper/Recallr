@@ -54,6 +54,19 @@ public class ChatStorageService
         }
     }
 
+    public async Task ResetMessagesAsync(string fachId, string lernzettelId)
+    {
+        try
+        {
+            await File.WriteAllTextAsync(GetFilePath(fachId, lernzettelId), "[]");
+        }
+        catch (Exception e)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+        }
+    }
+    
     public async Task<List<ChatEntry>> LoadMessagesAsync(string fachId, string lernzettelId)
     {
         try

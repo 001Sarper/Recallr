@@ -101,6 +101,13 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async void ResetChat()
+    {
+        await ChatStorageService.Instance.ResetMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
+        Messages.Clear();
+    }
+
+    [RelayCommand]
     private void DeleteFile(string fileName)
     {
         var item = Files.FirstOrDefault(f => f.FileName == fileName);
