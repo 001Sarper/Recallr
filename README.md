@@ -133,7 +133,7 @@ Paths used by the app (OS-dependent):
 
 ## Contributing
 
-This project is in early, active development (v0.2.0). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
+This project is in early, active development (v0.3.0). Contributions, bug reports and feedback are welcome — open an issue or submit a pull request. Prefer small, focused PRs and describe breaking changes clearly.
 
 Before contributing:
 - Run `dotnet restore` and ensure the app builds locally.
