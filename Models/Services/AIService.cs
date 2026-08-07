@@ -23,6 +23,7 @@ public partial class AIService : ObservableObject
     private static SettingsService Settings => SettingsService.Instance;
     private static AppStateService AppState => AppStateService.Instance;
 
+    private static ObservableCollection<string> modelsCollection = new();
 
     private static ChatClient _chatClient;
     private static OpenAIClient _openAiClient;
@@ -128,27 +129,28 @@ public partial class AIService : ObservableObject
 
     public async Task<ObservableCollection<string>> GetOpenAiModels()
     {
-        ObservableCollection<string> collection = new();
-
         try
         {
-            InitialiazeOpenAiClient();
-
-            OpenAIModelClient modelClient = _openAiClient.GetOpenAIModelClient();
-            var models = await modelClient.GetModelsAsync();
-
-            foreach (var model in models.Value.OrderBy(m => m.Id))
+            if (!modelsCollection.Any(model => model.Contains("gpt")))
             {
-                collection.Add(model.Id);
+                InitialiazeOpenAiClient();
+
+                OpenAIModelClient modelClient = _openAiClient.GetOpenAIModelClient();
+                var models = await modelClient.GetModelsAsync();
+
+                foreach (var model in models.Value.OrderBy(m => m.Id))
+                {
+                    modelsCollection.Add(model.Id);
+                }
             }
 
-            return collection;
+            return modelsCollection;
         }
         catch (Exception e)
         {
             AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
                 LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
-            return collection;
+            return modelsCollection;
         }
     }
 
