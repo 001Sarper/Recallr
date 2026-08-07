@@ -105,6 +105,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     {
         await ChatStorageService.Instance.ResetMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
         Messages.Clear();
+        AppState.ShowMessageOverlay(LocalizationService.Instance["successmessage_title"], LocalizationService.Instance["chat_clear_success"], Brushes.Green);
     }
 
     [RelayCommand]

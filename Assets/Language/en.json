@@ -64,5 +64,6 @@
   "pdf_export_success": "The PDF file was successfully exported!",
   "general_error_message": "An unexpected error occurred:",
   "learnsheet_creation_success": "Your study sheet has been successfully created!",
+  "chat_clear_success": "Your chat history has been successfully deleted!",
   "ai_response_loading_message": "Thinking..."
 }

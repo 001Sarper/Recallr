@@ -203,7 +203,7 @@
                                     <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_pdfexport}"
                                                FontWeight="DemiBold"
                                                VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" Classes="primary" Command="{Binding ExportAsPdfCommand}"
+                                    <Button Grid.Column="1" Classes="edit" Command="{Binding ExportAsPdfCommand}"
                                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <Path
                                             Data="
@@ -212,7 +212,7 @@
                                     M12 18v-8
                                     m-3 5 3 3 3-3
                                     "
-                                            Stroke="{DynamicResource ButtonPrimaryForeground}"
+                                            Stroke="{DynamicResource ButtonEditForeground}"
                                             StrokeThickness="2"
                                             StrokeLineCap="Round"
                                             StrokeJoin="Round"
@@ -233,7 +233,7 @@
                                     <TextBlock Grid.Column="0" Text="{models:Tr learn_sheet_chathistory_del}"
                                                FontWeight="DemiBold"
                                                VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" Classes="primary" Command="{Binding ResetChatCommand}"
+                                    <Button Grid.Column="1" Classes="delete" Command="{Binding ResetChatCommand}"
                                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <Path
                                             Data="
@@ -245,7 +245,7 @@
                                                 M2 13h20
                                                 M6 20v-3
                                                  "
-                                            Stroke="{DynamicResource ButtonPrimaryForeground}"
+                                            Stroke="{DynamicResource ButtonDeleteForeground}"
                                             StrokeThickness="2"
                                             StrokeLineCap="Round"
                                             StrokeJoin="Round"

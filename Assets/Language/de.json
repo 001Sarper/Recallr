@@ -64,6 +64,7 @@
   "pdf_export_success": "PDF Datei wurde erfolgreich exportiert!",
   "general_error_message": "Es gab einen unerwarteten Fehler:",
   "learnsheet_creation_success": "Dein Lernzettel wurde erfolgreich erstellt!",
+  "chat_clear_success": "Dein Chatverlauf wurde erfolgreich gelöscht!",
   "ai_response_loading_message": "Denke nach..."
   
 }
