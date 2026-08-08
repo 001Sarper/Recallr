@@ -50,6 +50,7 @@ public partial class AppStateService : ObservableObject
     
     public void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
     public void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
+    public void ShowAiChatView() => CurrentPageViewModel = new AiChatViewModel();
     public void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
     public void ShowLearningsheetDetailedView(string learningsheetID) => CurrentPageViewModel = new LearningsheetDetailedViewModel(learningsheetID);
 
