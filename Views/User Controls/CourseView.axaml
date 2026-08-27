@@ -16,14 +16,14 @@
                     HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowOverlayCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Path Data="M8,2 L8,14 M2,8 L14,8"
-                          Stroke="{DynamicResource TextPrimaryColor}"
+                          Stroke="{DynamicResource ButtonPrimaryForeground}"
                           StrokeThickness="2"
                           StrokeLineCap="Round"
                           Width="16" Height="16"
                           Stretch="None"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
-                    <TextBlock Text="{models:Tr course_add_btn}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryColor}"/>
+                    <TextBlock Text="{models:Tr course_add_btn}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource ButtonPrimaryForeground}"/>
                 </StackPanel>
             </Button>
         </Grid>
