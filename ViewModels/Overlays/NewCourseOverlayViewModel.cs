@@ -22,6 +22,12 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
     [RelayCommand]
     private void CreateCourse()
     {
+        if (string.IsNullOrWhiteSpace(AppStateService.CourseName) || string.IsNullOrWhiteSpace(AppStateService.CourseTeacher))
+        {
+            AppStateService.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"] ?? "Error", "Course and teacher name cannot be empty.", Brushes.Red);
+            return;
+        }
+
         if (!AppStateService.IsOverlayEditMode)
         {
             var newCourse = new ClientCourses
@@ -46,13 +52,17 @@ public partial class NewCourseOverlayViewModel : ViewModelBase
             var existingCourse = CoursesService.configManager.ClientCourses
                 .FirstOrDefault(c => c.ID == AppStateService.course.ID);
             
-            existingCourse.Icon = AppStateService.Instance.CourseEmoji;
-            existingCourse.Name = AppStateService.Instance.CourseName;
-            existingCourse.TeacherName = AppStateService.Instance.CourseTeacher;
+            if (existingCourse != null)
+            {
+                existingCourse.Icon = AppStateService.Instance.CourseEmoji;
+                existingCourse.Name = AppStateService.Instance.CourseName;
+                existingCourse.TeacherName = AppStateService.Instance.CourseTeacher;
+            }
 
             CoursesService.SaveConfig();
             CoursesService.Instance.LoadCourses();
             AppStateService.ClearData();
+            AppStateService.CloseOverlay();
         }
     }
 }

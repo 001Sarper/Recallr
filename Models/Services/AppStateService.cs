@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -19,8 +20,8 @@ public partial class AppStateService : ObservableObject
     //CourseEditor Variables
     
     [ObservableProperty] private int _courseEmoji = 0;
-    [ObservableProperty] private string _courseTeacher;
-    [ObservableProperty] private string _courseName;
+    [ObservableProperty] private string _courseTeacher = "";
+    [ObservableProperty] private string _courseName = "";
 
     [ObservableProperty] private bool _isOverlayEditMode = false;
     [ObservableProperty] private string _buttonContent = "";
@@ -40,19 +41,53 @@ public partial class AppStateService : ObservableObject
     [ObservableProperty] private string _messageViewMessage = "";
     
     [ObservableProperty]
-    private ViewModelBase currentPageViewModel;
+    private ViewModelBase currentPageViewModel = null!;
 
-    public ClientCourses course;
+    private CourseViewModel? _courseViewModel;
+    private SettingsViewModel? _settingsViewModel;
+    private AiChatViewModel? _aiChatViewModel;
+    private ExamsViewModel? _examsViewModel;
+
+    public ClientCourses course = null!;
     
     [RelayCommand]
     private void ShowNewCourseOverlay() => CurrentDialog = new NewCourseOverlayViewModel();
     
-    
-    public void ShowCourseView() => CurrentPageViewModel = new CourseViewModel();
-    public void ShowSettingsView() => CurrentPageViewModel = new SettingsViewModel();
-    public void ShowAiChatView() => CurrentPageViewModel = new AiChatViewModel();
+    public void ShowCourseView()
+    {
+        _courseViewModel ??= new CourseViewModel();
+        CurrentPageViewModel = _courseViewModel;
+    }
+
+    public void ShowSettingsView()
+    {
+        _settingsViewModel ??= new SettingsViewModel();
+        CurrentPageViewModel = _settingsViewModel;
+    }
+
+    public void ShowAiChatView()
+    {
+        _aiChatViewModel ??= new AiChatViewModel();
+        CurrentPageViewModel = _aiChatViewModel;
+    }
+
+    public void ShowExamsView()
+    {
+        _examsViewModel ??= new ExamsViewModel();
+        CurrentPageViewModel = _examsViewModel;
+    }
+
     public void ShowLearningsheetView() => CurrentPageViewModel = new LearningsheetViewModel();
     public void ShowLearningsheetDetailedView(string learningsheetID) => CurrentPageViewModel = new LearningsheetDetailedViewModel(learningsheetID);
+    public void ShowExamDetailView(string examID) => CurrentPageViewModel = new ExamDetailViewModel(examID);
+
+    public void ShowGenerateExamOverlay(List<Configuration.Learnsheet> selectedSheets, Configuration.ClientCourses? course)
+    {
+        CurrentDialog = new GenerateExamOverlayViewModel(selectedSheets, course);
+        BorderColor = Brushes.CadetBlue;
+        IsOverlayVisible = true;
+    }
+
 
     public void CloseOverlay()
     {

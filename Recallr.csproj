@@ -38,6 +38,7 @@
     <PackageReference Include="OpenAI" Version="2.12.0" />
     <PackageReference Include="PDFsharp" Version="6.2.4" />
     <PackageReference Include="QuestPDF" Version="2026.7.2" />
+    <PackageReference Include="Sylinko.CSharpMath.Avalonia" Version="12.0.0" />
   </ItemGroup>
 
   <ItemGroup>

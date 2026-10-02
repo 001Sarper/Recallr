@@ -42,7 +42,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     private readonly IFilePickerService _filePickerService;
     public ObservableCollection<FileEntryViewModel> Files { get; } = new();
     private string _learningsheetID;
-    private static string _currentLearningsheetFolder;
+    private static string _currentLearningsheetFolder = "";
     private List<string> _currentLearningsheetFolderFiles;
 
     private Learnsheet _currentLearnsheet;
@@ -101,7 +101,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async void ResetChat()
+    private async Task ResetChat()
     {
         await ChatStorageService.Instance.ResetMessagesAsync(CoursesService.currentCourseID, _learningsheetID);
         Messages.Clear();
@@ -146,7 +146,7 @@ public partial class LearningsheetDetailedViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async void CreateLearningsheetAsync()
+    private async Task CreateLearningsheetAsync()
     {
         if (!LearnsheetCreating)
         {

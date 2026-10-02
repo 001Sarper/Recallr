@@ -42,6 +42,7 @@
 
                     <!-- Text -->
                     <SolidColorBrush x:Key="TextPrimaryColor">#E6EDF3</SolidColorBrush>
+                    <Color x:Key="TextPrimaryColorValue">#E6EDF3</Color>
                     <SolidColorBrush x:Key="TextSecondaryColor">#8B949E</SolidColorBrush>
 
                     <!-- Akzent (Buttons, aktive Nav-Elemente, Links) -->
@@ -84,6 +85,7 @@
 
                     <!-- Text -->
                     <SolidColorBrush x:Key="TextPrimaryColor">#0D1117</SolidColorBrush>
+                    <Color x:Key="TextPrimaryColorValue">#0D1117</Color>
                     <SolidColorBrush x:Key="TextSecondaryColor">#57606A</SolidColorBrush>
 
                     <!-- Akzent (Buttons, aktive Nav-Elemente, Links) -->

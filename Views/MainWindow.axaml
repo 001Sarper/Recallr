@@ -70,6 +70,13 @@
                         
                         <ListBoxItem>
                             <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="📝" FontSize="16" />
+                                <TextBlock Text="{models:Tr exams_nav}" Foreground="{DynamicResource TextPrimaryColor}" />
+                            </StackPanel>
+                        </ListBoxItem>
+                        
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
                                 <TextBlock Text="⚙️" FontSize="16" />
                                 <TextBlock Text="{models:Tr settings_nav}" Foreground="{DynamicResource TextPrimaryColor}" />
                             </StackPanel>
@@ -123,7 +130,11 @@
             </Border>
 
             <Grid Grid.Row="1">
-                <ContentControl Content="{Binding AppState.CurrentPageViewModel}"/>
+                <TransitioningContentControl Content="{Binding AppState.CurrentPageViewModel}">
+                    <TransitioningContentControl.PageTransition>
+                        <CrossFade Duration="0:0:0.25" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
                 
                 <!-- Layer 2: Overlay, nur sichtbar wenn ein Dialog offen ist -->
                 <Grid IsVisible="{Binding AppState.IsOverlayVisible}" >

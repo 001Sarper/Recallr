@@ -285,7 +285,7 @@
                             </Border>
                         </StackPanel>
                         <Button Grid.Row="2" Height="45" Classes="primary" HorizontalAlignment="Stretch"
-                                VerticalContentAlignment="Center" Command="{Binding CreateLearningsheetAsyncCommand}">
+                                VerticalContentAlignment="Center" Command="{Binding CreateLearningsheetCommand}">
                             <Grid>
                                 <ProgressBar IsIndeterminate="True" IsVisible="{Binding LearnsheetCreating}" Height="7"
                                              HorizontalAlignment="Stretch" Foreground="{DynamicResource AccentColor}" />
