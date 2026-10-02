@@ -1,0 +1,166 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Recallr.ViewModels"
+             xmlns:models="clr-namespace:Recallr.Models.Models"
+             xmlns:m="clr-namespace:Recallr.Models.Configuration"
+             xmlns:converters="clr-namespace:Recallr.Models.Converters"
+             xmlns:controls="clr-namespace:Recallr.Views.UserControls"
+             xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:math="clr-namespace:CSharpMath.Avalonia;assembly=CSharpMath.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Recallr.Views.AiChatView"
+             x:DataType="vm:AiChatViewModel">
+    <Grid ColumnDefinitions="250,*">
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="{DynamicResource SurfaceColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,0" Padding="10">
+            <Grid RowDefinitions="Auto,*">
+                <Button Grid.Row="0" Classes="primary" HorizontalAlignment="Stretch" Command="{Binding NewChatCommand}" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+                        <TextBlock Text="+" FontSize="16" />
+                        <TextBlock Text="Neuer Chat" />
+                    </StackPanel>
+                </Button>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="m:ChatSession">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button Grid.Column="1" Classes="delete" Width="20" Height="20" Padding="0"
+                                        Command="{Binding $parent[UserControl].((vm:AiChatViewModel)DataContext).DeleteSessionCommand}"
+                                        CommandParameter="{Binding}">
+                                    <Path Data="M4 4l8 8m0-8l-8 8" Stroke="{DynamicResource ButtonDeleteForeground}" StrokeThickness="1.5" StrokeLineCap="Round" Width="8" Height="8" Stretch="Uniform" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- Chat Area -->
+        <Grid Grid.Column="1" RowDefinitions="*,Auto">
+            <!-- Message Feed -->
+            <ScrollViewer Grid.Row="0" Margin="10,10,10,10" x:Name="ChatScrollViewer">
+                <ItemsControl ItemsSource="{Binding Messages}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="20" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:ChatEntry">
+                            <Grid>
+                                <StackPanel Grid.Row="0" Spacing="10" MaxWidth="700"
+                                            Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
+                                            Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
+                                    <Border CornerRadius="10"
+                                            Padding="16,10"
+                                            Classes.ai="{Binding Sender, Converter={x:Static models:SenderConverters.IsAi}}"
+                                            Classes.user="{Binding Sender, Converter={x:Static models:SenderConverters.IsUser}}">
+                                        <Grid RowDefinitions="*,Auto">
+                                            <!-- Loading Indicator -->
+                                            <Grid IsVisible="{Binding !ResponseGenerated}" ColumnDefinitions="Auto,*">
+                                                <avaloniaProgressRing:ProgressRing Grid.Column="0"
+                                                        IsActive="True" Width="16" Height="16" VerticalAlignment="Center"/> 
+                                                <TextBlock Grid.Column="1" Text="{models:Tr ai_response_loading_message}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <!-- Message Text Parts -->
+                                            <ItemsControl Grid.Row="0" ItemsSource="{Binding Parts}" IsVisible="{Binding ResponseGenerated}">
+                                                <ItemsControl.DataTemplates>
+                                                    <!-- Text Part -->
+                                                    <DataTemplate DataType="models:TextPart">
+                                                        <mdxaml:MarkdownScrollViewer Markdown="{Binding Content}" Margin="0,0,0,5" />
+                                                    </DataTemplate>
+                                                    <!-- Math Part -->
+                                                    <DataTemplate DataType="models:MathPart">
+                                                        <Border Margin="0,5,0,10" Padding="10" Background="#11000000" CornerRadius="8">
+                                                            <controls:SafeMathView LaTeX="{Binding LatexCode}" HorizontalAlignment="Center" 
+                                                                               TextColor="{DynamicResource TextPrimaryColorValue}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.DataTemplates>
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Spacing="0" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
+                                            <!-- Attached files (User only) -->
+                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding AttachedFiles}" IsVisible="{Binding !!AttachedFiles.Count}" Margin="0,10,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" ItemSpacing="5" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border CornerRadius="4" Background="#33000000" Padding="5,2">
+                                                            <TextBlock Text="{Binding}" FontSize="11" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- Input Bar -->
+            <Border Grid.Row="1" Background="{DynamicResource SurfaceColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,1,0,0" Padding="10">
+                <StackPanel Spacing="10">
+                    <!-- Attached files preview -->
+                    <ItemsControl ItemsSource="{Binding AttachedFiles}" IsVisible="{Binding !!AttachedFiles.Count}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ItemSpacing="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border CornerRadius="6" Background="{DynamicResource BorderColor}" Padding="8,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="{Binding}" FontSize="12" MaxWidth="150" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                        <Button Classes="delete" Width="20" Height="20" Padding="0" Margin="0" CornerRadius="10"
+                                                Command="{Binding $parent[UserControl].((vm:AiChatViewModel)DataContext).RemoveAttachedFileCommand}" CommandParameter="{Binding}">
+                                            <Path Data="M4 4l8 8m0-8l-8 8" Stroke="{DynamicResource ButtonDeleteForeground}" StrokeThickness="1.5" StrokeLineCap="Round" Width="8" Height="8" Stretch="Uniform" />
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Button Grid.Column="0" Classes="secondary" Width="40" Height="40" Padding="0" Margin="0,0,10,0"
+                                Command="{Binding AttachFileCommand}">
+                            <Path Data="M16 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zM8 4v12M4 10h8"
+                                  Stroke="{DynamicResource TextPrimaryColor}" StrokeThickness="2" StrokeLineCap="Round" Width="18" Height="18" Stretch="Uniform" />
+                        </Button>
+
+                        <TextBox Grid.Column="1" CornerRadius="12" MinHeight="40" MaxHeight="120" AcceptsReturn="True" TextWrapping="Wrap"
+                                 PlaceholderText="Frag den AI Tutor etwas..."
+                                 Text="{Binding CurrentInput}">
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Enter" Command="{Binding SendMessageCommand}" />
+                            </TextBox.KeyBindings>
+                        </TextBox>
+
+                        <Button Grid.Column="2" Classes="primary" Width="40" Height="40" Padding="0" Margin="10,0,0,0"
+                                Command="{Binding SendMessageCommand}">
+                            <Path Data="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z M6 12h16"
+                                  Stroke="{DynamicResource ButtonPrimaryForeground}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round" Fill="Transparent" Width="18" Height="18" Stretch="Uniform" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

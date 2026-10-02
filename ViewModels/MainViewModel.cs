@@ -30,6 +30,18 @@ public partial class MainViewModel : ViewModelBase
                 break;
             case 1:
                 AppState.ClearBreadcrumbs();
+                AppState.CurrentOption = LocalizationService.Instance["ai_chat_nav"];
+                if (AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
+                AppState.ShowAiChatView();
+                break;
+            case 2:
+                AppState.ClearBreadcrumbs();
+                AppState.CurrentOption = LocalizationService.Instance["exams_nav"];
+                if (AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
+                AppState.ShowExamsView();
+                break;
+            case 3:
+                AppState.ClearBreadcrumbs();
                 AppState.CurrentOption = LocalizationService.Instance["settings_nav"];
                 if(AppStateService.Instance.IsOverlayVisible) AppStateService.Instance.CloseOverlay();
                 AppState.ShowSettingsView();

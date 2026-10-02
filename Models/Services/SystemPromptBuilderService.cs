@@ -74,4 +74,41 @@ public class SystemPromptBuilderService
         
         public static string BuildLearnsheet(string learnsheetLanguage, int learnsheetType) 
             => string.Format(SystemPrompts.LearnsheetSystemPrompt, learnsheetLanguage, GetLearnsheetSummaryType(learnsheetType));
+
+        private static string GetQuestionFormatBlock(int formatIndex) => formatIndex switch
+        {
+            0 => "Gemischt: Kombiniere offene Fragen und Multiple-Choice-Aufgaben sinnvoll.",
+            1 => "Nur offene Fragen (keine Multiple Choice). Alle Aufgaben erfordern eine schriftliche Antwort.",
+            2 => "Nur Multiple-Choice-Fragen. Jede Aufgabe hat 4 Antwortoptionen, davon eine richtig.",
+            _ => "Gemischt: Kombiniere offene Fragen und Multiple-Choice-Aufgaben sinnvoll."
+        };
+
+        public static string BuildExamSheet(
+            string language,
+            string teacherStyle,
+            int questionCount,
+            int totalPoints,
+            int formatIndex)
+        {
+            var teacherStyleBlock = string.IsNullOrWhiteSpace(teacherStyle)
+                ? "Kein spezifischer Lehrerstil angegeben – verwende einen allgemeinen, schulüblichen Stil."
+                : teacherStyle;
+
+            return string.Format(
+                SystemPrompts.ExamSheetSystemPrompt,
+                language,
+                teacherStyleBlock,
+                questionCount,
+                totalPoints,
+                GetQuestionFormatBlock(formatIndex));
+        }
+
+        public static string BuildSolutionKey(string language, string examSheetContent, string learnsheetContent)
+        {
+            return string.Format(
+                SystemPrompts.SolutionKeySystemPrompt,
+                language,
+                examSheetContent,
+                learnsheetContent);
+        }
 }

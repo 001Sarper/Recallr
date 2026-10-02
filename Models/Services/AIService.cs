@@ -25,8 +25,8 @@ public partial class AIService : ObservableObject
 
     private static ObservableCollection<string> modelsCollection = new();
 
-    private static ChatClient _chatClient;
-    private static OpenAIClient _openAiClient;
+    private static ChatClient _chatClient = null!;
+    private static OpenAIClient _openAiClient = null!;
 
     private static void InitialiazeClient()
     {
@@ -216,7 +216,7 @@ public partial class AIService : ObservableObject
         IEnumerable<ChatEntry> conversationHistory,
         string lernzettelContent)
     {
-        IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = null;
+        IAsyncEnumerator<StreamingChatCompletionUpdate>? enumerator = null;
         try
         {
             var languageName = Settings.Language switch
@@ -304,6 +304,151 @@ public partial class AIService : ObservableObject
             AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
                 LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Generates a practice exam (student sheet + solution key) from the given learnsheet contents.
+    /// Returns (examSheet, solutionKey) or (empty, empty) on failure.
+    /// </summary>
+    public async Task<(string examSheet, string solutionKey)> CreateExamAsync(
+        List<string> learnsheetContents,
+        string teacherStyle,
+        int questionCount,
+        int totalPoints,
+        int formatIndex)
+    {
+        try
+        {
+            var languageName = Settings.Language switch
+            {
+                0 => "Deutsch",
+                1 => "Englisch",
+                _ => "Englisch"
+            };
+
+            InitialiazeClient();
+
+            // Combine all learnsheet contents into one context block
+            var combinedContext = string.Join("\n\n---\n\n", learnsheetContents);
+
+            // === Call 1: Generate student exam sheet ===
+            var examSystemPrompt = SystemPromptBuilderService.BuildExamSheet(
+                languageName, teacherStyle, questionCount, totalPoints, formatIndex);
+
+            List<ChatMessage> examMessages =
+            [
+                new SystemChatMessage(examSystemPrompt),
+                new UserChatMessage("Erstelle die Prüfung auf Basis dieser Lernzettel:\n\n" + combinedContext)
+            ];
+
+            ChatCompletion examCompletion = await _chatClient.CompleteChatAsync(examMessages, LearnsheetOptions);
+            var examSheet = examCompletion.Content[0].Text;
+
+            if (string.IsNullOrWhiteSpace(examSheet))
+                return (string.Empty, string.Empty);
+
+            // === Call 2: Generate teacher solution key ===
+            var solutionSystemPrompt = SystemPromptBuilderService.BuildSolutionKey(
+                languageName, examSheet, combinedContext);
+
+            List<ChatMessage> solutionMessages =
+            [
+                new SystemChatMessage(solutionSystemPrompt),
+                new UserChatMessage("Erstelle den vollständigen Lösungsschlüssel zu dieser Prüfung.")
+            ];
+
+            ChatCompletion solutionCompletion = await _chatClient.CompleteChatAsync(solutionMessages, LearnsheetOptions);
+            var solutionKey = solutionCompletion.Content[0].Text;
+
+            return (examSheet, solutionKey);
+        }
+        catch (Exception e)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{e.Message}", Brushes.Red);
+            return (string.Empty, string.Empty);
+        }
+    }
+
+    public async IAsyncEnumerable<string> GetGeneralChatResponseStreamAsync(
+        IEnumerable<ChatEntry> conversationHistory)
+    {
+        var languageName = Settings.Language switch
+        {
+            0 => "Deutsch",
+            1 => "Englisch",
+            _ => "Englisch"
+        };
+        InitialiazeClient();
+        
+        var context = WorkspaceContextService.GetWorkspaceContext();
+        var systemPromptStr = string.Format(SystemPrompts.GeneralChatSystemPrompt, languageName, context);
+        var messages = new List<ChatMessage> { new SystemChatMessage(systemPromptStr) };
+
+        foreach (var msg in conversationHistory)
+        {
+            if (msg.Sender == ChatSender.User)
+            {
+                var contentParts = new List<ChatMessageContentPart> { ChatMessageContentPart.CreateTextPart(msg.Text) };
+                if (msg.AttachedFiles != null)
+                {
+                    foreach (var file in msg.AttachedFiles)
+                    {
+                        contentParts.Add(CreateContentPartForFile(file));
+                    }
+                }
+                messages.Add(new UserChatMessage(contentParts));
+            }
+            else
+            {
+                messages.Add(new AssistantChatMessage(msg.Text));
+            }
+        }
+        
+        IAsyncEnumerator<StreamingChatCompletionUpdate>? enumerator = null;
+        try
+        {
+            // Note: we don't pass ChatOptions here because we don't want the strict JSON schema
+            var options = new ChatCompletionOptions { ReasoningEffortLevel = ChatReasoningEffortLevel.High };
+            enumerator = _chatClient.CompleteChatStreamingAsync(messages, options).GetAsyncEnumerator();
+        }
+        catch (Exception ex)
+        {
+            AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+            yield break;
+        }
+
+        try
+        {
+            while (true)
+            {
+                StreamingChatCompletionUpdate update;
+                try
+                {
+                    if (!await enumerator.MoveNextAsync())
+                        break;
+                    update = enumerator.Current;
+                }
+                catch (Exception ex)
+                {
+                    AppState.ShowMessageOverlay(LocalizationService.Instance["errormessage_title"],
+                        LocalizationService.Instance["general_error_message"] + $"\n{ex.Message}", Brushes.Red);
+                    break;
+                }
+                
+                foreach (var part in update.ContentUpdate)
+                {
+                    if (!string.IsNullOrEmpty(part.Text))
+                        yield return part.Text;
+                }
+            }
+        }
+        finally
+        {
+            if (enumerator != null)
+                await enumerator.DisposeAsync();
         }
     }
 }
